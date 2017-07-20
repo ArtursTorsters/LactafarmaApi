@@ -43,7 +43,7 @@ namespace LactafarmaAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseDefaultFiles();
+            //app.UseDefaultFiles();
             app.UseStaticFiles();
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -52,7 +52,13 @@ namespace LactafarmaAPI
 
             app.UseApplicationInsightsExceptionTelemetry();
 
-            app.UseMvc();
+            app.UseMvc(config =>
+            {
+                config.MapRoute(
+                    name: "Default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Demo", action = "Index" });
+            });
         }
     }
 }
