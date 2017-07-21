@@ -15,5 +15,17 @@ namespace LactafarmaAPI.Controllers
         {
             return View();
         }
+
+        public IActionResult Demo()
+        {
+            throw new InvalidOperationException("Invalid operation happens because your are working right now...");
+
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
     }
 }
