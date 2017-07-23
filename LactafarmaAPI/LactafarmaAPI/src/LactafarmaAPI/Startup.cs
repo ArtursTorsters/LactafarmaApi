@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LactafarmaAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,8 +13,12 @@ namespace LactafarmaAPI
 {
     public class Startup
     {
+        private IHostingEnvironment _env;
+
         public Startup(IHostingEnvironment env)
         {
+            _env = env;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -36,6 +41,16 @@ namespace LactafarmaAPI
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
+
+            if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
+            {
+                //Add Dependency Injection for our magic MailService test
+                services.AddScoped<IMailService, DebugMailService>();
+            }
+            else
+            {
+                //Implement a real MailService
+            }
 
             services.AddMvc();
         }
