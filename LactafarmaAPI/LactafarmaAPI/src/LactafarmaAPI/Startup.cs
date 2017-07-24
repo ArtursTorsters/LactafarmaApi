@@ -22,7 +22,8 @@ namespace LactafarmaAPI
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
 
             if (env.IsEnvironment("Development"))
             {
@@ -30,7 +31,6 @@ namespace LactafarmaAPI
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
 
-            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -41,6 +41,8 @@ namespace LactafarmaAPI
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
+
+            services.AddSingleton(Configuration);
 
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
             {

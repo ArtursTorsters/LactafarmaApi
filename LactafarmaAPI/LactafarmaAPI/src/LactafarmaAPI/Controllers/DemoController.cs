@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LactafarmaAPI.Services;
 using LactafarmaAPI.ViewModels.Demo;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,10 +14,12 @@ namespace LactafarmaAPI.Controllers
     public class DemoController : Controller
     {
         private IMailService _mailService;
+        private IConfigurationRoot _config;
 
-        public DemoController(IMailService mailService)
+        public DemoController(IMailService mailService, IConfigurationRoot config)
         {
             _mailService = mailService;
+            _config = config;
         }
 
         // GET: /<controller>/
@@ -40,7 +43,11 @@ namespace LactafarmaAPI.Controllers
         [HttpPost]
         public IActionResult Contact(ContactViewModel model)
         {
-            _mailService.SendMail("dgomez@ocu.org", model.Email, "From Me", model.Message);
+            if (model.Email.Contains("ocu.org")) ModelState.AddModelError("Email", "We don't support OCU addresses");
+            if (ModelState.IsValid)
+            {
+                _mailService.SendMail(_config["MailSettings:ToAddress"], model.Email, "From Me", model.Message);
+            }
 
             return View();
         }
