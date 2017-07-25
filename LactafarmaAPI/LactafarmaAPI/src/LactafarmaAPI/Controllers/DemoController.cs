@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LactafarmaAPI.Data;
 using LactafarmaAPI.Services;
 using LactafarmaAPI.ViewModels.Demo;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +16,20 @@ namespace LactafarmaAPI.Controllers
     {
         private IMailService _mailService;
         private IConfigurationRoot _config;
+        private LactafarmaContext _context;
 
-        public DemoController(IMailService mailService, IConfigurationRoot config)
+        public DemoController(IMailService mailService, IConfigurationRoot config, LactafarmaContext context)
         {
             _mailService = mailService;
             _config = config;
+            _context = context;
         }
 
         // GET: /<controller>/
         public IActionResult Index()
         {
+            //var data = _context.Demos.ToList();
+
             return View();
         }
 

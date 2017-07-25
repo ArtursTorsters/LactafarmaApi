@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LactafarmaAPI.Data;
 using LactafarmaAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +54,8 @@ namespace LactafarmaAPI
             {
                 //Implement a real MailService
             }
+
+            services.AddDbContext<LactafarmaContext>();
 
             services.AddMvc();
         }

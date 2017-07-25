@@ -14,6 +14,12 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LactafarmaAPI", "src\Lactaf
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LactafarmaAPI.Services", "src\LactafarmaAPI.Services\LactafarmaAPI.Services.xproj", "{685FCB24-FE36-4A28-A70C-FC55D526465F}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LactafarmaAPI.Data", "src\LactafarmaAPI.Data\LactafarmaAPI.Data.xproj", "{22CBB2BD-28E3-459E-B159-420B344EED5A}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LactafarmaAPI.Domain", "src\LactafarmaAPI.Domain\LactafarmaAPI.Domain.xproj", "{CAB5304E-AB43-4613-B4B5-28F608ABF2B6}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LactafarmaAPI.Core", "src\LactafarmaAPI.Core\LactafarmaAPI.Core.xproj", "{1FE60289-988E-442D-8834-2FC7ECC27371}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +34,18 @@ Global
 		{685FCB24-FE36-4A28-A70C-FC55D526465F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{685FCB24-FE36-4A28-A70C-FC55D526465F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{685FCB24-FE36-4A28-A70C-FC55D526465F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22CBB2BD-28E3-459E-B159-420B344EED5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CBB2BD-28E3-459E-B159-420B344EED5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CBB2BD-28E3-459E-B159-420B344EED5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CBB2BD-28E3-459E-B159-420B344EED5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FE60289-988E-442D-8834-2FC7ECC27371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE60289-988E-442D-8834-2FC7ECC27371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE60289-988E-442D-8834-2FC7ECC27371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE60289-988E-442D-8834-2FC7ECC27371}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,5 +53,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0B11FE83-0FD6-433B-876B-C042225FF93C} = {F7105648-9016-4E17-A651-E9348B13B797}
 		{685FCB24-FE36-4A28-A70C-FC55D526465F} = {F7105648-9016-4E17-A651-E9348B13B797}
+		{22CBB2BD-28E3-459E-B159-420B344EED5A} = {F7105648-9016-4E17-A651-E9348B13B797}
+		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6} = {F7105648-9016-4E17-A651-E9348B13B797}
+		{1FE60289-988E-442D-8834-2FC7ECC27371} = {F7105648-9016-4E17-A651-E9348B13B797}
 	EndGlobalSection
 EndGlobal
