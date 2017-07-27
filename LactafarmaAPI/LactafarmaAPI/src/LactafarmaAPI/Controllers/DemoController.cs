@@ -28,7 +28,7 @@ namespace LactafarmaAPI.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            //var data = _context.Demos.ToList();
+            var data = _context.Alerts.Count();
 
             return View();
         }

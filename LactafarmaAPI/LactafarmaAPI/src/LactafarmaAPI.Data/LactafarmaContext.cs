@@ -11,11 +11,8 @@ namespace LactafarmaAPI.Data
 {
     public class LactafarmaContext: DbContext
     {
-        private IConfigurationRoot _config;
-
-        public LactafarmaContext(IConfigurationRoot config, DbContextOptions options): base(options)
+        public LactafarmaContext(DbContextOptions<LactafarmaContext> options) : base(options)
         {
-            _config = config;
         }
 
         public DbSet<Alert> Alerts { get; set; }
@@ -27,12 +24,14 @@ namespace LactafarmaAPI.Data
         public DbSet<Language> Languages { get; set; }
         public DbSet<Token> Tokens { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<DrugBrand> DrugBrands { get; set; }
+        public DbSet<DrugAlternative> DrugAlternatives { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
+            base.OnModelCreating(modelBuilder);
 
-            optionsBuilder.UseSqlServer(_config["ConnectionStrings:LactafarmaContextConnection"]);
+            LactafarmaDbMapping.Configure(modelBuilder);
         }
     }
 

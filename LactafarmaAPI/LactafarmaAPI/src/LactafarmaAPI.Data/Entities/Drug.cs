@@ -17,7 +17,7 @@ namespace LactafarmaAPI.Data.Entities
         public Group Group { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<Alias> Aliases { get; set; }
-        public virtual ICollection<Drug> DrugAlternatives { get; set; }
-        public virtual ICollection<Brand> Brands { get; set; }
+        public virtual ICollection<DrugAlternative> DrugAlternatives { get; set; }
+        public virtual ICollection<DrugBrand> DrugBrands { get; set; }
     }
 }

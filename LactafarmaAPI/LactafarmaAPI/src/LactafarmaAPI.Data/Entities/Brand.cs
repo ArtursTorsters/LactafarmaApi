@@ -9,6 +9,6 @@ namespace LactafarmaAPI.Data.Entities
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<Drug> Drugs { get; set; }
+        public virtual ICollection<DrugBrand> DrugBrands { get; set; }
     }
 }
