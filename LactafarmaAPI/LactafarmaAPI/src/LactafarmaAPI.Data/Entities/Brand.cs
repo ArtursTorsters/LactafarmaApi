@@ -8,7 +8,8 @@ namespace LactafarmaAPI.Data.Entities
     public class Brand
     {
         public long Id { get; set; }
-        public string Name { get; set; }
         public virtual ICollection<DrugBrand> DrugBrands { get; set; }
+        public virtual ICollection<BrandMultilingual> BrandsMultilingual { get; set; }
+
     }
 }

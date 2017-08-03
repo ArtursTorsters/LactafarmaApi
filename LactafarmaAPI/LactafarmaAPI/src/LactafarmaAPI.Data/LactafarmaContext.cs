@@ -16,11 +16,16 @@ namespace LactafarmaAPI.Data
         }
 
         public DbSet<Alert> Alerts { get; set; }
+        public DbSet<AlertMultilingual> AlertsMultilingual { get; set; }
         public DbSet<Alias> Aliases { get; set; }
+        public DbSet<AliasMultilingual> AliasMultilingual { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<BrandMultilingual> BrandsMultilingual { get; set; }
         public DbSet<Drug> Drugs { get; set; }
+        public DbSet<DrugMultilingual> DrugsMultilingual { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupMultilingual> GroupsMultilingual { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Token> Tokens { get; set; }
         public DbSet<User> Users { get; set; }

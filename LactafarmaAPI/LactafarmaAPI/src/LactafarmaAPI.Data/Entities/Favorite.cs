@@ -8,6 +8,7 @@ namespace LactafarmaAPI.Data.Entities
     public class Favorite
     {
         public Guid Id { get; set; }
+        public string Name { get; set; }
         public long DrugId { get; set; }
         public Guid UserId { get; set; }
         public Drug Drug { get; set; }

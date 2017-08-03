@@ -9,7 +9,7 @@ namespace LactafarmaAPI.Data.Entities
     {
         public long Id { get; set; }
         public DateTime Modified { get; set; }
-        public string Name { get; set; }
         public virtual ICollection<Drug> Drugs { get; set; }
+        public virtual ICollection<GroupMultilingual> GroupsMultilingual { get; set; }
     }
 }
