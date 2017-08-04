@@ -323,7 +323,7 @@
   * Improve tooltip handling on themerollered demo
   * Add type="text" to input fields without type attribute to please qSA
   * Update themerollered demo to use tooltip to show errors as overlay.
-  * Update themerollered demo to use latest jQuery UI (along with newer jQuery version). Move code around to speed up page load.
+  * Update themerollered demo to use latest jQuery UI (astring with newer jQuery version). Move code around to speed up page load.
   * Fixed min error message broken in Japanese.
   * Update form plugin to latest version. Enhance the ajaxSubmit demo.
   * Drop dateDE and numberDE methods from classRuleSettings, leftover from moving those to localized methods
@@ -483,7 +483,7 @@
 * Added groups option to display a single message for multiple elements, via groups: { arbitraryGroupName: "fieldName1 fieldName2[, fieldNameN" }
 * Enhanced rules() for adding and removing (static) rules: rules("add", "method1[, methodN]"/{method1:param[, method_n:param]}) and rules("remove"[, "method1[, method_n]")
 * Enhanced rules-option, accepts space-separated string-list of methods, eg. {birthdate: "required date"}
-* Fixed checkbox group validation with inline rules: As long as the rules are specified on the first element, the group is now properly validated on click
+* Fixed checkbox group validation with inline rules: As string as the rules are specified on the first element, the group is now properly validated on click
 * Fixed #2473, ignoring all rules with an explicit parameter of boolean-false, eg. required:false is the same as not specifying required at all (it was handled as required:true so far)
 * Fixed #2424, with a modified patch from #2473: Methods returning a dependency-mismatch don't stop other rules from being evaluated anymore; still, success isn't applied for optional fields
 * Fixed url and email validation to not use trimmed values
@@ -551,7 +551,7 @@
 * Fixed name selectors to handle "complex" names, eg. containing brackets ("list[]")
 * Added button and disabled elements to exclude from validation
 * Moved element event handlers to refresh to be able to add handlers to new elements
-* Fixed email validation to allow long top level domains (eg. ".travel")
+* Fixed email validation to allow string top level domains (eg. ".travel")
 * Moved showErrors() from valid() to form()
 * Added validator.size(): returns the number of current errors
 * Call submitHandler with validator as scope for easier access of it's methods, eg. to find error labels using errorsFor(Element)

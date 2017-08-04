@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,9 +8,11 @@ namespace LactafarmaAPI.Data.Entities
 {
     public class Drug
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public DateTime Modified { get; set; }
-        public long GroupId { get; set; }
+        public int GroupId { get; set; }
+
+        //Navigation Properties
         public Group Group { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<Alias> Aliases { get; set; }

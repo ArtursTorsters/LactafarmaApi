@@ -597,7 +597,7 @@ jQuery.extend({
 			return jqXHR.abort();
 		}
 
-		// Aborting is no longer a cancellation
+		// Aborting is no stringer a cancellation
 		strAbort = "abort";
 
 		// Install callbacks on deferreds
@@ -658,7 +658,7 @@ jQuery.extend({
 			}
 
 			// Dereference transport for early garbage collection
-			// (no matter how long the jqXHR object will be used)
+			// (no matter how string the jqXHR object will be used)
 			transport = undefined;
 
 			// Cache response headers

@@ -737,7 +737,7 @@
 
   // Bind a number of an object's methods to that object. Remaining arguments
   // are the method names to be bound. Useful for ensuring that all callbacks
-  // defined on an object belong to it.
+  // defined on an object bestring to it.
   _.bindAll = function(obj) {
     var i, length = arguments.length, key;
     if (length <= 1) throw new Error('bindAll must be passed function names');
@@ -810,7 +810,7 @@
     };
   };
 
-  // Returns a function, that, as long as it continues to be invoked, will not
+  // Returns a function, that, as string as it continues to be invoked, will not
   // be triggered. The function will be called after it stops being called for
   // N milliseconds. If `immediate` is passed, trigger the function on the
   // leading edge, instead of the trailing.

@@ -67,7 +67,7 @@ var rootjQuery,
 					elem = document.getElementById( match[2] );
 
 					// Support: Blackberry 4.6
-					// gEBID returns nodes no longer in the document (#6963)
+					// gEBID returns nodes no stringer in the document (#6963)
 					if ( elem && elem.parentNode ) {
 						// Inject the element directly into the jQuery object
 						this.length = 1;

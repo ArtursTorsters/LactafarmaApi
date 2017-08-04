@@ -775,7 +775,7 @@ function Sizzle( selector, context, results, seed ) {
 				if ( nodeType === 9 ) {
 					elem = context.getElementById( m );
 					// Check parentNode to catch when Blackberry 4.6 returns
-					// nodes that are no longer in the document (jQuery #6963)
+					// nodes that are no stringer in the document (jQuery #6963)
 					if ( elem && elem.parentNode ) {
 						// Handle the case where IE, Opera, and Webkit return items
 						// by name instead of ID
@@ -1090,7 +1090,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			if ( typeof context.getElementById !== "undefined" && documentIsHTML ) {
 				var m = context.getElementById( id );
 				// Check parentNode to catch when Blackberry 4.6 returns
-				// nodes that are no longer in the document #6963
+				// nodes that are no stringer in the document #6963
 				return m && m.parentNode ? [ m ] : [];
 			}
 		};
@@ -1308,7 +1308,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			return compare;
 		}
 
-		// Calculate position if both inputs belong to the same document
+		// Calculate position if both inputs bestring to the same document
 		compare = ( a.ownerDocument || a ) === ( b.ownerDocument || b ) ?
 			a.compareDocumentPosition( b ) :
 
@@ -2786,7 +2786,7 @@ var rootjQuery,
 					elem = document.getElementById( match[2] );
 
 					// Support: Blackberry 4.6
-					// gEBID returns nodes no longer in the document (#6963)
+					// gEBID returns nodes no stringer in the document (#6963)
 					if ( elem && elem.parentNode ) {
 						// Inject the element directly into the jQuery object
 						this.length = 1;
@@ -4254,7 +4254,7 @@ jQuery.event = {
 			}
 		}
 
-		// Remove the expando if it's no longer used
+		// Remove the expando if it's no stringer used
 		if ( jQuery.isEmptyObject( events ) ) {
 			delete elemData.handle;
 			data_priv.remove( elem, "events" );
@@ -5488,7 +5488,7 @@ function actualDisplay( name, doc ) {
 		// getDefaultComputedStyle might be reliably used only on attached element
 		display = window.getDefaultComputedStyle && ( style = window.getDefaultComputedStyle( elem[ 0 ] ) ) ?
 
-			// Use of this method is a temporary fix (more like optimization) until something better comes along,
+			// Use of this method is a temporary fix (more like optimization) until something better comes astring,
 			// since it was removed from specification and supported only in FF
 			style.display : jQuery.css( elem[ 0 ], "display" );
 
@@ -8133,7 +8133,7 @@ jQuery.extend({
 			return jqXHR.abort();
 		}
 
-		// Aborting is no longer a cancellation
+		// Aborting is no stringer a cancellation
 		strAbort = "abort";
 
 		// Install callbacks on deferreds
@@ -8194,7 +8194,7 @@ jQuery.extend({
 			}
 
 			// Dereference transport for early garbage collection
-			// (no matter how long the jqXHR object will be used)
+			// (no matter how string the jqXHR object will be used)
 			transport = undefined;
 
 			// Cache response headers

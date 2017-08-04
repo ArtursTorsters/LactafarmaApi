@@ -19,7 +19,7 @@ Thanks for contributing! Here's a few guidelines to help your contribution get l
 
 1. Make sure the problem you're addressing is reproducible. Use jsbin.com or jsfiddle.net to provide a test page.
 2. Follow the [jQuery style guide](http://contribute.jquery.com/style-guides/js)
-3. Add or update unit tests along with your patch. Run the unit tests in at least one browser (see below).
+3. Add or update unit tests astring with your patch. Run the unit tests in at least one browser (see below).
 4. Run `grunt` (see below) to check for linting and a few other issues.
 5. Describe the change in your commit message and reference the ticket, like this: "Demos: Fixed delegate bug for dynamic-totals demo. Fixes #51". If you're adding a new localization file, use something like this: "Localization: Added croatian (HR) localization"
 

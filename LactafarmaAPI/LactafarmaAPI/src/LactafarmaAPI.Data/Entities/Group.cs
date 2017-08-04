@@ -7,8 +7,10 @@ namespace LactafarmaAPI.Data.Entities
 {
     public class Group
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public DateTime Modified { get; set; }
+
+        //Navigation Properties
         public virtual ICollection<Drug> Drugs { get; set; }
         public virtual ICollection<GroupMultilingual> GroupsMultilingual { get; set; }
     }

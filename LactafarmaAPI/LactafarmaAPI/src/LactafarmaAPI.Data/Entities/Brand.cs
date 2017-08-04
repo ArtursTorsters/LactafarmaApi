@@ -7,7 +7,9 @@ namespace LactafarmaAPI.Data.Entities
 {
     public class Brand
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
+
+        //Navigation Properties
         public virtual ICollection<DrugBrand> DrugBrands { get; set; }
         public virtual ICollection<BrandMultilingual> BrandsMultilingual { get; set; }
 
