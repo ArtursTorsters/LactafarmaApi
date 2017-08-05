@@ -22,5 +22,8 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1"></DotNetCliToolReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LactafarmaAPI.Core\LactafarmaAPI.Core.csproj" />
+  </ItemGroup>
 
 </Project>

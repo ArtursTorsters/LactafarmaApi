@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LactafarmaAPI.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class Favorite
+    public class Favorite : IIdentifiableGuidEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -16,5 +17,11 @@ namespace LactafarmaAPI.Data.Entities
         //Navigation Properties
         public Drug Drug { get; set; }
         public User User { get; set; }
+
+        public Guid EntityId
+        {
+            get { return Id; }
+            set { Id = value; }
+        }
     }
 }

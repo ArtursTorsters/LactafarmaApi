@@ -1,11 +1,12 @@
-﻿using System;
+﻿using LactafarmaAPI.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class Language
+    public class Language : IIdentifiableGuidEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -16,6 +17,12 @@ namespace LactafarmaAPI.Data.Entities
         //public virtual ICollection<BrandMultilingual> BrandsMultilingual { get; set; }
         //public virtual ICollection<DrugMultilingual> DrugsMultilingual { get; set; }
         //public virtual ICollection<GroupMultilingual> GroupsMultilingual { get; set; }
+
+        public Guid EntityId
+        {
+            get { return Id; }
+            set { Id = value; }
+        }
 
     }
 }

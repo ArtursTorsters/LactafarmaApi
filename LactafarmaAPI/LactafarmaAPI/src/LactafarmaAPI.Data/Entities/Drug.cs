@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LactafarmaAPI.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class Drug
+    public class Drug : IIdentifiableEntity
     {
         public int Id { get; set; }
         public DateTime Modified { get; set; }
@@ -19,6 +20,10 @@ namespace LactafarmaAPI.Data.Entities
         public virtual ICollection<DrugAlternative> DrugAlternatives { get; set; }
         public virtual ICollection<DrugBrand> DrugBrands { get; set; }
         public virtual ICollection<DrugMultilingual> DrugsMultilingual { get; set; }
-
+        public int EntityId
+        {
+            get { return Id; }
+            set { Id = value; }
+        }
     }
 }

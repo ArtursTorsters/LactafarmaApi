@@ -17,6 +17,6 @@ namespace LactafarmaAPI.Data.Entities
 
         //Navigation Properties
         public Alert Alert { get; set; }
-        public Language Language { get; set; }
+        public Language Language { get; set; }        
     }
 }

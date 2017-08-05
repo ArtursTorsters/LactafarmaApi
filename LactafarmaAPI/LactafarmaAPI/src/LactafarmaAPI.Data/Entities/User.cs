@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LactafarmaAPI.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class User
+    public class User : IIdentifiableGuidEntity
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
@@ -22,5 +23,11 @@ namespace LactafarmaAPI.Data.Entities
         public virtual ICollection<Favorite> Favorites { get; set; }
         public virtual ICollection<Token> Tokens { get; set; }
         public Language Language { get; set; }
+
+        public Guid EntityId
+        {
+            get { return Id; }
+            set { Id = value; }
+        }
     }
 }
