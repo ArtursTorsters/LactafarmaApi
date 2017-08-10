@@ -22,6 +22,19 @@ namespace LactafarmaAPI.Data.Repositories
                 .AsEnumerable();
         }
 
+        public IEnumerable<Brand> GetBrandsByDrug(int drugId)
+        {
+            return EntityContext.Brands.Include(e => e.DrugBrands.Where(x => x.DrugId == drugId))
+                .Include(e => e.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId))
+                .AsEnumerable();
+        }
+
+        public Brand GetBrand(int brandId)
+        {
+            return EntityContext.Brands.Where(e => e.Id == brandId)
+                .Include(e => e.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId)).FirstOrDefault();
+        }
+
 
         protected override Expression<Func<Brand, bool>> IdentifierPredicate(int id)
         {

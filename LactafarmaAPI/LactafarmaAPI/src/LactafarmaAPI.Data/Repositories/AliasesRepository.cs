@@ -20,9 +20,25 @@ namespace LactafarmaAPI.Data.Repositories
         {
             return EntityContext.Aliases
                 .Where(e => e.DrugId == drugId)
-                .Include(e => e.Drug)
                 .Include(e => e.AliasMultilingual.Where(l => l.LanguageId == User.LanguageId))
                 .AsEnumerable();
+        }
+
+        public Drug GetDrugByAlias(int aliasId)
+        {
+            var drugId = EntityContext.Aliases.Where(e => e.Id == aliasId)
+                .Include(e => e.Drug).Select(e => e.DrugId).FirstOrDefault();
+
+            return EntityContext.Drugs.Where(x => x.Id == drugId)
+                .Include(e => e.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId))
+                .FirstOrDefault();
+        }
+
+        public Alias GetAlias(int aliasId)
+        {
+            return EntityContext.Aliases
+                .Where(x => x.Id == aliasId)
+                .Include(e => e.AliasMultilingual.Where(l => l.LanguageId == User.LanguageId)).FirstOrDefault();
         }
 
         protected override Expression<Func<Alias, bool>> IdentifierPredicate(int id)

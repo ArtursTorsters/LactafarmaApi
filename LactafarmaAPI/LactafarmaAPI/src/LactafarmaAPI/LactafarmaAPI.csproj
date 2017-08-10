@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LactafarmaAPI.Domain\LactafarmaAPI.Domain.csproj" />
     <ProjectReference Include="..\LactafarmaAPI.Services\LactafarmaAPI.Services.csproj" />
     <ProjectReference Include="..\LactafarmaAPI.Data\LactafarmaAPI.Data.csproj" />
   </ItemGroup>

@@ -9,6 +9,6 @@ namespace LactafarmaAPI.Data.Interfaces
     public interface IUserRepository : IDataGuidRepository<User>
     {
         IEnumerable<User> GetAllUsers();
-
+        User GetUser(Guid userId);
     }
 }

@@ -22,6 +22,13 @@ namespace LactafarmaAPI.Data.Repositories
              .AsEnumerable();
         }
 
+        public Group GetGroup(int groupId)
+        {
+            return EntityContext.Groups.Where(x => x.Id == groupId)
+                .Include(e => e.GroupsMultilingual.Where(l => l.LanguageId == User.LanguageId)).Include(x => x.Drugs)
+                .FirstOrDefault();
+        }
+
         protected override Expression<Func<Group, bool>> IdentifierPredicate(int id)
         {
             return (e => e.Id == id);

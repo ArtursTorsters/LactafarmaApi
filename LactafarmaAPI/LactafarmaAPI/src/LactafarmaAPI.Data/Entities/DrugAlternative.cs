@@ -12,5 +12,6 @@ namespace LactafarmaAPI.Data.Entities
 
         //Navigation Properties
         public Drug Drug { get; set; }
+        public Drug DrugOption { get; set; }
     }
 }

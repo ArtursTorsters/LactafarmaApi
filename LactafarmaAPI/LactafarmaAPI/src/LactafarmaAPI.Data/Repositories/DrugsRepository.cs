@@ -33,6 +33,12 @@ namespace LactafarmaAPI.Data.Repositories
              .AsEnumerable();
         }
 
+        public Drug GetDrug(int drugId)
+        {
+            return EntityContext.Drugs.Where(e => e.Id == drugId)
+                .Include(e => e.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId)).FirstOrDefault();
+        }
+
         protected override Expression<Func<Drug, bool>> IdentifierPredicate(int id)
         {
             return (e => e.Id == id);

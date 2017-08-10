@@ -22,6 +22,14 @@ namespace LactafarmaAPI.Data.Repositories
              .AsEnumerable();
         }
 
+        public User GetUser(Guid userId)
+        {
+            return EntityContext.Users
+                .Where(x => x.Id == userId).Include(e => e.Language)
+                .FirstOrDefault(l => l.LanguageId == User.LanguageId);
+
+        }
+
         protected override Expression<Func<User, bool>> IdentifierPredicate(Guid id)
         {
             return (e => e.Id == id);

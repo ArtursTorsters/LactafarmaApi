@@ -28,7 +28,6 @@ namespace LactafarmaAPI.Data.Repositories
         {
             return EntityContext.Alerts.Where(e => e.DrugId == drugId)                
                 .Include(e => e.AlertsMultilingual.Where(l => l.LanguageId == User.LanguageId))
-                .Include(e => e.Drug)
                 .AsEnumerable();
         }
 

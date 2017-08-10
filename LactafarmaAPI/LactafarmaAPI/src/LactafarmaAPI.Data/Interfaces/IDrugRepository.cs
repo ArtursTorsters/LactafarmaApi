@@ -11,5 +11,7 @@ namespace LactafarmaAPI.Data.Interfaces
         IEnumerable<Drug> GetDrugsByGroup(int groupId);
         IEnumerable<Drug> GetDrugsByBrand(int brandId);
 
+        Drug GetDrug(int drugId);
+
     }
 }

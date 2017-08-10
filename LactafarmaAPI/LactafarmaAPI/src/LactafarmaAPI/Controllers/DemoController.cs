@@ -29,13 +29,22 @@ namespace LactafarmaAPI.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
+
+
+            TestCalls();
+
+            return View();
+        }
+
+        private void TestCalls()
+        {
             var drugAlternativesCount = _context.DrugAlternatives.Count();
             var drugAlternatives = _context.DrugAlternatives.Take(10);
 
             var drugAlternatives2 = _context.DrugAlternatives.Include(e => e.Drug).Include(e => e.Drug.DrugsMultilingual).Where(e => e.DrugId == 320);
 
             var brandsCount = _context.Brands.Count();
-            var brands= _context.Brands.Take(10);
+            var brands = _context.Brands.Take(10);
 
             var brandsMultilingualCount = _context.BrandsMultilingual.Count();
             var brandsMultilingual = _context.BrandsMultilingual.Include(e => e.Brand).Include(e => e.Language);
@@ -77,16 +86,6 @@ namespace LactafarmaAPI.Controllers
 
             var aliasesMultilingualCount = _context.AliasMultilingual.Count();
             var aliasesMultilingual = _context.AliasMultilingual.Take(10);
-
-
-
-
-
-
-
-
-
-            return View();
         }
 
         public IActionResult Demo()
