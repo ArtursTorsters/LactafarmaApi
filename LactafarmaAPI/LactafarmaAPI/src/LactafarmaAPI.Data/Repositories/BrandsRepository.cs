@@ -11,22 +11,25 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class BrandsRepository : DataRepositoryBase<Brand, LactafarmaContext, User>, IBrandRepository
     {
-        public BrandsRepository(LactafarmaContext context, User user) : base(context, user)
+        public BrandsRepository(LactafarmaContext context) : base(context)
         {
+            User = new User()
+            {
+                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
+            };
         }
 
         public IEnumerable<Brand> GetAllBrands()
         {
-            return EntityContext.Brands                
+            return EntityContext.Brands
                 .Include(e => e.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId))
                 .AsEnumerable();
         }
 
-        public IEnumerable<Brand> GetBrandsByDrug(int drugId)
+        public IEnumerable<BrandMultilingual> GetBrandsByDrug(int drugId)
         {
-            return EntityContext.Brands.Include(e => e.DrugBrands.Where(x => x.DrugId == drugId))
-                .Include(e => e.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId))
-                .AsEnumerable();
+            return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(a => a.Brand).ThenInclude(d => d.DrugBrands)
+                .Where(a => a.Brand.DrugBrands.FirstOrDefault().DrugId == drugId).AsEnumerable();
         }
 
         public Brand GetBrand(int brandId)

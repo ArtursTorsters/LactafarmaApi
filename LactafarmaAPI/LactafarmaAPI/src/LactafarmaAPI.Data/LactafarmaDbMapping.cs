@@ -34,7 +34,7 @@ namespace LactafarmaAPI.Data
         static void MapBrand(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Brand>().ToTable("Brands");
-            modelBuilder.Entity<Brand>().HasKey(e => e.Id);
+            modelBuilder.Entity<Brand>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<Brand>().HasMany(d => d.BrandsMultilingual);
         }
 
@@ -55,7 +55,7 @@ namespace LactafarmaAPI.Data
         static void MapGroup(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Group>().ToTable("Groups");
-            modelBuilder.Entity<Group>().HasKey(e => e.Id);
+            modelBuilder.Entity<Group>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<Group>().HasMany(d => d.GroupsMultilingual);
         }
 
@@ -76,20 +76,20 @@ namespace LactafarmaAPI.Data
         static void MapLanguage(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Language>().ToTable("Languages");
-            modelBuilder.Entity<Language>().HasKey(e => e.Id);            
+            modelBuilder.Entity<Language>().Ignore(e => e.EntityId).HasKey(e => e.Id);            
         }
 
         static void MapToken(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Token>().ToTable("Tokens");
-            modelBuilder.Entity<Token>().HasKey(e => e.Id);
+            modelBuilder.Entity<Token>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<Token>().HasOne(d => d.User);
         }
 
         static void MapUser(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<User>().HasKey(e => e.Id);
+            modelBuilder.Entity<User>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<User>().HasMany(d => d.Favorites);
             //modelBuilder.Entity<User>().HasMany(d => d.Tokens);
             //modelBuilder.Entity<User>().HasOne(d => d.Language);
@@ -98,7 +98,7 @@ namespace LactafarmaAPI.Data
         static void MapFavorite(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Favorite>().ToTable("Favorites");
-            modelBuilder.Entity<Favorite>().HasKey(e => e.Id);
+            modelBuilder.Entity<Favorite>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<Favorite>().HasOne(d => d.Drug);
             //modelBuilder.Entity<Favorite>().HasOne(d => d.User);
         }
@@ -106,7 +106,7 @@ namespace LactafarmaAPI.Data
         static void MapDrug(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Drug>().ToTable("Drugs");
-            modelBuilder.Entity<Drug>().HasKey(e => e.Id);
+            modelBuilder.Entity<Drug>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<Drug>().HasOne(d => d.Group);
             //modelBuilder.Entity<Drug>().HasMany(d => d.DrugBrands);
 
@@ -152,7 +152,7 @@ namespace LactafarmaAPI.Data
         static void MapAlert(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Alert>().ToTable("Alerts");
-            modelBuilder.Entity<Alert>().HasKey(e => e.Id);
+            modelBuilder.Entity<Alert>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<Alert>().HasOne(d => d.Drug).WithMany(d => d.Alerts);
         }
 
@@ -175,9 +175,9 @@ namespace LactafarmaAPI.Data
         static void MapAlias(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Alias>().ToTable("Aliases");
-            modelBuilder.Entity<Alias>().HasKey(e => e.Id);
-            //modelBuilder.Entity<Alias>().HasOne(d => d.Drug);
-            //modelBuilder.Entity<Alias>().HasMany(d => d.AliasMultilingual);
+            modelBuilder.Entity<Alias>().Ignore(e => e.EntityId).HasKey(e => e.Id);
+            modelBuilder.Entity<Alias>().HasOne(d => d.Drug);
+            modelBuilder.Entity<Alias>().HasMany(d => d.AliasMultilingual);
         }
 
         static void MapAliasMultilingual(ModelBuilder modelBuilder)

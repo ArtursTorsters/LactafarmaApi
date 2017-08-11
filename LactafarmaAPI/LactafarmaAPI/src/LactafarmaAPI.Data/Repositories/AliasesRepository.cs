@@ -12,16 +12,18 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class AliasesRepository : DataRepositoryBase<Alias, LactafarmaContext, User>, IAliasRepository
     {
-        public AliasesRepository(LactafarmaContext context, User user) : base(context, user)
+        public AliasesRepository(LactafarmaContext context) : base(context)
         {
+            User = new User()
+            {
+                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
+            };
         }
 
-        public IEnumerable<Alias> GetAliasesByDrug(int drugId)
+        public IEnumerable<AliasMultilingual> GetAliasesByDrug(int drugId)
         {
-            return EntityContext.Aliases
-                .Where(e => e.DrugId == drugId)
-                .Include(e => e.AliasMultilingual.Where(l => l.LanguageId == User.LanguageId))
-                .AsEnumerable();
+            return EntityContext.AliasMultilingual.Where(e => e.LanguageId == User.LanguageId).Include(a => a.Alias).ThenInclude(d => d.Drug)
+                .Where(a => a.Alias.DrugId == drugId).AsEnumerable();
         }
 
         public Drug GetDrugByAlias(int aliasId)

@@ -18,11 +18,10 @@ namespace LactafarmaAPI.Core
         public V User;
         private readonly DbSet<T> _dbSet;
 
-        protected DataRepositoryBase(U entityContext, V user)
+        protected DataRepositoryBase(U entityContext)
         {
             EntityContext = entityContext;
             _dbSet = EntityContext.Set<T>();
-            User = user;
         }
 
         protected abstract Expression<Func<T, bool>> IdentifierPredicate(int id);
@@ -121,11 +120,10 @@ namespace LactafarmaAPI.Core
         public V User;
         private readonly DbSet<T> _dbSet;
 
-        protected DataGuidRepositoryBase(U entityContext, V user)
+        protected DataGuidRepositoryBase(U entityContext)
         {
             EntityContext = entityContext;
             _dbSet = EntityContext.Set<T>();
-            User = user;
         }
 
         protected abstract Expression<Func<T, bool>> IdentifierPredicate(Guid id);

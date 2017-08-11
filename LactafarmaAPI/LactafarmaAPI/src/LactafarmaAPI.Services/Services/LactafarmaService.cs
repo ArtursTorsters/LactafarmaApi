@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using AutoMapper;
+using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
-using LactafarmaAPI.Domain.Models;
+using LactafarmaAPI.Services.Interfaces;
+using Alert = LactafarmaAPI.Domain.Models.Alert;
+using Alias = LactafarmaAPI.Domain.Models.Alias;
+using Brand = LactafarmaAPI.Domain.Models.Brand;
+using Drug = LactafarmaAPI.Domain.Models.Drug;
+using Group = LactafarmaAPI.Domain.Models.Group;
+using User = LactafarmaAPI.Domain.Models.User;
 
-namespace LactafarmaAPI.Services
+namespace LactafarmaAPI.Services.Services
 {
     public class LactafarmaService : ILactafarmaService
     {
-        IAlertRepository _alertRepository;
-        IAliasRepository _aliasRepository;
-        IDrugRepository _drugRepository;
-        IBrandRepository _brandRepository;
-        IGroupRepository _groupRepository;
-        IUserRepository _userRepository;
+        #region Private Properties
+
+        private readonly IAliasRepository _aliasRepository;
+        private readonly IBrandRepository _brandRepository;
+        private readonly IDrugRepository _drugRepository;
+        private readonly IGroupRepository _groupRepository;
+        private readonly IUserRepository _userRepository;
+
+        private IAlertRepository _alertRepository;
+
+        #endregion
+
+        #region Constructors
 
         public LactafarmaService(IAlertRepository alertRepository,
             IAliasRepository aliasRepository, IDrugRepository drugRepository, IBrandRepository brandRepository,
@@ -29,56 +41,35 @@ namespace LactafarmaAPI.Services
             _userRepository = userRepository;
         }
 
+        #endregion
+
+        #region Public Methods
+
         public IEnumerable<Alert> GetAlertsByDrug(int drugId)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        ///     Get aliases by drugId
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
         public IEnumerable<Alias> GetAliasesByDrug(int drugId)
         {
             var aliases = _aliasRepository.GetAliasesByDrug(drugId);
             return MapAliases(aliases);
         }
 
-        private static List<Alias> MapAliases(IEnumerable<Data.Entities.Alias> aliases)
-        {
-            var collection = new List<Alias>();
-
-            foreach (var alias in aliases)
-            {
-                Alias result = new Alias
-                {
-                    Id = alias.Id,
-                    Name = alias.AliasMultilingual.FirstOrDefault().Name
-                };
-                collection.Add(result);
-            }
-
-            return collection;
-        }
-
+        /// <summary>
+        ///     Get Brands by drugId
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
         public IEnumerable<Brand> GetBrandsByDrug(int drugId)
         {
             var brands = _brandRepository.GetBrandsByDrug(drugId);
             return MapBrands(brands);
-        }
-
-        private static List<Brand> MapBrands(IEnumerable<Data.Entities.Brand> brands)
-        {
-            var collection = new List<Brand>();
-
-            foreach (var brand in brands)
-            {
-                Brand result = new Brand
-                {
-                    Id = brand.Id,
-                    Name = brand.BrandsMultilingual.FirstOrDefault().Name
-                };
-
-                collection.Add(result);
-            }
-
-            return collection;
         }
 
         public IEnumerable<Drug> GetDrugsByGroup(int groupId)
@@ -87,46 +78,10 @@ namespace LactafarmaAPI.Services
             return MapDrugsForGroup(drugs);
         }
 
-        private IEnumerable<Drug> MapDrugsForGroup(IEnumerable<Data.Entities.Drug> drugs)
-        {
-            var collection = new List<Drug>();
-
-            foreach (var drug in drugs)
-            {
-                Drug result = new Drug
-                {
-                    Id = drug.Id,
-                    Name = drug.DrugsMultilingual.FirstOrDefault().Name
-                };
-                
-                collection.Add(result);
-            }
-
-            return collection;
-        }
-
         public IEnumerable<Drug> GetDrugsByBrand(int brandId)
         {
             var drugs = _drugRepository.GetDrugsByBrand(brandId);
             return MapDrugsForBrand(drugs);
-        }
-
-        private IEnumerable<Drug> MapDrugsForBrand(IEnumerable<Data.Entities.Drug> drugs)
-        {
-            var collection = new List<Drug>();
-
-            foreach (var drug in drugs)
-            {
-                Drug result = new Drug
-                {
-                    Id = drug.Id,
-                    Name = drug.DrugsMultilingual.FirstOrDefault().Name
-                };
-
-                collection.Add(result);
-            }
-
-            return collection;
         }
 
         public Group GetGroup(int groupId)
@@ -135,9 +90,9 @@ namespace LactafarmaAPI.Services
 
             var result = new Group
             {
-                Id = @group.Id,
-                Modified = @group.Modified,
-                Name = @group.GroupsMultilingual.FirstOrDefault().Name
+                Id = group.Id,
+                Modified = group.Modified,
+                Name = group.GroupsMultilingual.FirstOrDefault().Name
             };
 
             return result;
@@ -224,7 +179,82 @@ namespace LactafarmaAPI.Services
             };
 
             return result;
-
         }
+
+        #endregion
+
+        #region Private Methods
+
+        private static List<Alias> MapAliases(IEnumerable<AliasMultilingual> aliases)
+        {
+            var collection = new List<Alias>();
+            foreach (var alias in aliases.ToList())
+            {
+                var result = new Alias
+                {
+                    Id = alias.AliasId,
+                    Name = alias.Name
+                };
+                collection.Add(result);
+            }
+
+            return collection;
+        }
+
+        private static List<Brand> MapBrands(IEnumerable<BrandMultilingual> brands)
+        {
+            var collection = new List<Brand>();
+
+            foreach (var brand in brands)
+            {
+                var result = new Brand
+                {
+                    Id = brand.BrandId,
+                    Name = brand.Name
+                };
+
+                collection.Add(result);
+            }
+
+            return collection;
+        }
+
+        private IEnumerable<Drug> MapDrugsForGroup(IEnumerable<Data.Entities.Drug> drugs)
+        {
+            var collection = new List<Drug>();
+
+            foreach (var drug in drugs)
+            {
+                var result = new Drug
+                {
+                    Id = drug.Id,
+                    Name = drug.DrugsMultilingual.FirstOrDefault().Name
+                };
+
+                collection.Add(result);
+            }
+
+            return collection;
+        }
+
+        private IEnumerable<Drug> MapDrugsForBrand(IEnumerable<Data.Entities.Drug> drugs)
+        {
+            var collection = new List<Drug>();
+
+            foreach (var drug in drugs)
+            {
+                var result = new Drug
+                {
+                    Id = drug.Id,
+                    Name = drug.DrugsMultilingual.FirstOrDefault().Name
+                };
+
+                collection.Add(result);
+            }
+
+            return collection;
+        }
+
+        #endregion
     }
 }

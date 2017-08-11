@@ -8,7 +8,7 @@ namespace LactafarmaAPI.Data.Interfaces
 {
     public interface IAliasRepository : IDataRepository<Alias>
     {
-        IEnumerable<Alias> GetAliasesByDrug(int drugId);
+        IEnumerable<AliasMultilingual> GetAliasesByDrug(int drugId);
 
         Drug GetDrugByAlias(int aliasId);
 

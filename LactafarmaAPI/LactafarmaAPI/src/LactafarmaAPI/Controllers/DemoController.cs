@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LactafarmaAPI.Data;
 using LactafarmaAPI.Services;
+using LactafarmaAPI.Services.Interfaces;
 using LactafarmaAPI.ViewModels.Demo;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,11 +17,13 @@ namespace LactafarmaAPI.Controllers
     public class DemoController : Controller
     {
         private IMailService _mailService;
+        private ILactafarmaService _lactafarmaService;
         private IConfigurationRoot _config;
         private LactafarmaContext _context;
 
-        public DemoController(IMailService mailService, IConfigurationRoot config, LactafarmaContext context)
+        public DemoController(ILactafarmaService lactafarmaService, IMailService mailService, IConfigurationRoot config, LactafarmaContext context)
         {
+            _lactafarmaService = lactafarmaService;
             _mailService = mailService;
             _config = config;
             _context = context;
@@ -29,7 +32,8 @@ namespace LactafarmaAPI.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-
+            var aliases = _lactafarmaService.GetAliasesByDrug(28);
+            var brands = _lactafarmaService.GetBrandsByDrug(1);
 
             TestCalls();
 
@@ -91,8 +95,6 @@ namespace LactafarmaAPI.Controllers
         public IActionResult Demo()
         {
             throw new InvalidOperationException("Invalid operation happens because your are working right now...");
-
-            return View();
         }
 
         public IActionResult Contact()

@@ -12,9 +12,13 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class DrugsRepository : DataRepositoryBase<Drug, LactafarmaContext, User>, IDrugRepository
     {
-        public DrugsRepository(LactafarmaContext context, User user): base(context, user)
-        {           
-        }        
+        public DrugsRepository(LactafarmaContext context): base(context)
+        {
+            User = new User()
+            {
+                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
+            };
+        }
 
         public IEnumerable<Drug> GetDrugsByGroup(int groupId)
         {

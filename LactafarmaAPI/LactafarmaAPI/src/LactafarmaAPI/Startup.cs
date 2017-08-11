@@ -1,22 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LactafarmaAPI.Data;
+﻿using LactafarmaAPI.Data;
+using LactafarmaAPI.Data.Entities;
+using LactafarmaAPI.Data.Interfaces;
+using LactafarmaAPI.Data.Repositories;
 using LactafarmaAPI.Services;
+using LactafarmaAPI.Services.Interfaces;
+using LactafarmaAPI.Services.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace LactafarmaAPI
 {
     public class Startup
     {
-        private IHostingEnvironment _env;
+        #region Private Properties
+
+        private readonly IHostingEnvironment _env;
+
+        #endregion
+
+        #region Public Properties
+
+        public IConfigurationRoot Configuration { get; }
+
+        #endregion
+
+        #region Constructors
 
         public Startup(IHostingEnvironment env)
         {
@@ -24,20 +36,19 @@ namespace LactafarmaAPI
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
 
             if (env.IsEnvironment("Development"))
-            {
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-                builder.AddApplicationInsightsSettings(developerMode: true);
-            }
+                builder.AddApplicationInsightsSettings(true);
 
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
+        #endregion
+
+        #region Public Methods
 
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
@@ -48,20 +59,21 @@ namespace LactafarmaAPI
             services.AddSingleton(Configuration);
 
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
-            {
-                //Add Dependency Injection for our magic MailService test
                 services.AddScoped<IMailService, DebugMailService>();
-            }
-            else
-            {
-                //Implement a real MailService
-            }
 
             services.AddEntityFrameworkSqlServer().AddDbContext<LactafarmaContext>(config =>
             {
                 config.UseSqlServer(Configuration["ConnectionStrings:LactafarmaContextConnection"]);
             });
 
+            services.AddScoped<IAliasRepository, AliasesRepository>();
+            services.AddScoped<IAlertRepository, AlertsRepository>();
+            services.AddScoped<IBrandRepository, BrandsRepository>();
+            services.AddScoped<IDrugRepository, DrugsRepository>();
+            services.AddScoped<IGroupRepository, GroupsRepository>();
+            services.AddScoped<IUserRepository, UsersRepository>();
+
+            services.AddScoped<ILactafarmaService, LactafarmaService>();
 
             services.AddMvc();
         }
@@ -70,9 +82,7 @@ namespace LactafarmaAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsEnvironment("Development"))
-            {
                 app.UseDeveloperExceptionPage();
-            }
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -86,10 +96,12 @@ namespace LactafarmaAPI
             app.UseMvc(config =>
             {
                 config.MapRoute(
-                    name: "Default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Demo", action = "Index" });
+                    "Default",
+                    "{controller}/{action}/{id?}",
+                    new {controller = "Demo", action = "Index"});
             });
         }
+
+        #endregion
     }
 }

@@ -11,8 +11,12 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class UsersRepository : DataGuidRepositoryBase<User, LactafarmaContext, User>, IUserRepository
     {
-        public UsersRepository(LactafarmaContext context, User user) : base(context, user)
+        public UsersRepository(LactafarmaContext context) : base(context)
         {
+            User = new User()
+            {
+                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
+            };
         }
 
         public IEnumerable<User> GetAllUsers()
