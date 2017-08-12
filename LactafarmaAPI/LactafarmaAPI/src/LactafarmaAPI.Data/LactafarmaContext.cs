@@ -1,19 +1,11 @@
 ﻿using LactafarmaAPI.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace LactafarmaAPI.Data
 {
-    public class LactafarmaContext: DbContext
+    public class LactafarmaContext : DbContext
     {
-        public LactafarmaContext(DbContextOptions<LactafarmaContext> options) : base(options)
-        {
-        }
+        #region Public Properties
 
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<AlertMultilingual> AlertsMultilingual { get; set; }
@@ -21,6 +13,8 @@ namespace LactafarmaAPI.Data
         public DbSet<AliasMultilingual> AliasMultilingual { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<BrandMultilingual> BrandsMultilingual { get; set; }
+        public DbSet<DrugAlternative> DrugAlternatives { get; set; }
+        public DbSet<DrugBrand> DrugBrands { get; set; }
         public DbSet<Drug> Drugs { get; set; }
         public DbSet<DrugMultilingual> DrugsMultilingual { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
@@ -29,8 +23,18 @@ namespace LactafarmaAPI.Data
         public DbSet<Language> Languages { get; set; }
         public DbSet<Token> Tokens { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<DrugBrand> DrugBrands { get; set; }
-        public DbSet<DrugAlternative> DrugAlternatives { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        public LactafarmaContext(DbContextOptions<LactafarmaContext> options) : base(options)
+        {
+        }
+
+        #endregion
+
+        #region Overridden Members
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,8 +42,7 @@ namespace LactafarmaAPI.Data
 
             LactafarmaDbMapping.Configure(modelBuilder);
         }
+
+        #endregion
     }
-
-    
-
 }

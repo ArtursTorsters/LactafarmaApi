@@ -10,7 +10,7 @@ namespace LactafarmaAPI.Data.Interfaces
     {
         IEnumerable<Brand> GetAllBrands();
         IEnumerable<BrandMultilingual> GetBrandsByDrug(int drugId);
-        Brand GetBrand(int brandId);
+        BrandMultilingual GetBrand(int brandId);
 
     }
 }

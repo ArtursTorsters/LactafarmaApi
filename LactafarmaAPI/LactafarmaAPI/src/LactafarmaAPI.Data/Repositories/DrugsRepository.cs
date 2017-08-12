@@ -1,51 +1,58 @@
-﻿using LactafarmaAPI.Core;
-using LactafarmaAPI.Data.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq.Expressions;
-using LactafarmaAPI.Data.Interfaces;
 using System.Linq;
+using System.Linq.Expressions;
+using LactafarmaAPI.Core;
+using LactafarmaAPI.Data.Entities;
+using LactafarmaAPI.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace LactafarmaAPI.Data.Repositories
 {
     public class DrugsRepository : DataRepositoryBase<Drug, LactafarmaContext, User>, IDrugRepository
     {
-        public DrugsRepository(LactafarmaContext context): base(context)
+        #region Constructors
+
+        public DrugsRepository(LactafarmaContext context) : base(context)
         {
-            User = new User()
+            User = new User
             {
                 LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
             };
         }
 
-        public IEnumerable<Drug> GetDrugsByGroup(int groupId)
+        #endregion
+
+        #region Public Methods
+
+        public IEnumerable<DrugMultilingual> GetDrugsByGroup(int groupId)
         {
-            return EntityContext.Drugs
-             .Where(e => e.GroupId == groupId)
-             .Include(e => e.Group)
-             .Include(e => e.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId))
-             .AsEnumerable();
+            return EntityContext.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(d => d.Drug)
+                .ThenInclude(g => g.Group).Where(gm => gm.Drug.GroupId == groupId).AsEnumerable();
         }
 
-        public IEnumerable<Drug> GetDrugsByBrand(int brandId)
+        public IEnumerable<DrugBrand> GetDrugsByBrand(int brandId)
         {
-            return EntityContext.Drugs
-             .Include(e => e.DrugBrands.Where(b => b.BrandId == brandId))                  
-             .Include(e => e.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId))
-             .AsEnumerable();
+            return EntityContext.DrugBrands.Where(db => db.BrandId == brandId).Include(d => d.Drug)
+                .ThenInclude(dm => dm.DrugsMultilingual)
+                .Where(dm => dm.Drug.DrugsMultilingual.FirstOrDefault().LanguageId == User.LanguageId).AsEnumerable();
         }
 
-        public Drug GetDrug(int drugId)
+        public DrugMultilingual GetDrug(int drugId)
         {
-            return EntityContext.Drugs.Where(e => e.Id == drugId)
-                .Include(e => e.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId)).FirstOrDefault();
+            return EntityContext.DrugsMultilingual.Where(e => e.DrugId == drugId && e.LanguageId == User.LanguageId)
+                .Include(e => e.Drug).FirstOrDefault();
         }
+
+        #endregion
+
+        #region Overridden Members
 
         protected override Expression<Func<Drug, bool>> IdentifierPredicate(int id)
         {
-            return (e => e.Id == id);
+            return e => e.Id == id;
         }
+
+        #endregion
     }
 }

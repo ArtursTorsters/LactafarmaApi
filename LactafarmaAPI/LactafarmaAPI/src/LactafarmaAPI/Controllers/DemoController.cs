@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using LactafarmaAPI.Data;
-using LactafarmaAPI.Services;
 using LactafarmaAPI.Services.Interfaces;
 using LactafarmaAPI.ViewModels.Demo;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,12 +13,19 @@ namespace LactafarmaAPI.Controllers
 {
     public class DemoController : Controller
     {
-        private IMailService _mailService;
-        private ILactafarmaService _lactafarmaService;
-        private IConfigurationRoot _config;
-        private LactafarmaContext _context;
+        #region Private Properties
 
-        public DemoController(ILactafarmaService lactafarmaService, IMailService mailService, IConfigurationRoot config, LactafarmaContext context)
+        private readonly IConfigurationRoot _config;
+        private readonly LactafarmaContext _context;
+        private readonly ILactafarmaService _lactafarmaService;
+        private readonly IMailService _mailService;
+
+        #endregion
+
+        #region Constructors
+
+        public DemoController(ILactafarmaService lactafarmaService, IMailService mailService, IConfigurationRoot config,
+            LactafarmaContext context)
         {
             _lactafarmaService = lactafarmaService;
             _mailService = mailService;
@@ -29,30 +33,68 @@ namespace LactafarmaAPI.Controllers
             _context = context;
         }
 
+        #endregion
+
+        #region Public Methods
+
         // GET: /<controller>/
         public IActionResult Index()
         {
             var aliases = _lactafarmaService.GetAliasesByDrug(28);
             var brands = _lactafarmaService.GetBrandsByDrug(1);
+            var drugs = _lactafarmaService.GetDrugsByGroup(5);
+            var drugBrands = _lactafarmaService.GetDrugsByBrand(2);
+            var group = _lactafarmaService.GetGroup(105);
+            var user = _lactafarmaService.GetUser(new Guid("C9B2B0B0-9A73-4671-8BA7-0DBE5F68D936"));
+            var alias = _lactafarmaService.GetAlias(12);
+            var drugAlias = _lactafarmaService.GetDrugByAlias(12);
+            var brand = _lactafarmaService.GetBrand(8);
+            var drug = _lactafarmaService.GetDrug(428);
 
             TestCalls();
 
             return View();
         }
 
+        public IActionResult Demo()
+        {
+            throw new InvalidOperationException("Invalid operation happens because your are working right now...");
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Contact(ContactViewModel model)
+        {
+            if (model.Email.Contains("ocu.org")) ModelState.AddModelError("Email", "We don't support OCU addresses");
+            if (ModelState.IsValid)
+                _mailService.SendMail(_config["MailSettings:ToAddress"], model.Email, "From Me", model.Message);
+
+            return View();
+        }
+
+        #endregion
+
+        #region Private Methods
+
         private void TestCalls()
         {
             var drugAlternativesCount = _context.DrugAlternatives.Count();
             var drugAlternatives = _context.DrugAlternatives.Take(10);
 
-            var drugAlternatives2 = _context.DrugAlternatives.Include(e => e.Drug).Include(e => e.Drug.DrugsMultilingual).Where(e => e.DrugId == 320);
+            var drugAlternatives2 = _context.DrugAlternatives.Include(e => e.Drug)
+                .Include(e => e.Drug.DrugsMultilingual).Where(e => e.DrugId == 320);
 
             var brandsCount = _context.Brands.Count();
             var brands = _context.Brands.Take(10);
 
             var brandsMultilingualCount = _context.BrandsMultilingual.Count();
             var brandsMultilingual = _context.BrandsMultilingual.Include(e => e.Brand).Include(e => e.Language);
-            var brandsMultilingual2 = _context.BrandsMultilingual.Include(e => e.Brand).Include(e => e.Language).Where(e => e.BrandId == 14);
+            var brandsMultilingual2 = _context.BrandsMultilingual.Include(e => e.Brand).Include(e => e.Language)
+                .Where(e => e.BrandId == 14);
 
             var groupsCount = _context.Groups.Count();
             var groups = _context.Groups.Take(10);
@@ -92,26 +134,6 @@ namespace LactafarmaAPI.Controllers
             var aliasesMultilingual = _context.AliasMultilingual.Take(10);
         }
 
-        public IActionResult Demo()
-        {
-            throw new InvalidOperationException("Invalid operation happens because your are working right now...");
-        }
-
-        public IActionResult Contact()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Contact(ContactViewModel model)
-        {
-            if (model.Email.Contains("ocu.org")) ModelState.AddModelError("Email", "We don't support OCU addresses");
-            if (ModelState.IsValid)
-            {
-                _mailService.SendMail(_config["MailSettings:ToAddress"], model.Email, "From Me", model.Message);
-            }
-
-            return View();
-        }
+        #endregion
     }
 }

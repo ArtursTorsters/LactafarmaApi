@@ -10,9 +10,9 @@ namespace LactafarmaAPI.Data.Interfaces
     {
         IEnumerable<AliasMultilingual> GetAliasesByDrug(int drugId);
 
-        Drug GetDrugByAlias(int aliasId);
+        DrugMultilingual GetDrugByAlias(int aliasId);
 
-        Alias GetAlias(int aliasId);
+        AliasMultilingual GetAlias(int aliasId);
 
     }
 }

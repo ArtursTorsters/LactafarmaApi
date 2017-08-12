@@ -72,32 +72,52 @@ namespace LactafarmaAPI.Services.Services
             return MapBrands(brands);
         }
 
+        /// <summary>
+        ///     Get Drugs by groupId
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
         public IEnumerable<Drug> GetDrugsByGroup(int groupId)
         {
             var drugs = _drugRepository.GetDrugsByGroup(groupId);
             return MapDrugsForGroup(drugs);
         }
 
+        /// <summary>
+        ///     Get Drugs by brandId
+        /// </summary>
+        /// <param name="brandId"></param>
+        /// <returns></returns>
         public IEnumerable<Drug> GetDrugsByBrand(int brandId)
         {
             var drugs = _drugRepository.GetDrugsByBrand(brandId);
             return MapDrugsForBrand(drugs);
         }
 
+        /// <summary>
+        ///     Get group by Id
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
         public Group GetGroup(int groupId)
         {
             var group = _groupRepository.GetGroup(groupId);
 
             var result = new Group
             {
-                Id = group.Id,
-                Modified = group.Modified,
-                Name = group.GroupsMultilingual.FirstOrDefault().Name
+                Id = group.GroupId,
+                Modified = group.Group.Modified,
+                Name = group.Name
             };
 
             return result;
         }
 
+        /// <summary>
+        ///     Get User by Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public User GetUser(Guid userId)
         {
             var user = _userRepository.GetUser(userId);
@@ -115,67 +135,81 @@ namespace LactafarmaAPI.Services.Services
             return result;
         }
 
+        /// <summary>
+        ///     Get Alias information by id (including associated Drug)
+        /// </summary>
+        /// <param name="aliasId"></param>
+        /// <returns></returns>
         public Alias GetAlias(int aliasId)
         {
             var alias = _aliasRepository.GetAlias(aliasId);
 
             var result = new Alias
             {
-                Id = alias.Id,
-                Name = alias.AliasMultilingual.FirstOrDefault().Name,
-                Drug = new Drug
-                {
-                    Comment = alias.Drug.DrugsMultilingual.FirstOrDefault().Comment,
-                    Description = alias.Drug.DrugsMultilingual.FirstOrDefault().Description,
-                    Modified = alias.Drug.Modified,
-                    Name = alias.Drug.DrugsMultilingual.FirstOrDefault().Name,
-                    Risk = alias.Drug.DrugsMultilingual.FirstOrDefault().Risk,
-                    Id = alias.Drug.DrugsMultilingual.FirstOrDefault().DrugId
-                }
-            };
-            return result;
-        }
-
-        public Brand GetBrand(int brandId)
-        {
-            var brand = _brandRepository.GetBrand(brandId);
-
-            var result = new Brand
-            {
-                Id = brand.Id,
-                Name = brand.BrandsMultilingual.FirstOrDefault().Name
-            };
-            return result;
-        }
-
-        public Drug GetDrug(int drugId)
-        {
-            var drug = _drugRepository.GetDrug(drugId);
-            var result = new Drug
-            {
-                Comment = drug.DrugsMultilingual.FirstOrDefault().Comment,
-                Description = drug.DrugsMultilingual.FirstOrDefault().Description,
-                Modified = drug.Modified,
-                Name = drug.DrugsMultilingual.FirstOrDefault().Name,
-                Risk = drug.DrugsMultilingual.FirstOrDefault().Risk,
-                Id = drug.DrugsMultilingual.FirstOrDefault().DrugId
+                Id = alias.AliasId,
+                Name = alias.Name,
+                Drug = GetDrugByAlias(aliasId)
             };
 
             return result;
         }
 
+        /// <summary>
+        ///     Get Drug information by AliasId
+        /// </summary>
+        /// <param name="aliasId"></param>
+        /// <returns></returns>
         public Drug GetDrugByAlias(int aliasId)
         {
             var drug = _aliasRepository.GetDrugByAlias(aliasId);
 
             var result = new Drug
             {
-                Comment = drug.DrugsMultilingual.FirstOrDefault().Comment,
-                Description = drug.DrugsMultilingual.FirstOrDefault().Description,
-                Modified = drug.Modified,
-                Name = drug.DrugsMultilingual.FirstOrDefault().Name,
-                Risk = drug.DrugsMultilingual.FirstOrDefault().Risk,
-                Id = drug.DrugsMultilingual.FirstOrDefault().DrugId
+                Id = drug.DrugId,
+                Name = drug.Name,
+                Comment = drug.Comment,
+                Description = drug.Description,
+                Risk = drug.Risk,
+                Modified = drug.Drug.Modified
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Get Brand information
+        /// </summary>
+        /// <param name="brandId"></param>
+        /// <returns></returns>
+        public Brand GetBrand(int brandId)
+        {
+            var brand = _brandRepository.GetBrand(brandId);
+
+            var result = new Brand
+            {
+                Id = brand.BrandId,
+                Name = brand.Name
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Get Drug information
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
+        public Drug GetDrug(int drugId)
+        {
+            var drug = _drugRepository.GetDrug(drugId);
+            var result = new Drug
+            {
+                Comment = drug.Comment,
+                Description = drug.Description,
+                Modified = drug.Drug.Modified,
+                Name = drug.Name,
+                Risk = drug.Risk,
+                Id = drug.DrugId
             };
 
             return result;
@@ -219,7 +253,7 @@ namespace LactafarmaAPI.Services.Services
             return collection;
         }
 
-        private IEnumerable<Drug> MapDrugsForGroup(IEnumerable<Data.Entities.Drug> drugs)
+        private IEnumerable<Drug> MapDrugsForGroup(IEnumerable<DrugMultilingual> drugs)
         {
             var collection = new List<Drug>();
 
@@ -227,8 +261,8 @@ namespace LactafarmaAPI.Services.Services
             {
                 var result = new Drug
                 {
-                    Id = drug.Id,
-                    Name = drug.DrugsMultilingual.FirstOrDefault().Name
+                    Id = drug.DrugId,
+                    Name = drug.Name
                 };
 
                 collection.Add(result);
@@ -237,7 +271,7 @@ namespace LactafarmaAPI.Services.Services
             return collection;
         }
 
-        private IEnumerable<Drug> MapDrugsForBrand(IEnumerable<Data.Entities.Drug> drugs)
+        private IEnumerable<Drug> MapDrugsForBrand(IEnumerable<DrugBrand> drugs)
         {
             var collection = new List<Drug>();
 
@@ -245,8 +279,9 @@ namespace LactafarmaAPI.Services.Services
             {
                 var result = new Drug
                 {
-                    Id = drug.Id,
-                    Name = drug.DrugsMultilingual.FirstOrDefault().Name
+                    Id = drug.DrugId,
+                    Name = drug.Drug.DrugsMultilingual.FirstOrDefault().Name,
+                    Modified = drug.Drug.Modified
                 };
 
                 collection.Add(result);
