@@ -6,19 +6,24 @@ using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
     public class GroupsRepository : DataRepositoryBase<Group, LactafarmaContext, User>, IGroupRepository
     {
+        private ILogger<GroupsRepository> _logger;
+
         #region Constructors
 
-        public GroupsRepository(LactafarmaContext context) : base(context)
+        public GroupsRepository(LactafarmaContext context, ILogger<GroupsRepository> logger) : base(context)
         {
             User = new User
             {
                 LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
             };
+
+            _logger = logger;
         }
 
         #endregion
@@ -27,15 +32,31 @@ namespace LactafarmaAPI.Data.Repositories
 
         public IEnumerable<Group> GetAllGroups()
         {
-            return EntityContext.Groups
-                .Include(e => e.GroupsMultilingual.Where(l => l.LanguageId == User.LanguageId))
-                .AsEnumerable();
+            try
+            {
+                return EntityContext.Groups
+                    .Include(e => e.GroupsMultilingual.Where(l => l.LanguageId == User.LanguageId))
+                    .AsEnumerable();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllGroups with message: {ex.Message}");
+                return null;
+            }
         }
 
         public GroupMultilingual GetGroup(int groupId)
         {
-            return EntityContext.GroupsMultilingual.Where(gm => gm.LanguageId == User.LanguageId).Include(g => g.Group)
-                .Single(g => g.GroupId == groupId);
+            try
+            {
+                return EntityContext.GroupsMultilingual.Where(gm => gm.LanguageId == User.LanguageId).Include(g => g.Group)
+                    .Single(g => g.GroupId == groupId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetGroup with message: {ex.Message}");
+                return null;
+            }
         }
 
         #endregion

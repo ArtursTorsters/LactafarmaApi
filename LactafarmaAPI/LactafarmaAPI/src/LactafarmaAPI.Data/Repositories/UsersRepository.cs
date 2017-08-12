@@ -6,19 +6,23 @@ using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
     public class UsersRepository : DataGuidRepositoryBase<User, LactafarmaContext, User>, IUserRepository
     {
+        private ILogger<UsersRepository> _logger;
+
         #region Constructors
 
-        public UsersRepository(LactafarmaContext context) : base(context)
+        public UsersRepository(LactafarmaContext context, ILogger<UsersRepository> logger) : base(context)
         {
             User = new User
             {
                 LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
             };
+            _logger = logger;
         }
 
         #endregion
@@ -27,16 +31,32 @@ namespace LactafarmaAPI.Data.Repositories
 
         public IEnumerable<User> GetAllUsers()
         {
-            return EntityContext.Users
-                .Include(e => e.Language).Where(l => l.LanguageId == User.LanguageId)
-                .AsEnumerable();
+            try
+            {
+                return EntityContext.Users
+                    .Include(e => e.Language).Where(l => l.LanguageId == User.LanguageId)
+                    .AsEnumerable();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllUsers with message: {ex.Message}");
+                return null;
+            }
         }
 
         public User GetUser(Guid userId)
         {
-            return EntityContext.Users
-                .Where(x => x.Id == userId).Include(e => e.Language)
-                .FirstOrDefault(l => l.LanguageId == User.LanguageId);
+            try
+            {
+                return EntityContext.Users
+                    .Where(x => x.Id == userId).Include(e => e.Language)
+                    .FirstOrDefault(l => l.LanguageId == User.LanguageId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetUser with message: {ex.Message}");
+                return null;
+            }
         }
 
         #endregion

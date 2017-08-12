@@ -4,6 +4,7 @@ using System.Linq;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using LactafarmaAPI.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using Alert = LactafarmaAPI.Domain.Models.Alert;
 using Alias = LactafarmaAPI.Domain.Models.Alias;
 using Brand = LactafarmaAPI.Domain.Models.Brand;
@@ -24,15 +25,17 @@ namespace LactafarmaAPI.Services.Services
         private readonly IUserRepository _userRepository;
 
         private IAlertRepository _alertRepository;
+        private readonly ILogger<LactafarmaService> _logger;
 
         #endregion
 
         #region Constructors
 
-        public LactafarmaService(IAlertRepository alertRepository,
+        public LactafarmaService(ILogger<LactafarmaService> logger, IAlertRepository alertRepository,
             IAliasRepository aliasRepository, IDrugRepository drugRepository, IBrandRepository brandRepository,
             IGroupRepository groupRepository, IUserRepository userRepository)
         {
+            _logger = logger;
             _alertRepository = alertRepository;
             _aliasRepository = aliasRepository;
             _drugRepository = drugRepository;
@@ -57,8 +60,16 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public IEnumerable<Alias> GetAliasesByDrug(int drugId)
         {
-            var aliases = _aliasRepository.GetAliasesByDrug(drugId);
-            return MapAliases(aliases);
+            _logger.LogInformation($"BEGIN GetAliasesByDrug");
+            try
+            {
+                return MapAliases(_aliasRepository.GetAliasesByDrug(drugId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAliasesByDrug with message: {ex.Message}");
+                return new List<Alias>();
+            }
         }
 
         /// <summary>
@@ -68,8 +79,16 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public IEnumerable<Brand> GetBrandsByDrug(int drugId)
         {
-            var brands = _brandRepository.GetBrandsByDrug(drugId);
-            return MapBrands(brands);
+            _logger.LogInformation($"BEGIN GetBrandsByDrug");
+            try
+            {
+                return MapBrands(_brandRepository.GetBrandsByDrug(drugId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetBrandsByDrug with message: {ex.Message}");
+                return new List<Brand>();
+            }
         }
 
         /// <summary>
@@ -79,8 +98,16 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public IEnumerable<Drug> GetDrugsByGroup(int groupId)
         {
-            var drugs = _drugRepository.GetDrugsByGroup(groupId);
-            return MapDrugsForGroup(drugs);
+            _logger.LogInformation($"BEGIN GetDrugsByGroup");
+            try
+            {
+                return MapDrugsForGroup(_drugRepository.GetDrugsByGroup(groupId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetDrugsByGroup with message: {ex.Message}");
+                return new List<Drug>();
+            }
         }
 
         /// <summary>
@@ -90,8 +117,16 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public IEnumerable<Drug> GetDrugsByBrand(int brandId)
         {
-            var drugs = _drugRepository.GetDrugsByBrand(brandId);
-            return MapDrugsForBrand(drugs);
+            _logger.LogInformation($"BEGIN GetDrugsByBrand");
+            try
+            {
+                return MapDrugsForBrand(_drugRepository.GetDrugsByBrand(brandId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetDrugsByBrand with message: {ex.Message}");
+                return new List<Drug>();
+            }
         }
 
         /// <summary>
@@ -101,16 +136,24 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public Group GetGroup(int groupId)
         {
-            var group = _groupRepository.GetGroup(groupId);
-
-            var result = new Group
+            _logger.LogInformation($"BEGIN GetGroup");
+            try
             {
-                Id = group.GroupId,
-                Modified = group.Group.Modified,
-                Name = group.Name
-            };
+                var group = _groupRepository.GetGroup(groupId);
 
-            return result;
+                var result = new Group
+                {
+                    Id = group.GroupId,
+                    Modified = group.Group.Modified,
+                    Name = group.Name
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetGroup with message: {ex.Message}");
+                return new Group();
+            }
         }
 
         /// <summary>
@@ -120,19 +163,27 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public User GetUser(Guid userId)
         {
-            var user = _userRepository.GetUser(userId);
-            var result = new User
+            _logger.LogInformation($"BEGIN GetUser");
+            try
             {
-                AppId = user.AppId,
-                Email = user.Email,
-                FacebookInfo = user.FacebookInfo,
-                GoogleInfo = user.GoogleInfo,
-                Id = user.Id,
-                Name = user.Name,
-                TwitterInfo = user.TwitterInfo
-            };
-
-            return result;
+                var user = _userRepository.GetUser(userId);
+                var result = new User
+                {
+                    AppId = user.AppId,
+                    Email = user.Email,
+                    FacebookInfo = user.FacebookInfo,
+                    GoogleInfo = user.GoogleInfo,
+                    Id = user.Id,
+                    Name = user.Name,
+                    TwitterInfo = user.TwitterInfo
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetUser with message: {ex.Message}");
+                return new User();
+            }
         }
 
         /// <summary>
@@ -142,16 +193,24 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public Alias GetAlias(int aliasId)
         {
-            var alias = _aliasRepository.GetAlias(aliasId);
-
-            var result = new Alias
+            _logger.LogInformation($"BEGIN GetAlias");
+            try
             {
-                Id = alias.AliasId,
-                Name = alias.Name,
-                Drug = GetDrugByAlias(aliasId)
-            };
+                var alias = _aliasRepository.GetAlias(aliasId);
 
-            return result;
+                var result = new Alias
+                {
+                    Id = alias.AliasId,
+                    Name = alias.Name,
+                    Drug = GetDrugByAlias(aliasId)
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAlias with message: {ex.Message}");
+                return new Alias();
+            }
         }
 
         /// <summary>
@@ -161,19 +220,27 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public Drug GetDrugByAlias(int aliasId)
         {
-            var drug = _aliasRepository.GetDrugByAlias(aliasId);
-
-            var result = new Drug
+            _logger.LogInformation($"BEGIN GetDrugByAlias");
+            try
             {
-                Id = drug.DrugId,
-                Name = drug.Name,
-                Comment = drug.Comment,
-                Description = drug.Description,
-                Risk = drug.Risk,
-                Modified = drug.Drug.Modified
-            };
+                var drug = _aliasRepository.GetDrugByAlias(aliasId);
 
-            return result;
+                var result = new Drug
+                {
+                    Id = drug.DrugId,
+                    Name = drug.Name,
+                    Comment = drug.Comment,
+                    Description = drug.Description,
+                    Risk = drug.Risk,
+                    Modified = drug.Drug.Modified
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetDrugByAlias with message: {ex.Message}");
+                return new Drug();
+            }
         }
 
         /// <summary>
@@ -183,15 +250,23 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public Brand GetBrand(int brandId)
         {
-            var brand = _brandRepository.GetBrand(brandId);
-
-            var result = new Brand
+            _logger.LogInformation($"BEGIN GetBrand");
+            try
             {
-                Id = brand.BrandId,
-                Name = brand.Name
-            };
+                var brand = _brandRepository.GetBrand(brandId);
 
-            return result;
+                var result = new Brand
+                {
+                    Id = brand.BrandId,
+                    Name = brand.Name
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetBrand with message: {ex.Message}");
+                return new Brand();
+            }
         }
 
         /// <summary>
@@ -201,18 +276,26 @@ namespace LactafarmaAPI.Services.Services
         /// <returns></returns>
         public Drug GetDrug(int drugId)
         {
-            var drug = _drugRepository.GetDrug(drugId);
-            var result = new Drug
+            _logger.LogInformation($"BEGIN GetDrug");
+            try
             {
-                Comment = drug.Comment,
-                Description = drug.Description,
-                Modified = drug.Drug.Modified,
-                Name = drug.Name,
-                Risk = drug.Risk,
-                Id = drug.DrugId
-            };
-
-            return result;
+                var drug = _drugRepository.GetDrug(drugId);
+                var result = new Drug
+                {
+                    Comment = drug.Comment,
+                    Description = drug.Description,
+                    Modified = drug.Drug.Modified,
+                    Name = drug.Name,
+                    Risk = drug.Risk,
+                    Id = drug.DrugId
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetDrug with message: {ex.Message}");
+                return new Drug();
+            }
         }
 
         #endregion

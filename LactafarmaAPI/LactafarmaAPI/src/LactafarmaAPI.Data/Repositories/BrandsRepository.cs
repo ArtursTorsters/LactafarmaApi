@@ -6,19 +6,24 @@ using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
     public class BrandsRepository : DataRepositoryBase<Brand, LactafarmaContext, User>, IBrandRepository
     {
+        private ILogger<BrandsRepository> _logger;
+
         #region Constructors
 
-        public BrandsRepository(LactafarmaContext context) : base(context)
+        public BrandsRepository(LactafarmaContext context, ILogger<BrandsRepository> logger) : base(context)
         {
             User = new User
             {
                 LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
             };
+
+            _logger = logger;
         }
 
         #endregion
@@ -27,22 +32,46 @@ namespace LactafarmaAPI.Data.Repositories
 
         public IEnumerable<Brand> GetAllBrands()
         {
-            return EntityContext.Brands
-                .Include(e => e.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId))
-                .AsEnumerable();
+            try
+            {
+                return EntityContext.Brands
+                    .Include(e => e.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId))
+                    .AsEnumerable();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllBrands with message: {ex.Message}");
+                return null;
+            }
         }
 
         public IEnumerable<BrandMultilingual> GetBrandsByDrug(int drugId)
         {
-            return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(a => a.Brand)
-                .ThenInclude(d => d.DrugBrands)
-                .Where(a => a.Brand.DrugBrands.FirstOrDefault().DrugId == drugId).AsEnumerable();
+            try
+            {
+                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(a => a.Brand)
+                    .ThenInclude(d => d.DrugBrands)
+                    .Where(a => a.Brand.DrugBrands.FirstOrDefault().DrugId == drugId).AsEnumerable();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetBrandsByDrug with message: {ex.Message}");
+                return null;
+            }
         }
 
         public BrandMultilingual GetBrand(int brandId)
         {
-            return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId && l.BrandId == brandId)
-                .Include(a => a.Brand).FirstOrDefault();
+            try
+            {
+                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId && l.BrandId == brandId)
+                    .Include(a => a.Brand).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetBrand with message: {ex.Message}");
+                return null;
+            }
         }
 
         #endregion

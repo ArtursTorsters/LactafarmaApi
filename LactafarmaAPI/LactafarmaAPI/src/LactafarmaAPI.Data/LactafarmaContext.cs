@@ -1,10 +1,12 @@
 ﻿using LactafarmaAPI.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data
 {
     public class LactafarmaContext : DbContext
     {
+        private ILogger<LactafarmaContext> _logger;
         #region Public Properties
 
         public DbSet<Alert> Alerts { get; set; }
@@ -28,8 +30,9 @@ namespace LactafarmaAPI.Data
 
         #region Constructors
 
-        public LactafarmaContext(DbContextOptions<LactafarmaContext> options) : base(options)
+        public LactafarmaContext(DbContextOptions<LactafarmaContext> options, ILogger<LactafarmaContext> logger) : base(options)
         {
+            _logger = logger;
         }
 
         #endregion
@@ -40,7 +43,7 @@ namespace LactafarmaAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            LactafarmaDbMapping.Configure(modelBuilder);
+            LactafarmaDbMapping.Configure(modelBuilder, _logger);
         }
 
         #endregion

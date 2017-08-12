@@ -75,6 +75,8 @@ namespace LactafarmaAPI
 
             services.AddScoped<ILactafarmaService, LactafarmaService>();
 
+            services.AddLogging();
+
             services.AddMvc();
         }
 
@@ -82,12 +84,17 @@ namespace LactafarmaAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsEnvironment("Development"))
+            {
                 app.UseDeveloperExceptionPage();
-
+                loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+                loggerFactory.AddDebug(LogLevel.Information);
+            }
+            else
+            {
+                loggerFactory.AddDebug(LogLevel.Error);
+            }
             //app.UseDefaultFiles();
             app.UseStaticFiles();
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             app.UseApplicationInsightsRequestTelemetry();
 
