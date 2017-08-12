@@ -40,9 +40,6 @@ namespace LactafarmaAPI
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
 
-            if (env.IsEnvironment("Development"))
-                builder.AddApplicationInsightsSettings(true);
-
             Configuration = builder.Build();
         }
 
@@ -54,8 +51,6 @@ namespace LactafarmaAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddApplicationInsightsTelemetry(Configuration);
-
             services.AddSingleton(Configuration);
 
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
@@ -86,7 +81,6 @@ namespace LactafarmaAPI
             if (env.IsEnvironment("Development"))
             {
                 app.UseDeveloperExceptionPage();
-                loggerFactory.AddConsole(Configuration.GetSection("Logging"));
                 loggerFactory.AddDebug(LogLevel.Information);
             }
             else
@@ -94,11 +88,7 @@ namespace LactafarmaAPI
                 loggerFactory.AddDebug(LogLevel.Error);
             }
             //app.UseDefaultFiles();
-            app.UseStaticFiles();
-
-            app.UseApplicationInsightsRequestTelemetry();
-
-            app.UseApplicationInsightsExceptionTelemetry();
+            app.UseStaticFiles();   
 
             app.UseMvc(config =>
             {

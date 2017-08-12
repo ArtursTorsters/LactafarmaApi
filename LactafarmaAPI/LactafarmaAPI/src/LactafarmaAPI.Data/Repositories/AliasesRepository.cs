@@ -12,7 +12,7 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class AliasesRepository : DataRepositoryBase<Alias, LactafarmaContext, User>, IAliasRepository
     {
-        private ILogger<AliasesRepository> _logger;
+        private readonly ILogger<AliasesRepository> _logger;
 
         #region Constructors
 
@@ -29,6 +29,20 @@ namespace LactafarmaAPI.Data.Repositories
         #endregion
 
         #region Public Methods
+
+        public IEnumerable<AliasMultilingual> GetAllAliases()
+        {
+            try
+            {
+                return EntityContext.AliasMultilingual.Where(e => e.LanguageId == User.LanguageId).Include(a => a.Alias)
+                    .AsEnumerable();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllAliases with message: {ex.Message}");
+                return null;
+            }
+        }
 
         public IEnumerable<AliasMultilingual> GetAliasesByDrug(int drugId)
         {

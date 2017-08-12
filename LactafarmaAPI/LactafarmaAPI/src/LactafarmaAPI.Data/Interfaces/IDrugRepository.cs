@@ -8,6 +8,7 @@ namespace LactafarmaAPI.Data.Interfaces
 {
     public interface IDrugRepository : IDataRepository<Drug>
     {
+        IEnumerable<DrugMultilingual> GetAllDrugs();
         IEnumerable<DrugMultilingual> GetDrugsByGroup(int groupId);
         IEnumerable<DrugBrand> GetDrugsByBrand(int brandId);
         DrugMultilingual GetDrug(int drugId);

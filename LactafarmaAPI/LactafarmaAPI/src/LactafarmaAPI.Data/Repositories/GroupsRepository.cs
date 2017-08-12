@@ -12,7 +12,7 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class GroupsRepository : DataRepositoryBase<Group, LactafarmaContext, User>, IGroupRepository
     {
-        private ILogger<GroupsRepository> _logger;
+        private readonly ILogger<GroupsRepository> _logger;
 
         #region Constructors
 
@@ -30,12 +30,12 @@ namespace LactafarmaAPI.Data.Repositories
 
         #region Public Methods
 
-        public IEnumerable<Group> GetAllGroups()
+        public IEnumerable<GroupMultilingual> GetAllGroups()
         {
             try
             {
-                return EntityContext.Groups
-                    .Include(e => e.GroupsMultilingual.Where(l => l.LanguageId == User.LanguageId))
+                return EntityContext.GroupsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                    .Include(g => g.Group)
                     .AsEnumerable();
             }
             catch (Exception ex)

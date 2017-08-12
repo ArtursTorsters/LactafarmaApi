@@ -12,7 +12,7 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class DrugsRepository : DataRepositoryBase<Drug, LactafarmaContext, User>, IDrugRepository
     {
-        private ILogger<DrugsRepository> _logger;
+        private readonly ILogger<DrugsRepository> _logger;
 
         #region Constructors
 
@@ -29,6 +29,20 @@ namespace LactafarmaAPI.Data.Repositories
         #endregion
 
         #region Public Methods
+
+        public IEnumerable<DrugMultilingual> GetAllDrugs()
+        {
+            try
+            {
+                return EntityContext.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(d => d.Drug)
+                    .AsEnumerable();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllDrugs with message: {ex.Message}");
+                return null;
+            }
+        }
 
         public IEnumerable<DrugMultilingual> GetDrugsByGroup(int groupId)
         {

@@ -12,7 +12,7 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class BrandsRepository : DataRepositoryBase<Brand, LactafarmaContext, User>, IBrandRepository
     {
-        private ILogger<BrandsRepository> _logger;
+        private readonly ILogger<BrandsRepository> _logger;
 
         #region Constructors
 
@@ -30,12 +30,12 @@ namespace LactafarmaAPI.Data.Repositories
 
         #region Public Methods
 
-        public IEnumerable<Brand> GetAllBrands()
+        public IEnumerable<BrandMultilingual> GetAllBrands()
         {
             try
             {
-                return EntityContext.Brands
-                    .Include(e => e.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId))
+                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                    .Include(b => b.Brand)
                     .AsEnumerable();
             }
             catch (Exception ex)

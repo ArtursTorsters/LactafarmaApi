@@ -12,6 +12,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LactafarmaAPI.Services", "src\LactafarmaAPI.Services\LactafarmaAPI.Services.csproj", "{685FCB24-FE36-4A28-A70C-FC55D526465F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6} = {CAB5304E-AB43-4613-B4B5-28F608ABF2B6}
+		{22CBB2BD-28E3-459E-B159-420B344EED5A} = {22CBB2BD-28E3-459E-B159-420B344EED5A}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LactafarmaAPI.Data", "src\LactafarmaAPI.Data\LactafarmaAPI.Data.csproj", "{22CBB2BD-28E3-459E-B159-420B344EED5A}"

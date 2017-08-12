@@ -8,8 +8,8 @@ namespace LactafarmaAPI.Data.Interfaces
 {
     public interface IAlertRepository : IDataRepository<Alert>
     {
-        IEnumerable<Alert> GetAllAlerts();
-        IEnumerable<Alert> GetAlertsByDrug(int drugId);
+        IEnumerable<AlertMultilingual> GetAllAlerts();
+        IEnumerable<AlertMultilingual> GetAlertsByDrug(int drugId);
 
     }
 }

@@ -12,7 +12,7 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class UsersRepository : DataGuidRepositoryBase<User, LactafarmaContext, User>, IUserRepository
     {
-        private ILogger<UsersRepository> _logger;
+        private readonly ILogger<UsersRepository> _logger;
 
         #region Constructors
 

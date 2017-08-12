@@ -13,7 +13,7 @@ namespace LactafarmaAPI.Data.Repositories
 {
     public class AlertsRepository : DataRepositoryBase<Alert, LactafarmaContext, User>, IAlertRepository
     {
-        private ILogger<AlertsRepository> _logger;
+        private readonly ILogger<AlertsRepository> _logger;
 
         public AlertsRepository(LactafarmaContext context, ILogger<AlertsRepository> logger): base(context)
         {
@@ -25,13 +25,13 @@ namespace LactafarmaAPI.Data.Repositories
             _logger = logger;
         }
 
-        public IEnumerable<Alert> GetAllAlerts()
+        public IEnumerable<AlertMultilingual> GetAllAlerts()
         {
             try
             {
-                return EntityContext.Alerts
-                    .Include(e => e.AlertsMultilingual.Where(l => l.LanguageId == User.LanguageId))
-                    .Include(e => e.Drug)
+                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                    .Include(e => e.Alert)
+                    .ThenInclude(e => e.Drug)
                     .AsEnumerable();
             }
             catch (Exception ex)
@@ -41,12 +41,12 @@ namespace LactafarmaAPI.Data.Repositories
             }
         }
 
-        public IEnumerable<Alert> GetAlertsByDrug(int drugId)
+        public IEnumerable<AlertMultilingual> GetAlertsByDrug(int drugId)
         {
             try
             {
-                return EntityContext.Alerts.Where(e => e.DrugId == drugId)
-                    .Include(e => e.AlertsMultilingual.Where(l => l.LanguageId == User.LanguageId))
+                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                    .Include(d => d.Alert).ThenInclude(d => d.Drug).Where(d => d.Alert.Drug.Id == drugId)
                     .AsEnumerable();
             }
             catch (Exception ex)

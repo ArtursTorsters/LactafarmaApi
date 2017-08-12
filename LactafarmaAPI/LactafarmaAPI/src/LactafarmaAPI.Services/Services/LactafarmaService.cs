@@ -18,14 +18,15 @@ namespace LactafarmaAPI.Services.Services
     {
         #region Private Properties
 
+        private readonly IAlertRepository _alertRepository;
+
         private readonly IAliasRepository _aliasRepository;
         private readonly IBrandRepository _brandRepository;
         private readonly IDrugRepository _drugRepository;
         private readonly IGroupRepository _groupRepository;
-        private readonly IUserRepository _userRepository;
 
-        private IAlertRepository _alertRepository;
         private readonly ILogger<LactafarmaService> _logger;
+        private readonly IUserRepository _userRepository;
 
         #endregion
 
@@ -48,9 +49,59 @@ namespace LactafarmaAPI.Services.Services
 
         #region Public Methods
 
+        /// <summary>
+        ///     Get Alerts by drugIds
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
         public IEnumerable<Alert> GetAlertsByDrug(int drugId)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"BEGIN GetAlertsByDrug");
+            try
+            {
+                return MapAlerts(_alertRepository.GetAlertsByDrug(drugId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAlertsByDrug with message: {ex.Message}");
+                return new List<Alert>();
+            }
+        }
+
+        /// <summary>
+        ///     Get all alerts
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Alert> GetAllAlerts()
+        {
+            _logger.LogInformation($"BEGIN GetAllAlerts");
+            try
+            {
+                return MapAlerts(_alertRepository.GetAllAlerts());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllAlerts with message: {ex.Message}");
+                return new List<Alert>();
+            }
+        }
+
+        /// <summary>
+        ///     Get all Aliases
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Alias> GetAllAliases()
+        {
+            _logger.LogInformation($"BEGIN GetAllAliases");
+            try
+            {
+                return MapAliases(_aliasRepository.GetAllAliases());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllAliases with message: {ex.Message}");
+                return new List<Alias>();
+            }
         }
 
         /// <summary>
@@ -92,6 +143,42 @@ namespace LactafarmaAPI.Services.Services
         }
 
         /// <summary>
+        ///     Get all Brands
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Brand> GetAllBrands()
+        {
+            _logger.LogInformation($"BEGIN GetAllBrands");
+            try
+            {
+                return MapBrands(_brandRepository.GetAllBrands());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllBrands with message: {ex.Message}");
+                return new List<Brand>();
+            }
+        }
+
+        /// <summary>
+        ///     Get all drugs
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Drug> GetAllDrugs()
+        {
+            _logger.LogInformation($"BEGIN GetAllDrugs");
+            try
+            {
+                return MapDrugs(_drugRepository.GetAllDrugs());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllDrugs with message: {ex.Message}");
+                return new List<Drug>();
+            }
+        }
+
+        /// <summary>
         ///     Get Drugs by groupId
         /// </summary>
         /// <param name="groupId"></param>
@@ -128,6 +215,25 @@ namespace LactafarmaAPI.Services.Services
                 return new List<Drug>();
             }
         }
+
+        /// <summary>
+        ///     Get all Groups
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Group> GetAllGroups()
+        {
+            _logger.LogInformation($"BEGIN GetAllGroups");
+            try
+            {
+                return MapGroups(_groupRepository.GetAllGroups());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAllGroups with message: {ex.Message}");
+                return new List<Group>();
+            }
+        }
+
 
         /// <summary>
         ///     Get group by Id
@@ -302,7 +408,26 @@ namespace LactafarmaAPI.Services.Services
 
         #region Private Methods
 
-        private static List<Alias> MapAliases(IEnumerable<AliasMultilingual> aliases)
+        private static IEnumerable<Alert> MapAlerts(IEnumerable<AlertMultilingual> alerts)
+        {
+            var collection = new List<Alert>();
+            foreach (var alert in alerts.ToList())
+            {
+                var result = new Alert
+                {
+                    Id = alert.AlertId,
+                    Name = alert.Name,
+                    Comment = alert.Comment,
+                    Created = alert.Alert.Created,
+                    Risk = alert.Risk
+                };
+                collection.Add(result);
+            }
+
+            return collection;
+        }
+
+        private static IEnumerable<Alias> MapAliases(IEnumerable<AliasMultilingual> aliases)
         {
             var collection = new List<Alias>();
             foreach (var alias in aliases.ToList())
@@ -318,7 +443,26 @@ namespace LactafarmaAPI.Services.Services
             return collection;
         }
 
-        private static List<Brand> MapBrands(IEnumerable<BrandMultilingual> brands)
+        private static IEnumerable<Group> MapGroups(IEnumerable<GroupMultilingual> groups)
+        {
+            var collection = new List<Group>();
+
+            foreach (var group in groups)
+            {
+                var result = new Group
+                {
+                    Id = group.GroupId,
+                    Name = group.Name,
+                    Modified = group.Group.Modified
+                };
+
+                collection.Add(result);
+            }
+
+            return collection;
+        }
+
+        private static IEnumerable<Brand> MapBrands(IEnumerable<BrandMultilingual> brands)
         {
             var collection = new List<Brand>();
 
@@ -365,6 +509,28 @@ namespace LactafarmaAPI.Services.Services
                     Id = drug.DrugId,
                     Name = drug.Drug.DrugsMultilingual.FirstOrDefault().Name,
                     Modified = drug.Drug.Modified
+                };
+
+                collection.Add(result);
+            }
+
+            return collection;
+        }
+
+        private IEnumerable<Drug> MapDrugs(IEnumerable<DrugMultilingual> drugs)
+        {
+            var collection = new List<Drug>();
+
+            foreach (var drug in drugs)
+            {
+                var result = new Drug
+                {
+                    Id = drug.DrugId,
+                    Name = drug.Name,
+                    Modified = drug.Drug.Modified,
+                    Comment = drug.Comment,
+                    Risk = drug.Risk,
+                    Description = drug.Description
                 };
 
                 collection.Add(result);
