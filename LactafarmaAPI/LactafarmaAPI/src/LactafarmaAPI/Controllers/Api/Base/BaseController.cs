@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api.Base
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class BaseController: Controller
     {
         public readonly IConfigurationRoot Config;

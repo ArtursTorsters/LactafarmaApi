@@ -9,203 +9,203 @@ using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Core
 {
-    public abstract class DataRepositoryBase<T, U, V> : IDataRepository<T>
-        where T : class, IIdentifiableEntity, new()
-        where U : DbContext
-        where V : class, IIdentifiableGuidEntity, new()
+    public abstract class DataRepositoryBase<TEntity, TContext, TUser> : IDataRepository<TEntity>
+        where TEntity : class, IIdentifiableEntity, new()
+        where TContext : DbContext
+        where TUser : class, IIdentifiableGuidEntity, new()
     {
-        public U EntityContext;
-        public V User;
-        private readonly DbSet<T> _dbSet;
+        public TContext EntityContext;
+        public TUser User;
+        private readonly DbSet<TEntity> _dbSet;
 
-        protected DataRepositoryBase(U entityContext)
+        protected DataRepositoryBase(TContext entityContext)
         {
             EntityContext = entityContext;
-            _dbSet = EntityContext.Set<T>();
+            _dbSet = EntityContext.Set<TEntity>();
         }
 
-        protected abstract Expression<Func<T, bool>> IdentifierPredicate(int id);
+        protected abstract Expression<Func<TEntity, bool>> IdentifierPredicate(int id);
 
-        public virtual T Add(T entity)
+        public virtual TEntity Add(TEntity entity)
         {
-            T addedEntity = AddEntity(entity);
+            TEntity addedEntity = AddEntity(entity);
             EntityContext.SaveChanges();
             return addedEntity;
         }
 
-        public virtual async Task<T> AddAsync(T entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            T addedEntity = AddEntity(entity);
+            TEntity addedEntity = AddEntity(entity);
             await EntityContext.SaveChangesAsync();
             return addedEntity;
         }
 
-        public virtual T Update(T entity)
+        public virtual TEntity Update(TEntity entity)
         {
-            EntityContext.Entry<T>(entity)
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Modified;
 
-            T existingEntity = UpdateEntity(entity);
+            TEntity existingEntity = UpdateEntity(entity);
 
             EntityContext.SaveChanges();
             return existingEntity;
         }
 
-        public virtual async Task<T> UpdateAsync(T entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            EntityContext.Entry<T>(entity)
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Modified;
 
-            T existingEntity = UpdateEntity(entity);
+            TEntity existingEntity = UpdateEntity(entity);
 
             await EntityContext.SaveChangesAsync();
             return existingEntity;
         }
 
-        public virtual void Remove(T entity)
+        public virtual void Remove(TEntity entity)
         {
             _dbSet.Remove(entity);
-            EntityContext.Entry<T>(entity)
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Deleted;
             EntityContext.SaveChanges();
         }
 
         public virtual void Remove(int id)
         {
-            T entity = GetEntity(id);
-            EntityContext.Entry<T>(entity)
+            TEntity entity = GetEntity(id);
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Deleted;
             EntityContext.SaveChanges();
         }        
         
-        public virtual IEnumerable<T> FindAll()
+        public virtual IEnumerable<TEntity> FindAll()
         {
             return (GetEntities()).Where(e => e.EntityId != 0);
         }
 
-        public virtual T FindById(int id)
+        public virtual TEntity FindById(int id)
         {
             return GetEntity(id);
         }
 
-        T AddEntity(T entity)
+        TEntity AddEntity(TEntity entity)
         {
             return _dbSet.Add(entity).Entity;
         }
 
-        IQueryable<T> GetEntities()
+        IQueryable<TEntity> GetEntities()
         {
             return _dbSet;
         }
 
-        T GetEntity(int id)
+        TEntity GetEntity(int id)
         {
             return _dbSet.Where(IdentifierPredicate(id)).FirstOrDefault();
         }
 
-        T UpdateEntity(T entity)
+        TEntity UpdateEntity(TEntity entity)
         {
             var q = _dbSet.Where(IdentifierPredicate(entity.EntityId));
             return q.FirstOrDefault();
         }
     }
 
-    public abstract class DataGuidRepositoryBase<T, U, V> : IDataGuidRepository<T>
-        where T : class, IIdentifiableGuidEntity, new()
-        where U : DbContext
-        where V : class, IIdentifiableGuidEntity, new()
+    public abstract class DataGuidRepositoryBase<TEntity, TContext, TUser> : IDataGuidRepository<TEntity>
+        where TEntity : class, IIdentifiableGuidEntity, new()
+        where TContext : DbContext
+        where TUser : class, IIdentifiableGuidEntity, new()
 
     {
-        public U EntityContext;
-        public V User;
-        private readonly DbSet<T> _dbSet;
+        public TContext EntityContext;
+        public TUser User;
+        private readonly DbSet<TEntity> _dbSet;
 
-        protected DataGuidRepositoryBase(U entityContext)
+        protected DataGuidRepositoryBase(TContext entityContext)
         {
             EntityContext = entityContext;
-            _dbSet = EntityContext.Set<T>();
+            _dbSet = EntityContext.Set<TEntity>();
         }
 
-        protected abstract Expression<Func<T, bool>> IdentifierPredicate(Guid id);
+        protected abstract Expression<Func<TEntity, bool>> IdentifierPredicate(Guid id);
 
-        public virtual T Add(T entity)
+        public virtual TEntity Add(TEntity entity)
         {
-            T addedEntity = AddEntity(entity);
+            TEntity addedEntity = AddEntity(entity);
             EntityContext.SaveChanges();
             return addedEntity;
         }
 
-        public virtual async Task<T> AddAsync(T entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            T addedEntity = AddEntity(entity);
+            TEntity addedEntity = AddEntity(entity);
             await EntityContext.SaveChangesAsync();
             return addedEntity;
         }
 
-        public virtual T Update(T entity)
+        public virtual TEntity Update(TEntity entity)
         {
-            EntityContext.Entry<T>(entity)
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Modified;
 
-            T existingEntity = UpdateEntity(entity);
+            TEntity existingEntity = UpdateEntity(entity);
 
             EntityContext.SaveChanges();
             return existingEntity;
         }
 
-        public virtual async Task<T> UpdateAsync(T entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            EntityContext.Entry<T>(entity)
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Modified;
 
-            T existingEntity = UpdateEntity(entity);
+            TEntity existingEntity = UpdateEntity(entity);
 
             await EntityContext.SaveChangesAsync();
             return existingEntity;
         }
 
-        public virtual void Remove(T entity)
+        public virtual void Remove(TEntity entity)
         {
             _dbSet.Remove(entity);
-            EntityContext.Entry<T>(entity)
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Deleted;
             EntityContext.SaveChanges();
         }
 
         public virtual void Remove(Guid id)
         {
-            T entity = GetEntity(id);
-            EntityContext.Entry<T>(entity)
+            TEntity entity = GetEntity(id);
+            EntityContext.Entry<TEntity>(entity)
                          .State = EntityState.Deleted;
             EntityContext.SaveChanges();
         }
 
-        public virtual IEnumerable<T> FindAll()
+        public virtual IEnumerable<TEntity> FindAll()
         {
             return (GetEntities()).Where(e => e.EntityId != null);
         }
 
-        public virtual T FindById(Guid id)
+        public virtual TEntity FindById(Guid id)
         {
             return GetEntity(id);
         }
 
-        T AddEntity(T entity)
+        TEntity AddEntity(TEntity entity)
         {
             return _dbSet.Add(entity).Entity;
         }
 
-        IQueryable<T> GetEntities()
+        IQueryable<TEntity> GetEntities()
         {
             return _dbSet;
         }
 
-        T GetEntity(Guid id)
+        TEntity GetEntity(Guid id)
         {
             return _dbSet.Where(IdentifierPredicate(id)).FirstOrDefault();
         }
 
-        T UpdateEntity(T entity)
+        TEntity UpdateEntity(TEntity entity)
         {
             var q = _dbSet.Where(IdentifierPredicate(entity.EntityId));
             return q.FirstOrDefault();

@@ -28,7 +28,7 @@ namespace LactafarmaAPI.Controllers.Api
         #endregion
 
         #region Public Methods
-        [HttpGet("/bygroup/{groupId:int}")]
+        [Route("bygroup/{groupId:int}")]
         public JsonResult GetDrugsByGroup(int groupId)
         {
             var result = new JsonResult(string.Empty);
