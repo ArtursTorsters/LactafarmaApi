@@ -3,6 +3,7 @@ using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -20,9 +21,11 @@ namespace LactafarmaAPI.Controllers.Api
 
         public DrugsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
-            ILogger<DrugsController> logger) : base(lactafarmaService, mailService, config)
+            ILogger<DrugsController> logger, IMemoryCache cache) : base(lactafarmaService, mailService, config, cache)
         {
             _logger = logger;
+
+            CacheInitialize(lactafarmaService.GetAllDrugs(), EntityType.Drug);
         }
 
         #endregion

@@ -72,6 +72,7 @@ namespace LactafarmaAPI
 
             services.AddLogging();
 
+            services.AddMemoryCache();
             services.AddMvc();
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LactafarmaAPI.Domain.Models;
+using LactafarmaAPI.Domain.Models.Base;
 
 namespace LactafarmaAPI.Services.Interfaces
 {
@@ -9,15 +10,15 @@ namespace LactafarmaAPI.Services.Interfaces
         #region Public Methods
 
         IEnumerable<Alert> GetAlertsByDrug(int drugId);
-        IEnumerable<Alert> GetAllAlerts();
-        IEnumerable<Alias> GetAllAliases();
+        IEnumerable<BaseModel> GetAllAlerts();
+        IEnumerable<BaseModel> GetAllAliases();
         IEnumerable<Alias> GetAliasesByDrug(int drugId);
         IEnumerable<Brand> GetBrandsByDrug(int drugId);
-        IEnumerable<Brand> GetAllBrands();
-        IEnumerable<Drug> GetAllDrugs();
+        IEnumerable<BaseModel> GetAllBrands();
+        IEnumerable<BaseModel> GetAllDrugs();
         IEnumerable<Drug> GetDrugsByGroup(int groupId);
         IEnumerable<Drug> GetDrugsByBrand(int brandId);
-        IEnumerable<Group> GetAllGroups();
+        IEnumerable<BaseModel> GetAllGroups();
         Group GetGroup(int groupId);
         User GetUser(Guid userId);
         Alias GetAlias(int aliasId);

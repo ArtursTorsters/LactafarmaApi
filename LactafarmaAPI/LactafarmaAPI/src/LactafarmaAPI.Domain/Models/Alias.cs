@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LactafarmaAPI.Domain.Models.Base;
 
 namespace LactafarmaAPI.Domain.Models
 {
-    public class Alias
+    public class Alias : BaseModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
         public Drug Drug { get; set; }
         public Language Language { get; set; }
     }

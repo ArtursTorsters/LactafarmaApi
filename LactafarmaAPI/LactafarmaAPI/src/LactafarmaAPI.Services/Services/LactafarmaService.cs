@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
+using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Alert = LactafarmaAPI.Domain.Models.Alert;
@@ -72,7 +73,7 @@ namespace LactafarmaAPI.Services.Services
         ///     Get all alerts
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Alert> GetAllAlerts()
+        public IEnumerable<BaseModel> GetAllAlerts()
         {
             _logger.LogInformation($"BEGIN GetAllAlerts");
             try
@@ -82,7 +83,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllAlerts with message: {ex.Message}");
-                return new List<Alert>();
+                return new List<BaseModel>();
             }
         }
 
@@ -90,7 +91,7 @@ namespace LactafarmaAPI.Services.Services
         ///     Get all Aliases
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Alias> GetAllAliases()
+        public IEnumerable<BaseModel> GetAllAliases()
         {
             _logger.LogInformation($"BEGIN GetAllAliases");
             try
@@ -100,7 +101,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllAliases with message: {ex.Message}");
-                return new List<Alias>();
+                return new List<BaseModel>();
             }
         }
 
@@ -146,7 +147,7 @@ namespace LactafarmaAPI.Services.Services
         ///     Get all Brands
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Brand> GetAllBrands()
+        public IEnumerable<BaseModel> GetAllBrands()
         {
             _logger.LogInformation($"BEGIN GetAllBrands");
             try
@@ -156,7 +157,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllBrands with message: {ex.Message}");
-                return new List<Brand>();
+                return new List<BaseModel>();
             }
         }
 
@@ -164,7 +165,7 @@ namespace LactafarmaAPI.Services.Services
         ///     Get all drugs
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Drug> GetAllDrugs()
+        public IEnumerable<BaseModel> GetAllDrugs()
         {
             _logger.LogInformation($"BEGIN GetAllDrugs");
             try
@@ -174,7 +175,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllDrugs with message: {ex.Message}");
-                return new List<Drug>();
+                return new List<BaseModel>();
             }
         }
 
@@ -220,7 +221,7 @@ namespace LactafarmaAPI.Services.Services
         ///     Get all Groups
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Group> GetAllGroups()
+        public IEnumerable<BaseModel> GetAllGroups()
         {
             _logger.LogInformation($"BEGIN GetAllGroups");
             try
@@ -230,7 +231,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllGroups with message: {ex.Message}");
-                return new List<Group>();
+                return new List<BaseModel>();
             }
         }
 
@@ -432,7 +433,7 @@ namespace LactafarmaAPI.Services.Services
             var collection = new List<Alias>();
             foreach (var alias in aliases.ToList())
             {
-                var result = new Alias
+                var result = new Alias()
                 {
                     Id = alias.AliasId,
                     Name = alias.Name
