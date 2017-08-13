@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
+using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -31,6 +34,22 @@ namespace LactafarmaAPI.Controllers.Api
         #endregion
 
         #region Public Methods
+
+        [Route("byname/{startsWith:string}")]
+        public JsonResult GetDrugsByName(string startsWith)
+        {
+            var result = new JsonResult("");
+            if (startsWith.Length < 1) return result;
+
+            Cache.TryGetValue(EntityType.Drug, out IEnumerable<BaseModel> drugs);
+
+            result = Json(drugs
+                .Where(a => a.VirtualName.IndexOf(startsWith, StringComparison.CurrentCultureIgnoreCase) !=
+                            -1).Take(3));
+
+            return result;
+        }
+
         [Route("bygroup/{groupId:int}")]
         public JsonResult GetDrugsByGroup(int groupId)
         {
@@ -50,6 +69,7 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+        [Route("bybrand/{brandId:int}")]
         public JsonResult GetDrugsByBrand(int brandId)
         {
             var result = new JsonResult(string.Empty);
@@ -68,6 +88,7 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+        [Route("byalias/{aliasId:int}")]
         public JsonResult GetDrugByAlias(int aliasId)
         {
             var result = new JsonResult(string.Empty);
@@ -86,6 +107,7 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+        [Route("{drugId:int}")]
         public JsonResult GetDrug(int drugId)
         {
             var result = new JsonResult(string.Empty);

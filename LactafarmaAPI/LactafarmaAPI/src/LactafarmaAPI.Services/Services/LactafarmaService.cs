@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using LactafarmaAPI.Domain.Models.Base;
@@ -436,7 +438,8 @@ namespace LactafarmaAPI.Services.Services
                 var result = new Alias()
                 {
                     Id = alias.AliasId,
-                    Name = alias.Name
+                    Name = alias.Name,
+                    VirtualName = RemoveDiacritics(alias.Name)
                 };
                 collection.Add(result);
             }
@@ -454,7 +457,8 @@ namespace LactafarmaAPI.Services.Services
                 {
                     Id = group.GroupId,
                     Name = group.Name,
-                    Modified = group.Group.Modified
+                    Modified = group.Group.Modified,
+                    VirtualName = RemoveDiacritics(group.Name)
                 };
 
                 collection.Add(result);
@@ -472,7 +476,8 @@ namespace LactafarmaAPI.Services.Services
                 var result = new Brand
                 {
                     Id = brand.BrandId,
-                    Name = brand.Name
+                    Name = brand.Name,
+                    VirtualName = RemoveDiacritics(brand.Name)
                 };
 
                 collection.Add(result);
@@ -528,6 +533,7 @@ namespace LactafarmaAPI.Services.Services
                 {
                     Id = drug.DrugId,
                     Name = drug.Name,
+                    VirtualName = RemoveDiacritics(drug.Name),
                     Modified = drug.Drug.Modified,
                     Comment = drug.Comment,
                     Risk = drug.Risk,
@@ -538,6 +544,23 @@ namespace LactafarmaAPI.Services.Services
             }
 
             return collection;
+        }
+
+        static string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
         #endregion

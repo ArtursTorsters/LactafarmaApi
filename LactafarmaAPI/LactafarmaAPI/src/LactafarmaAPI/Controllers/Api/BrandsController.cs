@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
+using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -32,6 +35,22 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
+        [Route("byname/{startsWith:string}")]
+        public JsonResult GetBrandsByName(string startsWith)
+        {
+            var result = new JsonResult("");
+            if (startsWith.Length < 1) return result;
+
+            Cache.TryGetValue(EntityType.Brand, out IEnumerable<BaseModel> brands);
+
+            result = Json(brands
+                .Where(a => a.VirtualName.IndexOf(startsWith, StringComparison.CurrentCultureIgnoreCase) !=
+                            -1).Take(3));
+
+            return result;
+        }
+
+        [Route("bydrug/{drugId:int}")]
         public JsonResult GetBrandsByDrug(int drugId)
         {
             var result = new JsonResult(string.Empty);
@@ -50,6 +69,7 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+        [Route("{brandId:int}")]
         public JsonResult GetBrand(int brandId)
         {
             var result = new JsonResult(string.Empty);

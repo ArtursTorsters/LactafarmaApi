@@ -59,5 +59,15 @@ namespace LactafarmaAPI.Controllers.Api.Base
             }
         }
 
+        /// <summary>
+        /// Clear set of objects stored on IMemoryCache
+        /// </summary>
+        public async Task ClearCachesAsync()
+        {
+            await Task.Run(() => Cache.Remove(EntityType.Alias));
+            await Task.Run(() => Cache.Remove(EntityType.Drug));
+            await Task.Run(() => Cache.Remove(EntityType.Group));
+            await Task.Run(() => Cache.Remove(EntityType.Brand));
+        }
     }
 }

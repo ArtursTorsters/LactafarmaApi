@@ -8,6 +8,7 @@ namespace LactafarmaAPI.Controllers.Api.Interfaces
 {
     interface IDrugsController
     {
+        JsonResult GetDrugsByName(string startsWith);
         JsonResult GetDrugsByGroup(int groupId);
         JsonResult GetDrugsByBrand(int brandId);
         JsonResult GetDrugByAlias(int aliasId);

@@ -8,6 +8,7 @@ namespace LactafarmaAPI.Controllers.Api.Interfaces
 {
     interface IGroupsController
     {
+        JsonResult GetGroupsByName(string startsWith);
         JsonResult GetGroup(int groupId);
 
     }

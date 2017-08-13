@@ -8,5 +8,6 @@ namespace LactafarmaAPI.Domain.Models.Base
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string VirtualName { get; set; }
     }
 }

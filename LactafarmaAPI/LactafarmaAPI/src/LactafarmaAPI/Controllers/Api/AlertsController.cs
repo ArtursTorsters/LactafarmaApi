@@ -32,6 +32,7 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
+        [Route("bydrug/{drugId:int}")]
         public JsonResult GetAlertsByDrug(int drugId)
         {
             var result = new JsonResult(string.Empty);

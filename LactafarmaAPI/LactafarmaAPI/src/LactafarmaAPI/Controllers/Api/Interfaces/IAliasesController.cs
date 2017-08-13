@@ -8,6 +8,7 @@ namespace LactafarmaAPI.Controllers.Api.Interfaces
 {
     interface IAliasesController
     {
+        JsonResult GetAliasesByName(string startsWith);
         JsonResult GetAliasesByDrug(int drugId);
         JsonResult GetAlias(int aliasId);
 
