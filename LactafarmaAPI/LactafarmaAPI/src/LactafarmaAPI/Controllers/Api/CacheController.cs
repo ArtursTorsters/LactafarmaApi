@@ -30,6 +30,7 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
+        [Route("load")]
         public async Task<IActionResult> LoadCaches()
         {
             var result = new JsonResult(false);
@@ -49,6 +50,7 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+        [Route("clear")]
         public async Task<IActionResult> ClearCaches()
         {
             var result = new JsonResult(false);

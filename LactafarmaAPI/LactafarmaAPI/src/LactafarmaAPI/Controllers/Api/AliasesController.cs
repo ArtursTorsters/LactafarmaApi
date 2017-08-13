@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
+using LactafarmaAPI.Core;
 using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -35,16 +36,16 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("byname/{startsWith:string}")]
+        [Route("byname/{startsWith}")]
         public JsonResult GetAliasesByName(string startsWith)
         {
-            var result = new JsonResult("");
+            JsonResult result = null;
             if (startsWith.Length < 1) return result;
 
             Cache.TryGetValue(EntityType.Alias, out IEnumerable<BaseModel> aliases);
 
             result = Json(aliases
-                .Where(a => a.VirtualName.IndexOf(startsWith, StringComparison.CurrentCultureIgnoreCase) !=
+                .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
                             -1).Take(3));
 
             return result;
@@ -53,7 +54,7 @@ namespace LactafarmaAPI.Controllers.Api
         [Route("bydrug/{drugId:int}")]
         public JsonResult GetAliasesByDrug(int drugId)
         {
-            var result = new JsonResult(string.Empty);
+            JsonResult result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetAliasesByDrug");
@@ -72,7 +73,7 @@ namespace LactafarmaAPI.Controllers.Api
         [Route("{aliasId:int}")]
         public JsonResult GetAlias(int aliasId)
         {
-            var result = new JsonResult(string.Empty);
+            JsonResult result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetAlias");

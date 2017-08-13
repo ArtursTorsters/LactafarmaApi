@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
+using LactafarmaAPI.Core;
 using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -35,16 +36,16 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("byname/{startsWith:string}")]
+        [Route("byname/{startsWith}")]
         public JsonResult GetGroupsByName(string startsWith)
         {
-            var result = new JsonResult("");
+            JsonResult result = null;
             if (startsWith.Length < 1) return result;
 
             Cache.TryGetValue(EntityType.Group, out IEnumerable<BaseModel> groups);
 
             result = Json(groups
-                .Where(a => a.VirtualName.IndexOf(startsWith, StringComparison.CurrentCultureIgnoreCase) !=
+                .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
                             -1).Take(3));
 
             return result;
@@ -53,7 +54,7 @@ namespace LactafarmaAPI.Controllers.Api
         [Route("{groupId:int}")]
         public JsonResult GetGroup(int groupId)
         {
-            var result = new JsonResult(string.Empty);
+            JsonResult result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetGroup");

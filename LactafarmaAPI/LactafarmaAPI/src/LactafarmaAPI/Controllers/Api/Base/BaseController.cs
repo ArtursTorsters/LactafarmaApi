@@ -55,7 +55,7 @@ namespace LactafarmaAPI.Controllers.Api.Base
                 cacheEntries = items;
 
                 // Save data in cache.
-                Cache.Set(typeof(TModel), cacheEntries, cacheEntryOptions);
+                Cache.Set(type, cacheEntries, cacheEntryOptions);
             }
         }
 
@@ -68,6 +68,6 @@ namespace LactafarmaAPI.Controllers.Api.Base
             await Task.Run(() => Cache.Remove(EntityType.Drug));
             await Task.Run(() => Cache.Remove(EntityType.Group));
             await Task.Run(() => Cache.Remove(EntityType.Brand));
-        }
+         }
     }
 }

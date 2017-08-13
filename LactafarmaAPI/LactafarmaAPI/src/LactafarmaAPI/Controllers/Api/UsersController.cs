@@ -34,7 +34,7 @@ namespace LactafarmaAPI.Controllers.Api
 
         public JsonResult GetUser(Guid userId)
         {
-            var result = new JsonResult(string.Empty);
+            JsonResult result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetUser");

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
+using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using LactafarmaAPI.Domain.Models.Base;
@@ -67,7 +66,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAlertsByDrug with message: {ex.Message}");
-                return new List<Alert>();
+                return null;
             }
         }
 
@@ -85,7 +84,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllAlerts with message: {ex.Message}");
-                return new List<BaseModel>();
+                return null;
             }
         }
 
@@ -103,7 +102,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllAliases with message: {ex.Message}");
-                return new List<BaseModel>();
+                return null;
             }
         }
 
@@ -122,7 +121,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAliasesByDrug with message: {ex.Message}");
-                return new List<Alias>();
+                return null;
             }
         }
 
@@ -141,7 +140,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetBrandsByDrug with message: {ex.Message}");
-                return new List<Brand>();
+                return null;
             }
         }
 
@@ -159,7 +158,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllBrands with message: {ex.Message}");
-                return new List<BaseModel>();
+                return null;
             }
         }
 
@@ -177,7 +176,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllDrugs with message: {ex.Message}");
-                return new List<BaseModel>();
+                return null;
             }
         }
 
@@ -196,7 +195,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetDrugsByGroup with message: {ex.Message}");
-                return new List<Drug>();
+                return null;
             }
         }
 
@@ -215,7 +214,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetDrugsByBrand with message: {ex.Message}");
-                return new List<Drug>();
+                return null;
             }
         }
 
@@ -233,7 +232,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAllGroups with message: {ex.Message}");
-                return new List<BaseModel>();
+                return null;
             }
         }
 
@@ -250,6 +249,8 @@ namespace LactafarmaAPI.Services.Services
             {
                 var group = _groupRepository.GetGroup(groupId);
 
+                if (group == null) return null;
+
                 var result = new Group
                 {
                     Id = group.GroupId,
@@ -261,7 +262,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetGroup with message: {ex.Message}");
-                return new Group();
+                return null;
             }
         }
 
@@ -276,6 +277,7 @@ namespace LactafarmaAPI.Services.Services
             try
             {
                 var user = _userRepository.GetUser(userId);
+                if (user == null) return null;
                 var result = new User
                 {
                     AppId = user.AppId,
@@ -291,7 +293,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetUser with message: {ex.Message}");
-                return new User();
+                return null;
             }
         }
 
@@ -307,6 +309,8 @@ namespace LactafarmaAPI.Services.Services
             {
                 var alias = _aliasRepository.GetAlias(aliasId);
 
+                if (alias == null) return null;
+
                 var result = new Alias
                 {
                     Id = alias.AliasId,
@@ -318,7 +322,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetAlias with message: {ex.Message}");
-                return new Alias();
+                return null;
             }
         }
 
@@ -334,6 +338,8 @@ namespace LactafarmaAPI.Services.Services
             {
                 var drug = _aliasRepository.GetDrugByAlias(aliasId);
 
+                if (drug == null) return null;
+
                 var result = new Drug
                 {
                     Id = drug.DrugId,
@@ -348,7 +354,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetDrugByAlias with message: {ex.Message}");
-                return new Drug();
+                return null;
             }
         }
 
@@ -364,6 +370,8 @@ namespace LactafarmaAPI.Services.Services
             {
                 var brand = _brandRepository.GetBrand(brandId);
 
+                if (brand == null) return null;
+
                 var result = new Brand
                 {
                     Id = brand.BrandId,
@@ -374,7 +382,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetBrand with message: {ex.Message}");
-                return new Brand();
+                return null;
             }
         }
 
@@ -389,6 +397,9 @@ namespace LactafarmaAPI.Services.Services
             try
             {
                 var drug = _drugRepository.GetDrug(drugId);
+
+                if (drug == null) return null;
+
                 var result = new Drug
                 {
                     Comment = drug.Comment,
@@ -403,7 +414,7 @@ namespace LactafarmaAPI.Services.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Exception on GetDrug with message: {ex.Message}");
-                return new Drug();
+                return null;
             }
         }
 
@@ -427,7 +438,7 @@ namespace LactafarmaAPI.Services.Services
                 collection.Add(result);
             }
 
-            return collection;
+            return collection.Count == 0 ? null : collection;
         }
 
         private static IEnumerable<Alias> MapAliases(IEnumerable<AliasMultilingual> aliases)
@@ -435,16 +446,16 @@ namespace LactafarmaAPI.Services.Services
             var collection = new List<Alias>();
             foreach (var alias in aliases.ToList())
             {
-                var result = new Alias()
+                var result = new Alias
                 {
                     Id = alias.AliasId,
                     Name = alias.Name,
-                    VirtualName = RemoveDiacritics(alias.Name)
+                    VirtualName = alias.Name.RemoveDiacritics()
                 };
                 collection.Add(result);
             }
 
-            return collection;
+            return collection.Count == 0 ? null : collection;
         }
 
         private static IEnumerable<Group> MapGroups(IEnumerable<GroupMultilingual> groups)
@@ -458,13 +469,13 @@ namespace LactafarmaAPI.Services.Services
                     Id = group.GroupId,
                     Name = group.Name,
                     Modified = group.Group.Modified,
-                    VirtualName = RemoveDiacritics(group.Name)
+                    VirtualName = group.Name.RemoveDiacritics()
                 };
 
                 collection.Add(result);
             }
 
-            return collection;
+            return collection.Count == 0 ? null : collection;
         }
 
         private static IEnumerable<Brand> MapBrands(IEnumerable<BrandMultilingual> brands)
@@ -477,13 +488,13 @@ namespace LactafarmaAPI.Services.Services
                 {
                     Id = brand.BrandId,
                     Name = brand.Name,
-                    VirtualName = RemoveDiacritics(brand.Name)
+                    VirtualName = brand.Name.RemoveDiacritics()
                 };
 
                 collection.Add(result);
             }
 
-            return collection;
+            return collection.Count == 0 ? null : collection;
         }
 
         private IEnumerable<Drug> MapDrugsForGroup(IEnumerable<DrugMultilingual> drugs)
@@ -501,7 +512,7 @@ namespace LactafarmaAPI.Services.Services
                 collection.Add(result);
             }
 
-            return collection;
+            return collection.Count == 0 ? null : collection;
         }
 
         private IEnumerable<Drug> MapDrugsForBrand(IEnumerable<DrugBrand> drugs)
@@ -520,7 +531,7 @@ namespace LactafarmaAPI.Services.Services
                 collection.Add(result);
             }
 
-            return collection;
+            return collection.Count == 0 ? null : collection;
         }
 
         private IEnumerable<Drug> MapDrugs(IEnumerable<DrugMultilingual> drugs)
@@ -533,7 +544,7 @@ namespace LactafarmaAPI.Services.Services
                 {
                     Id = drug.DrugId,
                     Name = drug.Name,
-                    VirtualName = RemoveDiacritics(drug.Name),
+                    VirtualName = drug.Name.RemoveDiacritics(),
                     Modified = drug.Drug.Modified,
                     Comment = drug.Comment,
                     Risk = drug.Risk,
@@ -543,24 +554,7 @@ namespace LactafarmaAPI.Services.Services
                 collection.Add(result);
             }
 
-            return collection;
-        }
-
-        static string RemoveDiacritics(string text)
-        {
-            var normalizedString = text.Normalize(NormalizationForm.FormD);
-            var stringBuilder = new StringBuilder();
-
-            foreach (var c in normalizedString)
-            {
-                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-                {
-                    stringBuilder.Append(c);
-                }
-            }
-
-            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+            return collection.Count == 0 ? null : collection;
         }
 
         #endregion

@@ -15,4 +15,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Globalization.Extensions">
+      <HintPath>C:\Users\ElyDavid\.nuget\packages\system.globalization.extensions\4.3.0\ref\netstandard1.3\System.Globalization.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
