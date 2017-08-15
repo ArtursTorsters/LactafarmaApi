@@ -46,7 +46,11 @@ namespace LactafarmaAPI.Controllers.Api
                 _logger.LogError(
                     $"Exception on JsonResult called GetUser(userId={userId}) with message {ex.Message}");
             }
-
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 

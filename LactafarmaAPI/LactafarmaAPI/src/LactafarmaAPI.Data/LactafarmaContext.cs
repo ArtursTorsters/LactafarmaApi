@@ -6,9 +6,10 @@ namespace LactafarmaAPI.Data
 {
     public class LactafarmaContext : DbContext
     {
-        private ILogger<LactafarmaContext> _logger;
+        private readonly ILogger<LactafarmaContext> _logger;
         #region Public Properties
 
+        public DbSet<Log> Logs { get; set; }
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<AlertMultilingual> AlertsMultilingual { get; set; }
         public DbSet<Alias> Aliases { get; set; }

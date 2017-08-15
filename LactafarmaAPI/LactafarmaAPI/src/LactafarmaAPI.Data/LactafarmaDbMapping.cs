@@ -13,6 +13,7 @@ namespace LactafarmaAPI.Data
         {
             try
             {
+                MapLog(modelBuilder, logger);
                 MapLanguage(modelBuilder, logger);
                 MapBrand(modelBuilder, logger);
                 MapBrandMultilingual(modelBuilder, logger);
@@ -37,6 +38,44 @@ namespace LactafarmaAPI.Data
             {
                 logger.LogError($"LactafarmaDbMapping: Configure Method exception {ex.Message}");
             }
+        }
+
+        private static void MapLog(ModelBuilder modelBuilder, ILogger<LactafarmaContext> logger)
+        {
+            logger.LogInformation("BEGIN: Configuring entity Log");
+
+            modelBuilder.Entity<Log>().ToTable("Logs");
+            modelBuilder.Entity<Log>().Ignore(e => e.EntityId).HasKey(e => e.Id);
+            modelBuilder.Entity<Log>(entity =>
+            {
+                entity.Property(e => e.Action).HasMaxLength(50);
+
+                entity.Property(e => e.Application)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Controller).HasMaxLength(50);
+
+                entity.Property(e => e.Identity).HasMaxLength(50);
+
+                entity.Property(e => e.Level)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Logged).HasColumnType("datetime");
+
+                entity.Property(e => e.Logger).HasMaxLength(250);
+
+                entity.Property(e => e.Message).IsRequired();
+
+                entity.Property(e => e.Referrer).HasMaxLength(250);
+
+                entity.Property(e => e.Url).HasMaxLength(500);
+
+                entity.Property(e => e.UserAgent).HasMaxLength(250);
+            });
+            logger.LogInformation("END: Configuring entity Log");
+
         }
 
         #endregion

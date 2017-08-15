@@ -40,14 +40,34 @@ namespace LactafarmaAPI.Controllers.Api
         public JsonResult GetBrandsByName(string startsWith)
         {
             JsonResult result = null;
-            if (startsWith.Length < 1) return result;
+            try
+            {
+                _logger.LogInformation("BEGIN GetBrandsByName");
 
-            Cache.TryGetValue(EntityType.Brand, out IEnumerable<BaseModel> brands);
+                if (startsWith.Length < 1)
+                {
+                    _logger.LogWarning("Call to the API without any letter!!");
+                    return null;
+                }
 
-            result = Json(brands
-                .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
-                            -1).Take(3));
+                Cache.TryGetValue(EntityType.Brand, out IEnumerable<BaseModel> brands);
 
+                result = Json(brands
+                    .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
+                                -1).Take(3));
+
+                _logger.LogInformation("END GetBrandsByName");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetBrandsByName(name={startsWith}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 
@@ -65,6 +85,11 @@ namespace LactafarmaAPI.Controllers.Api
             {
                 _logger.LogError(
                     $"Exception on JsonResult called GetBrandsByDrug(drugId={drugId}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
             }
 
             return result;
@@ -85,7 +110,11 @@ namespace LactafarmaAPI.Controllers.Api
                 _logger.LogError(
                     $"Exception on JsonResult called GetBrand(brandId={brandId}) with message {ex.Message}");
             }
-
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 

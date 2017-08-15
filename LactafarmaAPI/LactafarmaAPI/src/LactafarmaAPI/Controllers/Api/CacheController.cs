@@ -33,7 +33,7 @@ namespace LactafarmaAPI.Controllers.Api
         [Route("load")]
         public async Task<IActionResult> LoadCaches()
         {
-            var result = new JsonResult(false);
+            JsonResult result = null;
             try
             {
                 _logger.LogInformation("BEGIN LoadCaches");
@@ -43,8 +43,14 @@ namespace LactafarmaAPI.Controllers.Api
             }
             catch (Exception ex)
             {
+                result = new JsonResult(false);
                 _logger.LogError(
                     $"Exception on JsonResult called LoadCaches with message {ex.Message}");
+            }
+            finally
+            {
+                if (result == Json(false))
+                    _logger.LogWarning("No results for current request!!!");
             }
 
             return result;

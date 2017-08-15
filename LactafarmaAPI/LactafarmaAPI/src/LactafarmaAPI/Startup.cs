@@ -1,4 +1,5 @@
-﻿using LactafarmaAPI.Data;
+﻿using System.IO;
+using LactafarmaAPI.Data;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using LactafarmaAPI.Data.Repositories;
@@ -7,10 +8,15 @@ using LactafarmaAPI.Services.Interfaces;
 using LactafarmaAPI.Services.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Extensions.Logging;
+using NLog.Web;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace LactafarmaAPI
 {
@@ -41,6 +47,8 @@ namespace LactafarmaAPI
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+
+            env.ConfigureNLog("nlog.config");
         }
 
         #endregion
@@ -56,29 +64,49 @@ namespace LactafarmaAPI
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
                 services.AddScoped<IMailService, DebugMailService>();
 
+            //Entity Framework Core configuration
             services.AddEntityFrameworkSqlServer().AddDbContext<LactafarmaContext>(config =>
             {
                 config.UseSqlServer(Configuration["ConnectionStrings:LactafarmaContextConnection"]);
             });
 
+            //Configuration variables for NLog
+            LogManager.Configuration.Variables["connectionString"] =
+                Configuration["ConnectionStrings:LactafarmaContextConnection"];
+            LogManager.Configuration.Variables["configDir"] = Directory.GetCurrentDirectory();
+
+            //This interface is required for getting info from HttpContext (like Controller, Action, Url, UserAgent...)
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //Repository collection used on LactafarmaApi
             services.AddScoped<IAliasRepository, AliasesRepository>();
             services.AddScoped<IAlertRepository, AlertsRepository>();
             services.AddScoped<IBrandRepository, BrandsRepository>();
             services.AddScoped<IDrugRepository, DrugsRepository>();
             services.AddScoped<IGroupRepository, GroupsRepository>();
             services.AddScoped<IUserRepository, UsersRepository>();
+            services.AddScoped<ILogRepository, LogRepository>();
 
+            //General service for retrieving items from EF Core
             services.AddScoped<ILactafarmaService, LactafarmaService>();
 
+            //Allow logging system (ILogger)
             services.AddLogging();
 
+            //Allow IMemoryCache mechanism
             services.AddMemoryCache();
+            
+            //Allow MVC services to be specified
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //NLog configuration
+            loggerFactory.AddNLog();
+            app.AddNLogWeb();
+
             if (env.IsEnvironment("Development"))
             {
                 app.UseDeveloperExceptionPage();
@@ -88,15 +116,16 @@ namespace LactafarmaAPI
             {
                 loggerFactory.AddDebug(LogLevel.Error);
             }
+            
             //app.UseDefaultFiles();
             app.UseStaticFiles();   
 
             app.UseMvc(config =>
             {
-                config.MapRoute(
-                    "Default",
-                    "{controller}/{action}/{id?}",
-                    new {controller = "Demo", action = "Index"});
+                //config.MapRoute(
+                //    "Default",
+                //    "{controller}/{action}/{id?}",
+                //    new {controller = "Demo", action = "Index"});
             });
         }
 

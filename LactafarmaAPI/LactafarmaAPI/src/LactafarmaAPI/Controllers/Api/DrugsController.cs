@@ -40,14 +40,34 @@ namespace LactafarmaAPI.Controllers.Api
         public JsonResult GetDrugsByName(string startsWith)
         {
             JsonResult result = null;
-            if (startsWith.Length < 1) return result;
+            try
+            {
+                _logger.LogInformation("BEGIN GetDrugsByName");
 
-            Cache.TryGetValue(EntityType.Drug, out IEnumerable<BaseModel> drugs);
+                if (startsWith.Length < 1)
+                {
+                    _logger.LogWarning("Call to the API without any letter!!");
+                    return null;
+                }
 
-            result = Json(drugs
-                .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
-                            -1).Take(7));
+                Cache.TryGetValue(EntityType.Drug, out IEnumerable<BaseModel> drugs);
 
+                result = Json(drugs
+                    .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
+                                -1).Take(7));
+
+                _logger.LogInformation("END GetDrugsByName");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetDrugsByName(name={startsWith}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 
@@ -66,7 +86,11 @@ namespace LactafarmaAPI.Controllers.Api
                 _logger.LogError(
                     $"Exception on JsonResult called GetDrugsByGroup(groupId={groupId}) with message {ex.Message}");
             }
-
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 
@@ -85,7 +109,11 @@ namespace LactafarmaAPI.Controllers.Api
                 _logger.LogError(
                     $"Exception on JsonResult called GetDrugsByBrand(brandId={brandId}) with message {ex.Message}");
             }
-
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 
@@ -104,7 +132,11 @@ namespace LactafarmaAPI.Controllers.Api
                 _logger.LogError(
                     $"Exception on JsonResult called GetDrugByAlias(aliasId={aliasId}) with message {ex.Message}");
             }
-
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 
@@ -122,7 +154,11 @@ namespace LactafarmaAPI.Controllers.Api
             {
                 _logger.LogError($"Exception on JsonResult called GetDrug(drugId={drugId}) with message {ex.Message}");
             }
-
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 

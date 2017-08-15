@@ -40,16 +40,37 @@ namespace LactafarmaAPI.Controllers.Api
         public JsonResult GetAliasesByName(string startsWith)
         {
             JsonResult result = null;
-            if (startsWith.Length < 1) return result;
+            try
+            {
+                _logger.LogInformation("BEGIN GetAliasesByName");
 
-            Cache.TryGetValue(EntityType.Alias, out IEnumerable<BaseModel> aliases);
+                if (startsWith.Length < 1)
+                {
+                    _logger.LogWarning("Call to the API without any letter!!");
+                    return null;
+                }
 
-            result = Json(aliases
-                .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
-                            -1).Take(3));
+                Cache.TryGetValue(EntityType.Alias, out IEnumerable<BaseModel> aliases);
 
+                result = Json(aliases
+                    .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
+                                -1).Take(3));
+
+                _logger.LogInformation("END GetAliasesByName");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetAliasesByName(name={startsWith}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
+
 
         [Route("bydrug/{drugId:int}")]
         public JsonResult GetAliasesByDrug(int drugId)
@@ -65,6 +86,11 @@ namespace LactafarmaAPI.Controllers.Api
             {
                 _logger.LogError(
                     $"Exception on JsonResult called GetAliasesByDrug(drugId={drugId}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
             }
 
             return result;
@@ -84,6 +110,11 @@ namespace LactafarmaAPI.Controllers.Api
             {
                 _logger.LogError(
                     $"Exception on JsonResult called GetAlias(aliasId={aliasId}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
             }
 
             return result;

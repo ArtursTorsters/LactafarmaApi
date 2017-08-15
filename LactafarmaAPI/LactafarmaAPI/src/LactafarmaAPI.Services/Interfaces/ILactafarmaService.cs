@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using LactafarmaAPI.Core.Interfaces;
+using LactafarmaAPI.Data.PagedData;
 using LactafarmaAPI.Domain.Models;
 using LactafarmaAPI.Domain.Models.Base;
+using Log = LactafarmaAPI.Domain.Models.Log;
 
 namespace LactafarmaAPI.Services.Interfaces
 {
@@ -27,5 +31,9 @@ namespace LactafarmaAPI.Services.Interfaces
         Drug GetDrugByAlias(int aliasId);
 
         #endregion
+
+        Task<IList<string>> GetLevelsAsync();
+
+        Task<IPagedList<Log>> GetLogsAsync(LogPagedDataRequest request);
     }
 }

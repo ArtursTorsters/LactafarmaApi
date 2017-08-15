@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LactafarmaAPI.Core;
+using LactafarmaAPI.Core.Interfaces;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
+using LactafarmaAPI.Data.PagedData;
 using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -12,6 +15,7 @@ using Alias = LactafarmaAPI.Domain.Models.Alias;
 using Brand = LactafarmaAPI.Domain.Models.Brand;
 using Drug = LactafarmaAPI.Domain.Models.Drug;
 using Group = LactafarmaAPI.Domain.Models.Group;
+using Log = LactafarmaAPI.Domain.Models.Log;
 using User = LactafarmaAPI.Domain.Models.User;
 
 namespace LactafarmaAPI.Services.Services
@@ -28,17 +32,20 @@ namespace LactafarmaAPI.Services.Services
         private readonly IGroupRepository _groupRepository;
 
         private readonly ILogger<LactafarmaService> _logger;
+        private readonly ILogRepository _logRepository;
         private readonly IUserRepository _userRepository;
 
         #endregion
 
         #region Constructors
 
-        public LactafarmaService(ILogger<LactafarmaService> logger, IAlertRepository alertRepository,
+        public LactafarmaService(ILogRepository logRepository, ILogger<LactafarmaService> logger,
+            IAlertRepository alertRepository,
             IAliasRepository aliasRepository, IDrugRepository drugRepository, IBrandRepository brandRepository,
             IGroupRepository groupRepository, IUserRepository userRepository)
         {
             _logger = logger;
+            _logRepository = logRepository;
             _alertRepository = alertRepository;
             _aliasRepository = aliasRepository;
             _drugRepository = drugRepository;
@@ -50,6 +57,34 @@ namespace LactafarmaAPI.Services.Services
         #endregion
 
         #region Public Methods
+
+        public async Task<IPagedList<Log>> GetLogsAsync(LogPagedDataRequest request)
+        {
+            _logger.LogInformation($"BEGIN GetLogs");
+            try
+            {
+                return await Task.Run(() => MapLogs(_logRepository.GetLogs(request)));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetLogs with message: {ex.Message}");
+                return null;
+            }
+        }
+
+        public Task<IList<string>> GetLevelsAsync()
+        {
+            _logger.LogInformation($"BEGIN GetLevels");
+            try
+            {
+                return _logRepository.GetLevels();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetLevels with message: {ex.Message}");
+                return null;
+            }
+        }
 
         /// <summary>
         ///     Get Alerts by drugIds
@@ -421,6 +456,34 @@ namespace LactafarmaAPI.Services.Services
         #endregion
 
         #region Private Methods
+
+        private PagedList<Log> MapLogs(Task<IPagedList<Data.Entities.Log>> logs)
+        {
+            var collection = new PagedList<Log>();
+            foreach (var log in logs.Result.ToList())
+            {
+                var result = new Log
+                {
+                    Id = log.Id,
+                    Message = log.Message,
+                    Action = log.Action,
+                    Application = log.Application,
+                    Callsite = log.Callsite,
+                    Controller = log.Controller,
+                    Exception = log.Exception,
+                    Identity = log.Identity,
+                    Level = log.Level,
+                    Logged = log.Logged,
+                    Logger = log.Logger,
+                    Referrer = log.Referrer,
+                    Url = log.Url,
+                    UserAgent = log.UserAgent
+                };
+                collection.Add(result);
+            }
+
+            return collection.Count == 0 ? null : collection;
+        }
 
         private static IEnumerable<Alert> MapAlerts(IEnumerable<AlertMultilingual> alerts)
         {

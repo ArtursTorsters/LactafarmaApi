@@ -40,14 +40,35 @@ namespace LactafarmaAPI.Controllers.Api
         public JsonResult GetGroupsByName(string startsWith)
         {
             JsonResult result = null;
-            if (startsWith.Length < 1) return result;
+            try
+            {
+                _logger.LogInformation("BEGIN GetGroupsByName");
 
-            Cache.TryGetValue(EntityType.Group, out IEnumerable<BaseModel> groups);
+                if (startsWith.Length < 1)
+                {
+                    _logger.LogWarning("Call to the API without any letter!!");
+                    return null;
+                }
 
-            result = Json(groups
-                .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
-                            -1).Take(3));
+                Cache.TryGetValue(EntityType.Group, out IEnumerable<BaseModel> groups);
 
+                result = Json(groups
+                    .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(),
+                                    StringComparison.CurrentCultureIgnoreCase) !=
+                                -1).Take(3));
+
+                _logger.LogInformation("END GetGroupsByName");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetGroupsByName(name={startsWith}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 
@@ -66,7 +87,11 @@ namespace LactafarmaAPI.Controllers.Api
                 _logger.LogError(
                     $"Exception on JsonResult called GetGroup(groupId={groupId}) with message {ex.Message}");
             }
-
+            finally
+            {
+                if (result?.Value == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
             return result;
         }
 
