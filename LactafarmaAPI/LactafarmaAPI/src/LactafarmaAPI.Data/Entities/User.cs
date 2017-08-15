@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class User : IIdentifiableGuidEntity
+    public class User : IdentityUser, IIdentifiableGuidEntity
     {
-        public Guid Id { get; set; }
-        public string Email { get; set; }
         public string Name { get; set; }
         public string TwitterInfo { get; set; }
         public string FacebookInfo { get; set; }
@@ -24,10 +23,10 @@ namespace LactafarmaAPI.Data.Entities
         public virtual ICollection<Token> Tokens { get; set; }
         public Language Language { get; set; }
 
-        public Guid EntityId
+        public string EntityId
         {
-            get { return Id; }
-            set { Id = value; }
+            get => Id;
+            set => Id = value;
         }
     }
 }

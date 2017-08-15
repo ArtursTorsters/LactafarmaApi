@@ -306,7 +306,7 @@ namespace LactafarmaAPI.Services.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public User GetUser(Guid userId)
+        public User GetUser(string userId)
         {
             _logger.LogInformation($"BEGIN GetUser");
             try

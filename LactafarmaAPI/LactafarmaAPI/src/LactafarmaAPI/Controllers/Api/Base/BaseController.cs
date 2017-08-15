@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api.Base
 {
+    [Authorize]
     [Route("api/v1/[controller]")]
     public class BaseController: Controller
     {

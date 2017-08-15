@@ -44,7 +44,7 @@ namespace LactafarmaAPI.Data.Repositories
             }
         }
 
-        public User GetUser(Guid userId)
+        public User GetUser(string userId)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace LactafarmaAPI.Data.Repositories
 
         #region Overridden Members
 
-        protected override Expression<Func<User, bool>> IdentifierPredicate(Guid id)
+        protected override Expression<Func<User, bool>> IdentifierPredicate(string id)
         {
             return e => e.Id == id;
         }

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Security.Claims;
 using LactafarmaAPI.Data;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
@@ -6,13 +7,17 @@ using LactafarmaAPI.Data.Repositories;
 using LactafarmaAPI.Services;
 using LactafarmaAPI.Services.Interfaces;
 using LactafarmaAPI.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json.Serialization;
 using NLog;
 using NLog.Extensions.Logging;
 using NLog.Web;
@@ -95,9 +100,26 @@ namespace LactafarmaAPI
 
             //Allow IMemoryCache mechanism
             services.AddMemoryCache();
-            
+            //Allo Session state
+            services.AddSession();
+
             //Allow MVC services to be specified
-            services.AddMvc();
+            //Add AuthorizeFilter to demand the user to be authenticated in order to access resources.
+            services.AddMvc(options => options.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())))
+                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            // Set up policies from claims
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Administrator", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "Administrator"))
+                        .Build();
+                });
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

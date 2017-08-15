@@ -9,7 +9,7 @@ namespace LactafarmaAPI.Data.Entities
 {
     public class Favorite : IIdentifiableGuidEntity
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int DrugId { get; set; }
         public Guid UserId { get; set; }
@@ -18,10 +18,10 @@ namespace LactafarmaAPI.Data.Entities
         public Drug Drug { get; set; }
         public User User { get; set; }
 
-        public Guid EntityId
+        public string EntityId
         {
-            get { return Id; }
-            set { Id = value; }
+            get => Id;
+            set => Id = value;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    [Authorize]
     public class ErrorController : Controller
     {
         #region Private Properties
@@ -24,18 +26,18 @@ namespace LactafarmaAPI.Controllers.Api
         #region Public Methods
 
         [Route("{*url}", Order = 999)]
-        public JsonResult TraceError()
+        public IActionResult TraceError()
         {
-            JsonResult result = null;
+            IActionResult result = null;
             try
             {
                 _logger.LogCritical("Page Not Found");
-                result = Json("404: Page Not Found");
+                result = BadRequest("Invalid Resource");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called TraceError with message {ex.Message}");
+                    $"Exception on IActionResult called TraceError with message {ex.Message}");
             }
 
             return result;

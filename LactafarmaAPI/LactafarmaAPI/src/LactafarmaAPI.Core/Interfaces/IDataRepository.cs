@@ -31,9 +31,9 @@ namespace LactafarmaAPI.Core.Interfaces
         T Update(T entity);
         Task<T> UpdateAsync(T entity);
         void Remove(T entity);
-        void Remove(Guid id);
+        void Remove(string id);
 
         IEnumerable<T> FindAll();
-        T FindById(Guid id);
+        T FindById(string id);
     }
 }

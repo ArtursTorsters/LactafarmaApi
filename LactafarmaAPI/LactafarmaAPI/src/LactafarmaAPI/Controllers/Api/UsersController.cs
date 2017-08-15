@@ -38,7 +38,7 @@ namespace LactafarmaAPI.Controllers.Api
             try
             {
                 _logger.LogInformation("BEGIN GetUser");
-                result = Json(LactafarmaService.GetUser(userId));
+                result = Json(LactafarmaService.GetUser(userId.ToString()));
                 _logger.LogInformation("END GetUser");
             }
             catch (Exception ex)

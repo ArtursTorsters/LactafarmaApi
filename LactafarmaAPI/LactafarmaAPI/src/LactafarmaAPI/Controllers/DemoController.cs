@@ -45,7 +45,7 @@ namespace LactafarmaAPI.Controllers
                 var drugs = _lactafarmaService.GetDrugsByGroup(5);
                 var drugBrands = _lactafarmaService.GetDrugsByBrand(2);
                 var group = _lactafarmaService.GetGroup(105);
-                var user = _lactafarmaService.GetUser(new Guid("C9B2B0B0-9A73-4671-8BA7-0DBE5F68D936"));
+                var user = _lactafarmaService.GetUser("C9B2B0B0-9A73-4671-8BA7-0DBE5F68D936");
                 var alias = _lactafarmaService.GetAlias(12);
                 var drugAlias = _lactafarmaService.GetDrugByAlias(12);
                 var brand = _lactafarmaService.GetBrand(8);

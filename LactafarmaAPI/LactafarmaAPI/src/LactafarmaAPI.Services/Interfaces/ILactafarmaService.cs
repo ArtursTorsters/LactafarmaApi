@@ -24,7 +24,7 @@ namespace LactafarmaAPI.Services.Interfaces
         IEnumerable<Drug> GetDrugsByBrand(int brandId);
         IEnumerable<BaseModel> GetAllGroups();
         Group GetGroup(int groupId);
-        User GetUser(Guid userId);
+        User GetUser(string userId);
         Alias GetAlias(int aliasId);
         Brand GetBrand(int brandId);
         Drug GetDrug(int drugId);

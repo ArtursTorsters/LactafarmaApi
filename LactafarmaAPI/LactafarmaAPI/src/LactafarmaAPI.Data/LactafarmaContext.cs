@@ -1,10 +1,13 @@
-﻿using LactafarmaAPI.Data.Entities;
+﻿using LactafarmaAPI.Core;
+using LactafarmaAPI.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data
 {
-    public class LactafarmaContext : DbContext
+    public class LactafarmaContext : IdentityDbContext<User>
     {
         private readonly ILogger<LactafarmaContext> _logger;
         #region Public Properties
@@ -45,6 +48,13 @@ namespace LactafarmaAPI.Data
             base.OnModelCreating(modelBuilder);
 
             LactafarmaDbMapping.Configure(modelBuilder, _logger);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-TG264EB;Database=LactafarmaDb;Trusted_Connection=true;MultipleActiveResultSets=true;");
         }
 
         #endregion

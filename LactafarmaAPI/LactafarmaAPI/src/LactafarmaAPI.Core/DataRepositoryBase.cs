@@ -126,7 +126,7 @@ namespace LactafarmaAPI.Core
             _dbSet = EntityContext.Set<TEntity>();
         }
 
-        protected abstract Expression<Func<TEntity, bool>> IdentifierPredicate(Guid id);
+        protected abstract Expression<Func<TEntity, bool>> IdentifierPredicate(string id);
 
         public virtual TEntity Add(TEntity entity)
         {
@@ -172,7 +172,7 @@ namespace LactafarmaAPI.Core
             EntityContext.SaveChanges();
         }
 
-        public virtual void Remove(Guid id)
+        public virtual void Remove(string id)
         {
             TEntity entity = GetEntity(id);
             EntityContext.Entry<TEntity>(entity)
@@ -185,7 +185,7 @@ namespace LactafarmaAPI.Core
             return (GetEntities()).Where(e => e.EntityId != null);
         }
 
-        public virtual TEntity FindById(Guid id)
+        public virtual TEntity FindById(string id)
         {
             return GetEntity(id);
         }
@@ -200,7 +200,7 @@ namespace LactafarmaAPI.Core
             return _dbSet;
         }
 
-        TEntity GetEntity(Guid id)
+        TEntity GetEntity(string id)
         {
             return _dbSet.Where(IdentifierPredicate(id)).FirstOrDefault();
         }
