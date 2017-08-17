@@ -46,22 +46,6 @@ namespace LactafarmaAPI.Controllers.Api.Base
             _userManager = userManager;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            base.OnActionExecuting(context);
-
-            if (Cache.Get("User") == null)
-            {
-                var user = _userManager.GetUserAsync(HttpContext.User).Result;
-                
-                if (user == null)
-                    RedirectToRoute("/auth/login");
-
-                Cache.Set("User", user);
-            }
-                
-        }
-
         public void CacheInitialize<TModel>(IEnumerable<TModel> items, EntityType type) where TModel : BaseModel
         {
             // Set cache options.

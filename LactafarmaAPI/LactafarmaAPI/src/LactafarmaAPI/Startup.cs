@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -113,6 +114,9 @@ namespace LactafarmaAPI
                 };
             }).AddEntityFrameworkStores<LactafarmaContext>();
 
+            // Adding custom properties to ClaimPrincipal (LanguageId) - Extend the default one: HttpContext.User
+            services.AddScoped<IUserClaimsPrincipalFactory<User>, AppClaimsPrincipalFactory>();
+
             //Entity Framework Core configuration
             services.AddEntityFrameworkSqlServer().AddDbContext<LactafarmaContext>(config =>
             {
@@ -142,11 +146,9 @@ namespace LactafarmaAPI
             //Allow logging system (ILogger)
             services.AddLogging();
 
-            //Allow IMemoryCache mechanism
-            services.AddMemoryCache();
-            //Allo Session state
-            services.AddSession();
-
+            ////Allow IMemoryCache mechanism
+            //services.AddMemoryCache();
+            
             //Allow MVC services to be specified
             //Add AuthorizeFilter to demand the user to be authenticated in order to access resources.
             services.AddMvc(options =>
@@ -171,7 +173,10 @@ namespace LactafarmaAPI
                 });
             });
 
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
 
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -195,6 +200,8 @@ namespace LactafarmaAPI
             app.UseStaticFiles();
 
             app.UseIdentity();
+
+            app.UseSession();
 
             app.UseMvc(config =>
             {

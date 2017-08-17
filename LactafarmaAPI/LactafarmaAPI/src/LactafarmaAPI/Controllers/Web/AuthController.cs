@@ -68,9 +68,6 @@ namespace LactafarmaAPI.Controllers.Web
                         false, false);
                     if (signinResult.Succeeded)
                     {
-                        _cache.Remove("User");
-                        _cache.Set("User", _userManager.GetUserAsync(HttpContext.User).Result);
-
                         _logger.LogInformation("User authenticated succesfully");
                         return Json("User authenticated succesfully");
                     }
@@ -98,7 +95,7 @@ namespace LactafarmaAPI.Controllers.Web
             {
                 await _signInManager.SignOutAsync();
             }
-
+            _cache.Remove("User");
             _logger.LogInformation("User did logout correctly!!");
 
             return Json("User did logout correctly!!");

@@ -27,7 +27,8 @@ namespace LactafarmaAPI.Controllers.Api
 
         public DrugsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
-            ILogger<DrugsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
+            ILogger<DrugsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(
+            lactafarmaService, mailService, config, cache, userManager)
         {
             _logger = logger;
             CacheInitialize(lactafarmaService.GetAllDrugs(), EntityType.Drug);
@@ -54,7 +55,8 @@ namespace LactafarmaAPI.Controllers.Api
                 Cache.TryGetValue(EntityType.Drug, out IEnumerable<BaseModel> drugs);
 
                 result = Json(drugs
-                    .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
+                    .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(),
+                                    StringComparison.CurrentCultureIgnoreCase) !=
                                 -1).Take(7));
 
                 _logger.LogInformation("END GetDrugsByName");

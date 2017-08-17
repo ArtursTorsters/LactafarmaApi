@@ -5,19 +5,20 @@ using System.Linq.Expressions;
 using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
-    public class GroupsRepository : DataRepositoryBase<Group, LactafarmaContext, User>, IGroupRepository
+    public class GroupsRepository : DataRepositoryBase<Group, LactafarmaContext>, IGroupRepository
     {
         private readonly ILogger<GroupsRepository> _logger;
 
         #region Constructors
 
-        public GroupsRepository(LactafarmaContext context, ILogger<GroupsRepository> logger, IMemoryCache cache) : base(context, cache)
+        public GroupsRepository(LactafarmaContext context, ILogger<GroupsRepository> logger, IHttpContextAccessor httpContext) : base(context, httpContext)
         {
             _logger = logger;
         }
@@ -30,7 +31,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.GroupsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                return EntityContext.GroupsMultilingual.Where(l => l.LanguageId == LanguageId)
                     .Include(g => g.Group)
                     .AsEnumerable();
             }
@@ -45,7 +46,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.GroupsMultilingual.Where(gm => gm.LanguageId == User.LanguageId).Include(g => g.Group)
+                return EntityContext.GroupsMultilingual.Where(gm => gm.LanguageId == LanguageId).Include(g => g.Group)
                     .Single(g => g.GroupId == groupId);
             }
             catch (Exception ex)

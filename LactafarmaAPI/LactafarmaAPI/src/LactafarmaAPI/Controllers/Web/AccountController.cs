@@ -85,8 +85,6 @@ namespace LactafarmaAPI.Controllers.Web
                     //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    _cache.Remove("User");
-                    _cache.Set("User", _userManager.GetUserAsync(HttpContext.User).Result);
                     _logger.LogInformation(3, "User created a new account with password.");
                     return Json("User created succesfully");
                 }

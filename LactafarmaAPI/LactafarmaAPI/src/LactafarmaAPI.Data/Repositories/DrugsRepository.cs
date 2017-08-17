@@ -14,14 +14,14 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
-    public class DrugsRepository : DataRepositoryBase<Drug, LactafarmaContext, User>, IDrugRepository
+    public class DrugsRepository : DataRepositoryBase<Drug, LactafarmaContext>, IDrugRepository
     {
         private readonly ILogger<DrugsRepository> _logger;
         private readonly IMemoryCache _cache;
 
         #region Constructors
 
-        public DrugsRepository(LactafarmaContext context, ILogger<DrugsRepository> logger, IMemoryCache cache) : base(context, cache)
+        public DrugsRepository(LactafarmaContext context, ILogger<DrugsRepository> logger, IHttpContextAccessor httpContext) : base(context, httpContext)
         {
             _logger = logger;
         }
@@ -34,7 +34,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(d => d.Drug)
+                return EntityContext.DrugsMultilingual.Where(l => l.LanguageId == LanguageId).Include(d => d.Drug)
                     .AsEnumerable();
             }
             catch (Exception ex)
@@ -48,7 +48,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.DrugsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(d => d.Drug)
+                return EntityContext.DrugsMultilingual.Where(l => l.LanguageId == LanguageId).Include(d => d.Drug)
                     .ThenInclude(g => g.Group).Where(gm => gm.Drug.GroupId == groupId).AsEnumerable();
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace LactafarmaAPI.Data.Repositories
             {
                 return EntityContext.DrugBrands.Where(db => db.BrandId == brandId).Include(d => d.Drug)
                     .ThenInclude(dm => dm.DrugsMultilingual)
-                    .Where(dm => dm.Drug.DrugsMultilingual.FirstOrDefault().LanguageId == User.LanguageId).AsEnumerable();
+                    .Where(dm => dm.Drug.DrugsMultilingual.FirstOrDefault().LanguageId == LanguageId).AsEnumerable();
             }
             catch (Exception ex)
             {
@@ -77,7 +77,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.DrugsMultilingual.Where(e => e.DrugId == drugId && e.LanguageId == User.LanguageId)
+                return EntityContext.DrugsMultilingual.Where(e => e.DrugId == drugId && e.LanguageId == LanguageId)
                     .Include(e => e.Drug).FirstOrDefault();
             }
             catch (Exception ex)

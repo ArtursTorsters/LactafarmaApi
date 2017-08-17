@@ -5,19 +5,20 @@ using System.Linq.Expressions;
 using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
-    public class AliasesRepository : DataRepositoryBase<Alias, LactafarmaContext, User>, IAliasRepository
+    public class AliasesRepository : DataRepositoryBase<Alias, LactafarmaContext>, IAliasRepository
     {
         private readonly ILogger<AliasesRepository> _logger;
 
         #region Constructors
 
-        public AliasesRepository(LactafarmaContext context, ILogger<AliasesRepository> logger, IMemoryCache cache) : base(context, cache)
+        public AliasesRepository(LactafarmaContext context, ILogger<AliasesRepository> logger, IHttpContextAccessor httpContext) : base(context, httpContext)
         {
             _logger = logger;
         }
@@ -30,7 +31,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.AliasMultilingual.Where(e => e.LanguageId == User.LanguageId).Include(a => a.Alias)
+                return EntityContext.AliasMultilingual.Where(e => e.LanguageId == LanguageId).Include(a => a.Alias)
                     .AsEnumerable();
             }
             catch (Exception ex)
@@ -44,7 +45,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.AliasMultilingual.Where(e => e.LanguageId == User.LanguageId).Include(a => a.Alias)
+                return EntityContext.AliasMultilingual.Where(e => e.LanguageId == LanguageId).Include(a => a.Alias)
                     .ThenInclude(d => d.Drug)
                     .Where(a => a.Alias.DrugId == drugId).AsEnumerable();
             }
@@ -62,7 +63,7 @@ namespace LactafarmaAPI.Data.Repositories
                 var alias = EntityContext.Aliases.Where(d => d.Id == aliasId).Include(d => d.Drug)
                     .Include(dm => dm.Drug.DrugsMultilingual).FirstOrDefault();
 
-                return alias.Drug.DrugsMultilingual.Single(d => d.LanguageId == User.LanguageId);
+                return alias.Drug.DrugsMultilingual.Single(d => d.LanguageId == LanguageId);
             }
             catch (Exception ex)
             {
@@ -75,7 +76,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.AliasMultilingual.Where(am => am.LanguageId == User.LanguageId).Include(a => a.Alias)
+                return EntityContext.AliasMultilingual.Where(am => am.LanguageId == LanguageId).Include(a => a.Alias)
                     .FirstOrDefault();
             }
             catch (Exception ex)

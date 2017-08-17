@@ -5,19 +5,20 @@ using System.Linq.Expressions;
 using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
-    public class BrandsRepository : DataRepositoryBase<Brand, LactafarmaContext, User>, IBrandRepository
+    public class BrandsRepository : DataRepositoryBase<Brand, LactafarmaContext>, IBrandRepository
     {
         private readonly ILogger<BrandsRepository> _logger;
 
         #region Constructors
 
-        public BrandsRepository(LactafarmaContext context, ILogger<BrandsRepository> logger, IMemoryCache cache) : base(context, cache)
+        public BrandsRepository(LactafarmaContext context, ILogger<BrandsRepository> logger, IHttpContextAccessor httpContext) : base(context, httpContext)
         {
             _logger = logger;
         }
@@ -30,7 +31,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == LanguageId)
                     .Include(b => b.Brand)
                     .AsEnumerable();
             }
@@ -45,7 +46,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId).Include(a => a.Brand)
+                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == LanguageId).Include(a => a.Brand)
                     .ThenInclude(d => d.DrugBrands)
                     .Where(a => a.Brand.DrugBrands.FirstOrDefault().DrugId == drugId).AsEnumerable();
             }
@@ -60,7 +61,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == User.LanguageId && l.BrandId == brandId)
+                return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == LanguageId && l.BrandId == brandId)
                     .Include(a => a.Brand).FirstOrDefault();
             }
             catch (Exception ex)

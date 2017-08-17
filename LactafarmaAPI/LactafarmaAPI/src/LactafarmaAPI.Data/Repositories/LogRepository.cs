@@ -10,17 +10,18 @@ using LactafarmaAPI.Core.Interfaces;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using LactafarmaAPI.Data.PagedData;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
-    public class LogRepository : DataRepositoryBase<Log, LactafarmaContext, User>, ILogRepository
+    public class LogRepository : DataRepositoryBase<Log, LactafarmaContext>, ILogRepository
     {
         private readonly ILogger<LogRepository> _logger;
 
-        public LogRepository(LactafarmaContext context, ILogger<LogRepository> logger, IMemoryCache cache) : base(context, cache)
+        public LogRepository(LactafarmaContext context, ILogger<LogRepository> logger, IHttpContextAccessor httpContext) : base(context, httpContext)
         {
             _logger = logger;
         }

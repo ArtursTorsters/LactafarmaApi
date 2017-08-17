@@ -7,16 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
 {
-    public class AlertsRepository : DataRepositoryBase<Alert, LactafarmaContext, User>, IAlertRepository
+    public class AlertsRepository : DataRepositoryBase<Alert, LactafarmaContext>, IAlertRepository
     {
         private readonly ILogger<AlertsRepository> _logger;
 
-        public AlertsRepository(LactafarmaContext context, ILogger<AlertsRepository> logger, IMemoryCache cache): base(context, cache)
+        public AlertsRepository(LactafarmaContext context, ILogger<AlertsRepository> logger, IHttpContextAccessor httpContext): base(context, httpContext)
         {
             _logger = logger;
         }
@@ -25,7 +26,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == LanguageId)
                     .Include(e => e.Alert)
                     .ThenInclude(e => e.Drug)
                     .AsEnumerable();
@@ -41,7 +42,7 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == User.LanguageId)
+                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == LanguageId)
                     .Include(d => d.Alert).ThenInclude(d => d.Drug).Where(d => d.Alert.Drug.Id == drugId)
                     .AsEnumerable();
             }
