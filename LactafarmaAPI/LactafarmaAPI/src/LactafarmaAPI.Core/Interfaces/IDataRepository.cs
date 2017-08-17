@@ -24,16 +24,16 @@ namespace LactafarmaAPI.Core.Interfaces
     }
 
     public interface IDataGuidRepository<T> : IDataRepository
-        where T : class, IIdentifiableGuidEntity, new()
+        where T : class, new()
     {
         T Add(T entity);
         Task<T> AddAsync(T entity);
         T Update(T entity);
         Task<T> UpdateAsync(T entity);
         void Remove(T entity);
-        void Remove(string id);
+        void Remove(Guid id);
 
         IEnumerable<T> FindAll();
-        T FindById(string id);
+        T FindById(Guid id);
     }
 }

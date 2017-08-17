@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using LactafarmaAPI.Core;
 using LactafarmaAPI.Core.Interfaces;
@@ -33,7 +34,7 @@ namespace LactafarmaAPI.Services.Services
 
         private readonly ILogger<LactafarmaService> _logger;
         private readonly ILogRepository _logRepository;
-        private readonly IUserRepository _userRepository;
+        public LactafarmaAPI.Data.Entities.User _user;
 
         #endregion
 
@@ -42,7 +43,7 @@ namespace LactafarmaAPI.Services.Services
         public LactafarmaService(ILogRepository logRepository, ILogger<LactafarmaService> logger,
             IAlertRepository alertRepository,
             IAliasRepository aliasRepository, IDrugRepository drugRepository, IBrandRepository brandRepository,
-            IGroupRepository groupRepository, IUserRepository userRepository)
+            IGroupRepository groupRepository)
         {
             _logger = logger;
             _logRepository = logRepository;
@@ -51,7 +52,6 @@ namespace LactafarmaAPI.Services.Services
             _drugRepository = drugRepository;
             _brandRepository = brandRepository;
             _groupRepository = groupRepository;
-            _userRepository = userRepository;
         }
 
         #endregion
@@ -69,6 +69,19 @@ namespace LactafarmaAPI.Services.Services
             {
                 _logger.LogError($"Exception on GetLogs with message: {ex.Message}");
                 return null;
+            }
+        }
+
+        public void SetUser(Data.Entities.User currentUser)
+        {
+            _logger.LogInformation($"BEGIN SetUser");
+            try
+            {
+                _user = currentUser;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on SetUser with message: {ex.Message}");
             }
         }
 
@@ -306,31 +319,31 @@ namespace LactafarmaAPI.Services.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public User GetUser(string userId)
-        {
-            _logger.LogInformation($"BEGIN GetUser");
-            try
-            {
-                var user = _userRepository.GetUser(userId);
-                if (user == null) return null;
-                var result = new User
-                {
-                    AppId = user.AppId,
-                    Email = user.Email,
-                    FacebookInfo = user.FacebookInfo,
-                    GoogleInfo = user.GoogleInfo,
-                    Id = user.Id,
-                    Name = user.Name,
-                    TwitterInfo = user.TwitterInfo
-                };
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception on GetUser with message: {ex.Message}");
-                return null;
-            }
-        }
+        //public User GetUser(string userId)
+        //{
+        //    _logger.LogInformation($"BEGIN GetUser");
+        //    try
+        //    {
+        //        var user = _userRepository.GetUser(userId);
+        //        if (user == null) return null;
+        //        var result = new User
+        //        {
+        //            AppId = user.AppId,
+        //            Email = user.Email,
+        //            FacebookInfo = user.FacebookInfo,
+        //            GoogleInfo = user.GoogleInfo,
+        //            Id = user.Id,
+        //            Name = user.Name,
+        //            TwitterInfo = user.TwitterInfo
+        //        };
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Exception on GetUser with message: {ex.Message}");
+        //        return null;
+        //    }
+        //}
 
         /// <summary>
         ///     Get Alias information by id (including associated Drug)

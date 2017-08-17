@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
@@ -15,13 +16,8 @@ namespace LactafarmaAPI.Data.Repositories
     {
         private readonly ILogger<AlertsRepository> _logger;
 
-        public AlertsRepository(LactafarmaContext context, ILogger<AlertsRepository> logger): base(context)
+        public AlertsRepository(LactafarmaContext context, ILogger<AlertsRepository> logger, IMemoryCache cache): base(context, cache)
         {
-            User = new User()
-            {
-                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
-            };
-
             _logger = logger;
         }
 

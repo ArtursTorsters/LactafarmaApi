@@ -11,6 +11,7 @@ using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using LactafarmaAPI.Data.PagedData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
@@ -19,13 +20,8 @@ namespace LactafarmaAPI.Data.Repositories
     {
         private readonly ILogger<LogRepository> _logger;
 
-        public LogRepository(LactafarmaContext context, ILogger<LogRepository> logger) : base(context)
+        public LogRepository(LactafarmaContext context, ILogger<LogRepository> logger, IMemoryCache cache) : base(context, cache)
         {
-            User = new User
-            {
-                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
-            };
-
             _logger = logger;
         }
 

@@ -21,7 +21,7 @@ namespace LactafarmaAPI.Data
                 MapGroupMultilingual(modelBuilder, logger);
 
                 MapToken(modelBuilder, logger);
-                MapUser(modelBuilder, logger);
+                //MapUser(modelBuilder, logger);
                 MapFavorite(modelBuilder, logger);
                 MapDrug(modelBuilder, logger);
                 MapDrugBrand(modelBuilder, logger);
@@ -150,16 +150,16 @@ namespace LactafarmaAPI.Data
             logger.LogInformation("END: Configuring entity Token");
         }
 
-        private static void MapUser(ModelBuilder modelBuilder, ILogger logger)
-        {
-            logger.LogInformation("BEGIN: Configuring entity User");
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<User>().Ignore(e => e.EntityId).HasKey(e => e.Id);
-            //modelBuilder.Entity<User>().HasMany(d => d.Favorites);
-            //modelBuilder.Entity<User>().HasMany(d => d.Tokens);
-            //modelBuilder.Entity<User>().HasOne(d => d.Language);
-            logger.LogInformation("END: Configuring entity User");
-        }
+        //private static void MapUser(ModelBuilder modelBuilder, ILogger logger)
+        //{
+        //    logger.LogInformation("BEGIN: Configuring entity User");
+        //    modelBuilder.Entity<User>().ToTable("Users");
+        //    modelBuilder.Entity<User>().Ignore(e => e.EntityId).HasKey(e => e.Id);
+        //    //modelBuilder.Entity<User>().HasMany(d => d.Favorites);
+        //    //modelBuilder.Entity<User>().HasMany(d => d.Tokens);
+        //    //modelBuilder.Entity<User>().HasOne(d => d.Language);
+        //    logger.LogInformation("END: Configuring entity User");
+        //}
 
         private static void MapFavorite(ModelBuilder modelBuilder, ILogger logger)
         {

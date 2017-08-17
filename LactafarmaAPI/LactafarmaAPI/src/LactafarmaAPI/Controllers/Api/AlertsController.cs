@@ -1,7 +1,9 @@
 ﻿using System;
 using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
+using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +23,7 @@ namespace LactafarmaAPI.Controllers.Api
 
         public AlertsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
-            ILogger<AlertsController> logger, IMemoryCache cache) : base(lactafarmaService, mailService, config, cache)
+            ILogger<AlertsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
         {
             _logger = logger;
 

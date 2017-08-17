@@ -28,7 +28,6 @@ namespace LactafarmaAPI.Data
         public DbSet<GroupMultilingual> GroupsMultilingual { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Token> Tokens { get; set; }
-        public DbSet<User> Users { get; set; }
 
         #endregion
 
@@ -48,13 +47,6 @@ namespace LactafarmaAPI.Data
             base.OnModelCreating(modelBuilder);
 
             LactafarmaDbMapping.Configure(modelBuilder, _logger);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-TG264EB;Database=LactafarmaDb;Trusted_Connection=true;MultipleActiveResultSets=true;");
         }
 
         #endregion

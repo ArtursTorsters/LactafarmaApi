@@ -2,11 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -20,6 +24,7 @@ namespace LactafarmaAPI.Controllers.Api.Base
         public readonly IConfigurationRoot Config;
         public readonly ILactafarmaService LactafarmaService;
         public readonly IMailService MailService;
+        private readonly UserManager<User> _userManager;
         public IMemoryCache Cache { get; set; }
 
         public enum EntityType
@@ -32,14 +37,30 @@ namespace LactafarmaAPI.Controllers.Api.Base
             User
         }
 
-        public BaseController(ILactafarmaService lactafarmaService, IMailService mailService, IConfigurationRoot config, IMemoryCache cache)
+        public BaseController(ILactafarmaService lactafarmaService, IMailService mailService, IConfigurationRoot config, IMemoryCache cache, UserManager<User> userManager)
         {
             LactafarmaService = lactafarmaService;
             MailService = mailService;
             Config = config;
             Cache = cache;
+            _userManager = userManager;
         }
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+
+            if (Cache.Get("User") == null)
+            {
+                var user = _userManager.GetUserAsync(HttpContext.User).Result;
+                
+                if (user == null)
+                    RedirectToRoute("/auth/login");
+
+                Cache.Set("User", user);
+            }
+                
+        }
 
         public void CacheInitialize<TModel>(IEnumerable<TModel> items, EntityType type) where TModel : BaseModel
         {

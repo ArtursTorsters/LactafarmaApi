@@ -6,6 +6,6 @@ namespace LactafarmaAPI.Core.Interfaces
 {
     public interface IIdentifiableGuidEntity
     {
-        string EntityId { get; set; }
+        Guid EntityId { get; set; }
     }
 }

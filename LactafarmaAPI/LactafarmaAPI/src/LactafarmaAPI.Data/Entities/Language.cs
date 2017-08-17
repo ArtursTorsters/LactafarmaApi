@@ -8,7 +8,7 @@ namespace LactafarmaAPI.Data.Entities
 {
     public class Language : IIdentifiableGuidEntity
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
 
         //Navigation Properties
@@ -18,7 +18,7 @@ namespace LactafarmaAPI.Data.Entities
         //public virtual ICollection<DrugMultilingual> DrugsMultilingual { get; set; }
         //public virtual ICollection<GroupMultilingual> GroupsMultilingual { get; set; }
 
-        public string EntityId
+        public Guid EntityId
         {
             get => Id;
             set => Id = value;

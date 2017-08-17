@@ -6,6 +6,7 @@ using LactafarmaAPI.Data.PagedData;
 using LactafarmaAPI.Domain.Models;
 using LactafarmaAPI.Domain.Models.Base;
 using Log = LactafarmaAPI.Domain.Models.Log;
+using User = LactafarmaAPI.Data.Entities.User;
 
 namespace LactafarmaAPI.Services.Interfaces
 {
@@ -24,7 +25,7 @@ namespace LactafarmaAPI.Services.Interfaces
         IEnumerable<Drug> GetDrugsByBrand(int brandId);
         IEnumerable<BaseModel> GetAllGroups();
         Group GetGroup(int groupId);
-        User GetUser(string userId);
+        //User GetUser(string userId);
         Alias GetAlias(int aliasId);
         Brand GetBrand(int brandId);
         Drug GetDrug(int drugId);
@@ -35,5 +36,6 @@ namespace LactafarmaAPI.Services.Interfaces
         Task<IList<string>> GetLevelsAsync();
 
         Task<IPagedList<Log>> GetLogsAsync(LogPagedDataRequest request);
+        void SetUser(User currentUser);
     }
 }

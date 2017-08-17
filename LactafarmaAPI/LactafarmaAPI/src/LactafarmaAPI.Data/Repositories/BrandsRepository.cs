@@ -6,6 +6,7 @@ using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
@@ -16,13 +17,8 @@ namespace LactafarmaAPI.Data.Repositories
 
         #region Constructors
 
-        public BrandsRepository(LactafarmaContext context, ILogger<BrandsRepository> logger) : base(context)
+        public BrandsRepository(LactafarmaContext context, ILogger<BrandsRepository> logger, IMemoryCache cache) : base(context, cache)
         {
-            User = new User
-            {
-                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
-            };
-
             _logger = logger;
         }
 

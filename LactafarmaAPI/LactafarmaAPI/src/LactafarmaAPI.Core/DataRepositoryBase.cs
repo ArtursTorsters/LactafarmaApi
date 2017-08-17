@@ -5,22 +5,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LactafarmaAPI.Core
 {
     public abstract class DataRepositoryBase<TEntity, TContext, TUser> : IDataRepository<TEntity>
         where TEntity : class, IIdentifiableEntity, new()
         where TContext : DbContext
-        where TUser : class, IIdentifiableGuidEntity, new()
+        where TUser : class, new()
     {
         public TContext EntityContext;
-        public TUser User;
+        public TUser User => (TUser)_cache.Get("User");
         private readonly DbSet<TEntity> _dbSet;
+        private readonly IMemoryCache _cache;
 
-        protected DataRepositoryBase(TContext entityContext)
+        protected DataRepositoryBase(TContext entityContext, IMemoryCache cache)
         {
             EntityContext = entityContext;
+            _cache = cache;
             _dbSet = EntityContext.Set<TEntity>();
         }
 
@@ -113,7 +118,7 @@ namespace LactafarmaAPI.Core
     public abstract class DataGuidRepositoryBase<TEntity, TContext, TUser> : IDataGuidRepository<TEntity>
         where TEntity : class, IIdentifiableGuidEntity, new()
         where TContext : DbContext
-        where TUser : class, IIdentifiableGuidEntity, new()
+        where TUser : class, new()
 
     {
         public TContext EntityContext;
@@ -126,7 +131,7 @@ namespace LactafarmaAPI.Core
             _dbSet = EntityContext.Set<TEntity>();
         }
 
-        protected abstract Expression<Func<TEntity, bool>> IdentifierPredicate(string id);
+        protected abstract Expression<Func<TEntity, bool>> IdentifierPredicate(Guid id);
 
         public virtual TEntity Add(TEntity entity)
         {
@@ -172,7 +177,7 @@ namespace LactafarmaAPI.Core
             EntityContext.SaveChanges();
         }
 
-        public virtual void Remove(string id)
+        public virtual void Remove(Guid id)
         {
             TEntity entity = GetEntity(id);
             EntityContext.Entry<TEntity>(entity)
@@ -185,7 +190,7 @@ namespace LactafarmaAPI.Core
             return (GetEntities()).Where(e => e.EntityId != null);
         }
 
-        public virtual TEntity FindById(string id)
+        public virtual TEntity FindById(Guid id)
         {
             return GetEntity(id);
         }
@@ -200,7 +205,7 @@ namespace LactafarmaAPI.Core
             return _dbSet;
         }
 
-        TEntity GetEntity(string id)
+        TEntity GetEntity(Guid id)
         {
             return _dbSet.Where(IdentifierPredicate(id)).FirstOrDefault();
         }

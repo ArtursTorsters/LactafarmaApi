@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using LactafarmaAPI.Data;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
@@ -7,10 +9,13 @@ using LactafarmaAPI.Data.Repositories;
 using LactafarmaAPI.Services;
 using LactafarmaAPI.Services.Interfaces;
 using LactafarmaAPI.Services.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -69,6 +74,45 @@ namespace LactafarmaAPI
             if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
                 services.AddScoped<IMailService, DebugMailService>();
 
+            // EF Core Identity
+            services.AddIdentity<User, IdentityRole>(config =>
+            {
+                // Password settings
+                config.Password.RequireDigit = true;
+                config.Password.RequiredLength = 8;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = true;
+                config.Password.RequireLowercase = false;
+
+                // Lockout settings
+                config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                config.Lockout.MaxFailedAccessAttempts = 10;
+
+                // Cookie settings
+                config.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
+                config.Cookies.ApplicationCookie.LoginPath = "/auth/login";
+                config.Cookies.ApplicationCookie.LogoutPath = "/auth/logout";
+
+                // User settings
+                config.User.RequireUniqueEmail = true;
+                //Handle AuthenticationEvents on API calls (401 message)
+                config.Cookies.ApplicationCookie.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = async ctx =>
+                    {
+                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+                        {
+                            ctx.Response.StatusCode = 401;
+                        }
+                        else
+                        {
+                            ctx.Response.Redirect(ctx.RedirectUri);
+                        }
+                        await Task.Yield();
+                    }
+                };
+            }).AddEntityFrameworkStores<LactafarmaContext>();
+
             //Entity Framework Core configuration
             services.AddEntityFrameworkSqlServer().AddDbContext<LactafarmaContext>(config =>
             {
@@ -89,7 +133,7 @@ namespace LactafarmaAPI
             services.AddScoped<IBrandRepository, BrandsRepository>();
             services.AddScoped<IDrugRepository, DrugsRepository>();
             services.AddScoped<IGroupRepository, GroupsRepository>();
-            services.AddScoped<IUserRepository, UsersRepository>();
+            //services.AddScoped<IUserRepository, UsersRepository>();
             services.AddScoped<ILogRepository, LogRepository>();
 
             //General service for retrieving items from EF Core
@@ -105,8 +149,16 @@ namespace LactafarmaAPI
 
             //Allow MVC services to be specified
             //Add AuthorizeFilter to demand the user to be authenticated in order to access resources.
-            services.AddMvc(options => options.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())))
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            services.AddMvc(options =>
+            {
+                if (_env.IsProduction())
+                {
+                    options.Filters.Add(new RequireHttpsAttribute());
+                }
+                //options.Filters
+                //    .Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
+                //        .Build()));
+            }).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             // Set up policies from claims
             services.AddAuthorization(options =>
@@ -140,7 +192,9 @@ namespace LactafarmaAPI
             }
             
             //app.UseDefaultFiles();
-            app.UseStaticFiles();   
+            app.UseStaticFiles();
+
+            app.UseIdentity();
 
             app.UseMvc(config =>
             {

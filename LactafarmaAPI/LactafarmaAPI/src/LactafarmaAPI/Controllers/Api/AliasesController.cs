@@ -4,8 +4,10 @@ using System.Linq;
 using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
 using LactafarmaAPI.Core;
+using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +27,7 @@ namespace LactafarmaAPI.Controllers.Api
 
         public AliasesController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
-            ILogger<AliasesController> logger, IMemoryCache cache) : base(lactafarmaService, mailService, config, cache)
+            ILogger<AliasesController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
         {
             _logger = logger;
 

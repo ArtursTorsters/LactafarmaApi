@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LactafarmaAPI.Controllers.Api.Base;
+using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.PagedData;
 using LactafarmaAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -21,8 +23,7 @@ namespace LactafarmaAPI.Controllers.Api
         #region Constructors
 
         public LogController(ILactafarmaService lactafarmaService, IMailService mailService,
-            IConfigurationRoot config, ILogger<LogController> logger, IMemoryCache cache) : base(lactafarmaService,
-            mailService, config, cache)
+            IConfigurationRoot config, ILogger<LogController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
         {
             _logger = logger;
         }

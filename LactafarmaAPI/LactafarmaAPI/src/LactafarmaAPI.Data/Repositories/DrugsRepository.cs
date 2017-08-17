@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Data.Repositories
@@ -13,16 +17,12 @@ namespace LactafarmaAPI.Data.Repositories
     public class DrugsRepository : DataRepositoryBase<Drug, LactafarmaContext, User>, IDrugRepository
     {
         private readonly ILogger<DrugsRepository> _logger;
+        private readonly IMemoryCache _cache;
 
         #region Constructors
 
-        public DrugsRepository(LactafarmaContext context, ILogger<DrugsRepository> logger) : base(context)
+        public DrugsRepository(LactafarmaContext context, ILogger<DrugsRepository> logger, IMemoryCache cache) : base(context, cache)
         {
-            User = new User
-            {
-                LanguageId = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134")
-            };
-
             _logger = logger;
         }
 

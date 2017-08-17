@@ -9,7 +9,7 @@ namespace LactafarmaAPI.Data.Entities
 {
     public class Token : IIdentifiableGuidEntity
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string Hash { get; set; }
         public DateTime ExpirationDate { get; set; }
         public Guid UserId { get; set; }
@@ -17,7 +17,7 @@ namespace LactafarmaAPI.Data.Entities
         //Navigation Properties
         public User User { get; set; }
 
-        public string EntityId
+        public Guid EntityId
         {
             get => Id;
             set => Id = value;
