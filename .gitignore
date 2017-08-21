@@ -33,6 +33,7 @@ bld/
 Release/
 
 # ignore appsettings configuration files
+**/appsettings.json
 **/appsettings.development.json
 **/appsettings.staging.json
 **/appsettings.production.json
