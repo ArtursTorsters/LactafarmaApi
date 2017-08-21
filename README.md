@@ -5,7 +5,7 @@ Here is the documentation about API created for Lactafarma mobile app, for getti
 
 * Groups of drugs which are divided by family
 * Aliases used by drug, on this way you will be aware about different naming for any drug
-* Brands around every drug, which it's interesting for getting drugs more cheap than private ones
+* Brands around every drug, which it's interesting for getting drugs more cheaper than private ones
 * Drugs with detailed information about risk when you are making breastfeeding (this information is extracted from <a href="www.e-lactancia.org" target="_blank">www.e-lactancia.org</a>)
 * Alerts about updates on drug information or new risk level
 

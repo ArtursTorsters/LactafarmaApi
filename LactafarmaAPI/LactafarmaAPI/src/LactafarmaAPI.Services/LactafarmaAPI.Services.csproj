@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>LactafarmaAPI.Services</AssemblyName>
     <PackageId>LactafarmaAPI.Services</PackageId>
-    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -12,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LactafarmaAPI.Core\LactafarmaAPI.Core.csproj" />
     <ProjectReference Include="..\LactafarmaAPI.Data\LactafarmaAPI.Data.csproj" />
     <ProjectReference Include="..\LactafarmaAPI.Domain\LactafarmaAPI.Domain.csproj" />
   </ItemGroup>

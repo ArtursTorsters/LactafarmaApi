@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.13
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F7105648-9016-4E17-A651-E9348B13B797}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E7F6248B-9C41-4651-9A77-5A294AACB346}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LactafarmaAPI", "src\LactafarmaAPI\LactafarmaAPI.csproj", "{0B11FE83-0FD6-433B-876B-C042225FF93C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{685FCB24-FE36-4A28-A70C-FC55D526465F} = {685FCB24-FE36-4A28-A70C-FC55D526465F}
+		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6} = {CAB5304E-AB43-4613-B4B5-28F608ABF2B6}
+		{22CBB2BD-28E3-459E-B159-420B344EED5A} = {22CBB2BD-28E3-459E-B159-420B344EED5A}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LactafarmaAPI.Services", "src\LactafarmaAPI.Services\LactafarmaAPI.Services.csproj", "{685FCB24-FE36-4A28-A70C-FC55D526465F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -21,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LactafarmaAPI.Domain", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LactafarmaAPI.Core", "src\LactafarmaAPI.Core\LactafarmaAPI.Core.csproj", "{1FE60289-988E-442D-8834-2FC7ECC27371}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LactafarmaApi.EntityFrameworkMigrations", "LactafarmaApi.EntityFrameworkMigrations\LactafarmaApi.EntityFrameworkMigrations.csproj", "{6FD980FD-25D2-47B5-8C29-853FC44B5951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LactafarmaApi.EntityFrameworkMigrations", "LactafarmaApi.EntityFrameworkMigrations\LactafarmaApi.EntityFrameworkMigrations.csproj", "{6FD980FD-25D2-47B5-8C29-853FC44B5951}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,5 +69,8 @@ Global
 		{CAB5304E-AB43-4613-B4B5-28F608ABF2B6} = {F7105648-9016-4E17-A651-E9348B13B797}
 		{1FE60289-988E-442D-8834-2FC7ECC27371} = {F7105648-9016-4E17-A651-E9348B13B797}
 		{6FD980FD-25D2-47B5-8C29-853FC44B5951} = {F7105648-9016-4E17-A651-E9348B13B797}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA0FA6BB-9370-440C-B618-233EA110378D}
 	EndGlobalSection
 EndGlobal

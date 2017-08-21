@@ -17,7 +17,6 @@ namespace LactafarmaAPI.Data.Repositories
     public class DrugsRepository : DataRepositoryBase<Drug, LactafarmaContext>, IDrugRepository
     {
         private readonly ILogger<DrugsRepository> _logger;
-        private readonly IMemoryCache _cache;
 
         #region Constructors
 

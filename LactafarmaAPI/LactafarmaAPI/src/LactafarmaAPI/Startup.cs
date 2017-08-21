@@ -72,8 +72,9 @@ namespace LactafarmaAPI
             // Add framework services.
             services.AddSingleton(Configuration);
 
-            if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
-                services.AddScoped<IMailService, DebugMailService>();
+            //TODO: Create Real Mail Service for sending to emails for administrator role
+            //if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
+            services.AddScoped<IMailService, DebugMailService>();
 
             // EF Core Identity
             services.AddIdentity<User, IdentityRole>(config =>
@@ -89,15 +90,22 @@ namespace LactafarmaAPI
                 config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 config.Lockout.MaxFailedAccessAttempts = 10;
 
-                // Cookie settings
-                config.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
-                config.Cookies.ApplicationCookie.LoginPath = "/auth/login";
-                config.Cookies.ApplicationCookie.LogoutPath = "/auth/logout";
-
                 // User settings
                 config.User.RequireUniqueEmail = true;
-                //Handle AuthenticationEvents on API calls (401 message)
-                config.Cookies.ApplicationCookie.Events = new CookieAuthenticationEvents
+            }).AddEntityFrameworkStores<LactafarmaContext>();
+                       
+            // Cookie settings
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/auth/login";
+                config.LogoutPath = "/auth/logout";
+                config.ExpireTimeSpan = TimeSpan.FromDays(150);
+            });
+
+            //Handle AuthenticationEvents on API calls (401 message)
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Events = new CookieAuthenticationEvents
                 {
                     OnRedirectToLogin = async ctx =>
                     {
@@ -112,7 +120,7 @@ namespace LactafarmaAPI
                         await Task.Yield();
                     }
                 };
-            }).AddEntityFrameworkStores<LactafarmaContext>();
+            });
 
             // Adding custom properties to ClaimPrincipal (LanguageId) - Extend the default one: HttpContext.User
             services.AddScoped<IUserClaimsPrincipalFactory<User>, AppClaimsPrincipalFactory>();
@@ -153,10 +161,11 @@ namespace LactafarmaAPI
             //Add AuthorizeFilter to demand the user to be authenticated in order to access resources.
             services.AddMvc(options =>
             {
-                if (_env.IsProduction())
-                {
-                    options.Filters.Add(new RequireHttpsAttribute());
-                }
+                //TODO: SSL requirement on Hosting
+                //if (_env.IsProduction())
+                //{
+                //    options.Filters.Add(new RequireHttpsAttribute());
+                //}
                 //options.Filters
                 //    .Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
                 //        .Build()));
@@ -199,7 +208,7 @@ namespace LactafarmaAPI
             //app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseIdentity();
+            app.UseAuthentication();
 
             app.UseSession();
 
