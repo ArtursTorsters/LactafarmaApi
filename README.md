@@ -63,4 +63,4 @@ This project was a workaround for dealing with IdentityUser object on environmen
 
 If you run into any problems or issues, **please** let us know so we can address and fix them right away. You can report issues on GitHub:
 
-* [Markdown Monster Bug Reports and Feature Requests](https://github.com/gomnet/lactafarma/issues)
+* [LactafarmaAPI Bug Reports and Feature Requests](https://github.com/gomnet/lactafarma/issues)
