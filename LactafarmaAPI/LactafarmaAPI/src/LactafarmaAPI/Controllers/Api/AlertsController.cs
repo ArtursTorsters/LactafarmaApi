@@ -12,6 +12,9 @@ using System.Collections.Generic;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Alerts Controller
+    /// </summary>
     public class AlertsController : BaseController, IAlertsController
     {
         #region Private Properties
@@ -21,7 +24,15 @@ namespace LactafarmaAPI.Controllers.Api
         #endregion
 
         #region Constructors
-
+        /// <summary>
+        /// Alerts handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public AlertsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
             ILogger<AlertsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
@@ -34,8 +45,12 @@ namespace LactafarmaAPI.Controllers.Api
         #endregion
 
         #region Public Methods
-
-        [Route("bydrug/{drugId:int}")]
+        /// <summary>
+        /// Get alerts by specified Drug in User context
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
+        [HttpGet("bydrug/{drugId:int}")]
         public IEnumerable<Domain.Models.Alert> GetAlertsByDrug(int drugId)
         {
             IEnumerable<Domain.Models.Alert> result = null;

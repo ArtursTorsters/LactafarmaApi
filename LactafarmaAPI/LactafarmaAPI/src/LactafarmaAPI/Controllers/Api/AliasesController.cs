@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Alerts handler class
+    /// </summary>
     public class AliasesController : BaseController, IAliasesController
     {
         #region Private Properties
@@ -25,6 +28,15 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Aliases handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public AliasesController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
             ILogger<AliasesController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
@@ -38,7 +50,12 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("byname/{startsWith}")]
+        /// <summary>
+        /// Get first 3 coincidences on aliases collection
+        /// </summary>
+        /// <param name="startsWith"></param>
+        /// <returns></returns>
+        [HttpGet("byname/{startsWith}")]
         public IEnumerable<Domain.Models.Alias> GetAliasesByName(string startsWith)
         {
             IEnumerable<Domain.Models.Alias> result = null;
@@ -73,8 +90,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-
-        [Route("bydrug/{drugId:int}")]
+        /// <summary>
+        /// Get aliases by specified Drug in User context
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
+        [HttpGet("bydrug/{drugId:int}")]
         public IEnumerable<Domain.Models.Alias> GetAliasesByDrug(int drugId)
         {
             IEnumerable<Domain.Models.Alias> result = null;
@@ -98,7 +119,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("{aliasId:int}")]
+        /// <summary>
+        /// Get detailed information about alias requested
+        /// </summary>
+        /// <param name="aliasId"></param>
+        /// <returns></returns>
+        [HttpGet("{aliasId:int}")]
         public Domain.Models.Alias GetAlias(int aliasId)
         {
             Domain.Models.Alias result = null;

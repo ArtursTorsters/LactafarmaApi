@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Drugs handler class
+    /// </summary>
     public class DrugsController : BaseController, IDrugsController
     {
         #region Private Properties
@@ -25,6 +28,15 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Drugs handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public DrugsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
             ILogger<DrugsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(
@@ -38,7 +50,12 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("byname/{startsWith}")]
+        /// <summary>
+        /// Get first 7 coincidences on drugs collection
+        /// </summary>
+        /// <param name="startsWith"></param>
+        /// <returns></returns>
+        [HttpGet("byname/{startsWith}")]
         public IEnumerable<Domain.Models.Drug> GetDrugsByName(string startsWith)
         {
             IEnumerable<Domain.Models.Drug> result = null;
@@ -74,7 +91,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("bygroup/{groupId:int}")]
+        /// <summary>
+        /// Get list of drugs by provided group
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        [HttpGet("bygroup/{groupId:int}")]
         public IEnumerable<Domain.Models.Drug> GetDrugsByGroup(int groupId)
         {
             IEnumerable<Domain.Models.Drug> result = null;
@@ -97,7 +119,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("bybrand/{brandId:int}")]
+        /// <summary>
+        /// Get list of drugs by provided brand
+        /// </summary>
+        /// <param name="brandId"></param>
+        /// <returns></returns>
+        [HttpGet("bybrand/{brandId:int}")]
         public IEnumerable<Domain.Models.Drug> GetDrugsByBrand(int brandId)
         {
             IEnumerable<Domain.Models.Drug> result = null;
@@ -120,7 +147,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("byalias/{aliasId:int}")]
+        /// <summary>
+        /// Get list of drugs by provided alias
+        /// </summary>
+        /// <param name="aliasId"></param>
+        /// <returns></returns>
+        [HttpGet("byalias/{aliasId:int}")]
         public Domain.Models.Drug GetDrugByAlias(int aliasId)
         {
             Domain.Models.Drug result = null;
@@ -143,7 +175,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("{drugId:int}")]
+        /// <summary>
+        /// Get detailed information about drug requested
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
+        [HttpGet("{drugId:int}")]
         public Domain.Models.Drug GetDrug(int drugId)
         {
             Domain.Models.Drug result = null;

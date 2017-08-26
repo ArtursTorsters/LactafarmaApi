@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Logs handler class
+    /// </summary>
     public class LogController : BaseController
     {
         #region Private Properties
@@ -22,6 +25,15 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Logs handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public LogController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config, ILogger<LogController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
         {
@@ -32,7 +44,11 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("levels")]
+        /// <summary>
+        /// Get all different log levels currently available
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("levels")]
         public async Task<IActionResult> GetLevels()
         {
             var result = new JsonResult(false);
@@ -57,11 +73,13 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+
         /// <summary>
-        ///     Get logs with Error level specified on last 7 days
+        /// Get logs with Error level specified on last 7 days
         /// </summary>
         /// <returns></returns>
-        [Route("error")]
+        
+        [HttpGet("error")]
         public async Task<IActionResult> GetErrorLogs()
         {
             IActionResult result = null;
@@ -94,10 +112,10 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        ///     Get logs with Error level specified on last 7 days
+        /// Get logs with Warn level specified on last 7 days
         /// </summary>
         /// <returns></returns>
-        [Route("warn")]
+        [HttpGet("warn")]
         public async Task<IActionResult> GetWarnLogs()
         {
             IActionResult result = null;
@@ -129,7 +147,11 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("fatal")]
+        /// <summary>
+        /// Get logs with Fatal level specified on last 7 days
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("fatal")]
         public async Task<IActionResult> GetFatalLogs()
         {
             IActionResult result = null;
@@ -162,10 +184,11 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        ///     Get logs with Any level specified on last 7 days
+        /// Get logs with Any level specified on last 7 days
         /// </summary>
         /// <returns></returns>
-        [Route("all")]
+        
+        [HttpGet("all")]
         public async Task<IActionResult> GetLogs()
         {
             IActionResult result = null;

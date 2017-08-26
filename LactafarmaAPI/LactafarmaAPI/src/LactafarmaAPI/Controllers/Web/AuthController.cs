@@ -14,6 +14,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Web
 {
+    /// <summary>
+    /// Auth handler class
+    /// </summary>
     public class AuthController : Controller
     {
         private SignInManager<User> _signInManager;
@@ -21,6 +24,13 @@ namespace LactafarmaAPI.Controllers.Web
         private IMemoryCache _cache;
         private UserManager<User> _userManager;
 
+        /// <summary>
+        /// Auth handler constructor
+        /// </summary>
+        /// <param name="signInManager"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public AuthController(SignInManager<User> signInManager, ILogger<AuthController> logger, IMemoryCache cache, UserManager<User> userManager)
         {
             _signInManager = signInManager;
@@ -29,7 +39,11 @@ namespace LactafarmaAPI.Controllers.Web
             _userManager = userManager;
         }
 
-        [Route("/auth/login")]
+        /// <summary>
+        /// Login page load
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/auth/login")]
         public ActionResult Login()
         {
             ActionResult result = null;
@@ -53,8 +67,12 @@ namespace LactafarmaAPI.Controllers.Web
             return View();
         }
 
-        [Route("/auth/login")]
-        [HttpPost]
+        /// <summary>
+        /// Try to login with information provided by user
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("/auth/login")]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
             ActionResult result = null;
@@ -88,7 +106,12 @@ namespace LactafarmaAPI.Controllers.Web
 
             return result;
         }
-        [Route("/auth/logout")]
+
+        /// <summary>
+        /// Try to logout when user was previously loggedin
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/auth/logout")]
         public async Task<ActionResult> Logout()
         {
             if (User.Identity.IsAuthenticated)

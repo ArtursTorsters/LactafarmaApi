@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Brands handler class
+    /// </summary>
     public class BrandsController : BaseController, IBrandsController
     {
         #region Private Properties
@@ -25,6 +28,15 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Brands handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public BrandsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
             ILogger<BrandsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
@@ -38,7 +50,12 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("byname/{startsWith}")]
+        /// <summary>
+        /// Get first 3 coincidences on brands collection
+        /// </summary>
+        /// <param name="startsWith"></param>
+        /// <returns></returns>
+        [HttpGet("byname/{startsWith}")]
         public IEnumerable<Domain.Models.Brand> GetBrandsByName(string startsWith)
         {
             IEnumerable<Domain.Models.Brand> result = null;
@@ -73,7 +90,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("bydrug/{drugId:int}")]
+        /// <summary>
+        /// Get brands by specified Drug in User context
+        /// </summary>
+        /// <param name="drugId"></param>
+        /// <returns></returns>
+        [HttpGet("bydrug/{drugId:int}")]
         public IEnumerable<Domain.Models.Brand> GetBrandsByDrug(int drugId)
         {
             IEnumerable<Domain.Models.Brand> result = null;
@@ -97,7 +119,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("{brandId:int}")]
+        /// <summary>
+        /// Get detailed information about brand requested
+        /// </summary>
+        /// <param name="brandId"></param>
+        /// <returns></returns>
+        [HttpGet("{brandId:int}")]
         public Domain.Models.Brand GetBrand(int brandId)
         {
             Domain.Models.Brand result = null;

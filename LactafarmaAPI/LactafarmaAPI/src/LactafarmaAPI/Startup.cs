@@ -28,9 +28,14 @@ using NLog;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace LactafarmaAPI
 {
+    /// <summary>
+    /// Startup class
+    /// </summary>
     public class Startup
     {
         #region Private Properties
@@ -41,12 +46,19 @@ namespace LactafarmaAPI
 
         #region Public Properties
 
+        /// <summary>
+        /// IConfigurationRoot
+        /// </summary>
         public IConfigurationRoot Configuration { get; }
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Startup constructor
+        /// </summary>
+        /// <param name="env"></param>
         public Startup(IHostingEnvironment env)
         {
             _env = env;
@@ -66,7 +78,11 @@ namespace LactafarmaAPI
 
         #region Public Methods
 
-        // This method gets called by the runtime. Use this method to add services to the container
+
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
@@ -93,7 +109,7 @@ namespace LactafarmaAPI
                 // User settings
                 config.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<LactafarmaContext>();
-                       
+
             // Cookie settings
             services.ConfigureApplicationCookie(config =>
             {
@@ -154,9 +170,26 @@ namespace LactafarmaAPI
             //Allow logging system (ILogger)
             services.AddLogging();
 
-            ////Allow IMemoryCache mechanism
-            //services.AddMemoryCache();
-            
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "LactafarmaApi",
+                    Description = "API for getting interesting information about drugs for breastfeeding, also it will be used as template for ASP.NET Core projects with Entity Framework Core (2.0)",
+                    Version = "v1",
+                    Contact = new Contact { Email = "xpertpoint.solutions@gmail.com", Url = "https://github.com/gomnet/lactafarma/issues" }
+                });
+
+                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "LactafarmaAPI.xml");
+                c.IncludeXmlComments(filePath);
+            });
+
+            services.ConfigureSwaggerGen(
+                options => {
+                    // UseFullTypeNameInSchemaIds replacement for .NET Core
+                    options.CustomSchemaIds(x => x.FullName);                    
+                    });
+
             //Allow MVC services to be specified
             //Add AuthorizeFilter to demand the user to be authenticated in order to access resources.
             services.AddMvc(options =>
@@ -188,7 +221,12 @@ namespace LactafarmaAPI
             services.AddSession();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        /// <param name="loggerFactory"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             //NLog configuration
@@ -204,7 +242,7 @@ namespace LactafarmaAPI
             {
                 loggerFactory.AddDebug(LogLevel.Error);
             }
-            
+
             //app.UseDefaultFiles();
             app.UseStaticFiles();
 
@@ -212,13 +250,23 @@ namespace LactafarmaAPI
 
             app.UseSession();
 
-            app.UseMvc(config =>
+            //Specify route template for API documentation
+            app.UseSwagger(c =>
             {
-                //config.MapRoute(
-                //    "Default",
-                //    "{controller}/{action}/{id?}",
-                //    new {controller = "Demo", action = "Index"});
+                c.RouteTemplate = "help/{documentName}/lactafarma.json";
+                c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
             });
+
+            //Indicate endpoints/documents for Swagger UI generator
+            app.UseSwaggerUI(c =>
+            {
+                c.RoutePrefix = "help";
+                c.SwaggerEndpoint("/help/v1/lactafarma.json", "LactafarmaApi V1");
+                c.InjectStylesheet("/css/themes/theme-monokai.css");
+                c.InjectOnCompleteJavaScript("/js/custom-swagger-ui.js");
+            });
+
+            app.UseMvc();            
         }
 
         #endregion

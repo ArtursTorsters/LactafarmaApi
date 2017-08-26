@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Groups handler class
+    /// </summary>
     public class GroupsController : BaseController, IGroupsController
     {
         #region Private Properties
@@ -25,6 +28,15 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Groups handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public GroupsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
             ILogger<GroupsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
@@ -38,7 +50,12 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("byname/{startsWith}")]
+        /// <summary>
+        /// Get first 3 coincidences on groups collection
+        /// </summary>
+        /// <param name="startsWith"></param>
+        /// <returns></returns>
+        [HttpGet("byname/{startsWith}")]
         public IEnumerable<Domain.Models.Group> GetGroupsByName(string startsWith)
         {
             IEnumerable<Domain.Models.Group> result = null;
@@ -74,7 +91,12 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("{groupId:int}")]
+        /// <summary>
+        /// Get detailed information about group requested
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        [HttpGet("{groupId:int}")]
         public Domain.Models.Group GetGroup(int groupId)
         {
             Domain.Models.Group result = null;

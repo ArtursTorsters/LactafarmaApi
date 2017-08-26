@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Cache handler class
+    /// </summary>
     public class CacheController : BaseController
     {
         #region Private Properties
@@ -21,6 +24,15 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Cache handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public CacheController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config, ILogger<CacheController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
         {
@@ -30,8 +42,12 @@ namespace LactafarmaAPI.Controllers.Api
         #endregion
 
         #region Public Methods
-
-        [Route("load")]
+        
+        /// <summary>
+        /// Load all objects for caching just on Id/Name fields
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("load")]
         public async Task<IActionResult> LoadCaches()
         {
             JsonResult result = null;
@@ -57,7 +73,11 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
-        [Route("clear")]
+        /// <summary>
+        /// Clear all objects from Memory
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("clear")]
         public async Task<IActionResult> ClearCaches()
         {
             var result = new JsonResult(false);
@@ -77,9 +97,22 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+
+
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Clear set of objects stored on IMemoryCache
+        /// </summary>
+        private async Task ClearCachesAsync()
+        {
+            await Task.Run(() => Cache.Remove(EntityType.Alias));
+            await Task.Run(() => Cache.Remove(EntityType.Drug));
+            await Task.Run(() => Cache.Remove(EntityType.Group));
+            await Task.Run(() => Cache.Remove(EntityType.Brand));
+        }
 
         private async Task LoadCachesAsync()
         {

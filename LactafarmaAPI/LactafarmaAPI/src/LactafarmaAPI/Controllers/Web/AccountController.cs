@@ -15,6 +15,9 @@ using Language = LactafarmaAPI.ViewModels.Language;
 
 namespace LactafarmaAPI.Controllers.Web
 {
+    /// <summary>
+    /// Account handler constructor
+    /// </summary>
     public class AccountController: Controller
     {
         private readonly UserManager<User> _userManager;
@@ -25,6 +28,13 @@ namespace LactafarmaAPI.Controllers.Web
 
         private readonly IMemoryCache _cache;
 
+        /// <summary>
+        /// Account handler constructor
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="cache"></param>
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -40,9 +50,11 @@ namespace LactafarmaAPI.Controllers.Web
             _cache = cache;
         }
 
-        // GET: /Account/Register
-        [Route("/account/register")]
-        [HttpGet]
+        /// <summary>
+        /// Registration page load
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/account/register")]        
         [AllowAnonymous]
         public IActionResult Register()
         {
@@ -65,9 +77,13 @@ namespace LactafarmaAPI.Controllers.Web
             return View(vm);
         }
 
-        // POST: /Account/Register
-        [Route("/account/register")]
-        [HttpPost]
+        
+        /// <summary>
+        /// Start Registration workflow with requested information
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("/account/register")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)

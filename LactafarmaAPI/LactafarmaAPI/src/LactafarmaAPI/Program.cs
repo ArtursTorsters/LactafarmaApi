@@ -8,8 +8,15 @@ using Microsoft.AspNetCore.Builder;
 
 namespace LactafarmaAPI
 {
+    /// <summary>
+    /// Program handler class
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Main handler constructor
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()

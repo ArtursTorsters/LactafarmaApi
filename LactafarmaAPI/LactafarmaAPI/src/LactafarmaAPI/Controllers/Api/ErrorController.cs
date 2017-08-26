@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api
 {
+    /// <summary>
+    /// Errors handler class
+    /// </summary>
     [Authorize]
     public class ErrorController : Controller
     {
@@ -16,6 +19,10 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Errors handler constructor
+        /// </summary>
+        /// <param name="logger"></param>
         public ErrorController(ILogger<ErrorController> logger)
         {
             _logger = logger;
@@ -25,7 +32,11 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
 
-        [Route("{*url}", Order = 999)]
+        /// <summary>
+        /// Handling errors (Not Found requests)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{*url}", Order = 999)]
         public IActionResult TraceError()
         {
             IActionResult result = null;

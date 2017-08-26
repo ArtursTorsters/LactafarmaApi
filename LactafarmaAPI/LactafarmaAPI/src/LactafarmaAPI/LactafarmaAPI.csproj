@@ -10,6 +10,10 @@
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\LactafarmaAPI.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -22,6 +26,10 @@
   <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
   <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
   <PackageReference Include="NLog.Web.AspNetCore" Version="4.4.1" />
+  <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
+  <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="1.0.0" />
+  <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="1.0.0" />
+  <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="1.0.0" />
 </ItemGroup>
 <ItemGroup>
   <ProjectReference Include="..\LactafarmaAPI.Core\LactafarmaAPI.Core.csproj" />
@@ -30,8 +38,9 @@
   <ProjectReference Include="..\LactafarmaAPI.Services\LactafarmaAPI.Services.csproj" />
 </ItemGroup>
 <ItemGroup>
-  <Folder Include="wwwroot\js\" />
+  <Folder Include="wwwroot\css\themes\" />
   <Folder Include="wwwroot\lib\_app\" />
+  <Folder Include="wwwroot\images\" />
 </ItemGroup>
 
   <Target Name="OurBuild" AfterTargets="Build">

@@ -17,26 +17,70 @@ using Microsoft.Extensions.Logging;
 
 namespace LactafarmaAPI.Controllers.Api.Base
 {
+    /// <summary>
+    /// Base handler class
+    /// </summary>
     [Authorize]
     [Route("api/v1/[controller]")]
     public class BaseController: Controller
     {
+        /// <summary>
+        /// ConfigurationRoot container
+        /// </summary>
         public readonly IConfigurationRoot Config;
+        /// <summary>
+        /// LactafarmaService 
+        /// </summary>
         public readonly ILactafarmaService LactafarmaService;
+        /// <summary>
+        /// MailService
+        /// </summary>
         public readonly IMailService MailService;
         private readonly UserManager<User> _userManager;
+        /// <summary>
+        /// Cache container
+        /// </summary>
         public IMemoryCache Cache { get; set; }
 
+        /// <summary>
+        /// EntityType for storing data in Cache container
+        /// </summary>
         public enum EntityType
         {
+            /// <summary>
+            /// Alert entity type
+            /// </summary>
             Alert,
+            /// <summary>
+            /// Alias entity type
+            /// </summary>
             Alias,
+            /// <summary>
+            /// Drug entity type
+            /// </summary>
             Drug,
+            /// <summary>
+            /// Brand entity type
+            /// </summary>
             Brand,
+            /// <summary>
+            /// Group entity type
+            /// </summary>
             Group,
+            /// <summary>
+            /// User entity type
+            /// </summary>
             User
         }
 
+        /// <summary>
+        /// Base handler constructor
+        /// </summary>
+        /// <param name="lactafarmaService"></param>
+        /// <param name="mailService"></param>
+        /// <param name="config"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public BaseController(ILactafarmaService lactafarmaService, IMailService mailService, IConfigurationRoot config, IMemoryCache cache, UserManager<User> userManager)
         {
             LactafarmaService = lactafarmaService;
@@ -46,6 +90,12 @@ namespace LactafarmaAPI.Controllers.Api.Base
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Storing information on Cache container by type specified by input parameters
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="type"></param>
         public void CacheInitialize<TModel>(IEnumerable<TModel> items, EntityType type) where TModel : BaseModel
         {
             // Set cache options.
@@ -64,17 +114,6 @@ namespace LactafarmaAPI.Controllers.Api.Base
                 // Save data in cache.
                 Cache.Set(type, cacheEntries, cacheEntryOptions);
             }
-        }
-
-        /// <summary>
-        /// Clear set of objects stored on IMemoryCache
-        /// </summary>
-        public async Task ClearCachesAsync()
-        {
-            await Task.Run(() => Cache.Remove(EntityType.Alias));
-            await Task.Run(() => Cache.Remove(EntityType.Drug));
-            await Task.Run(() => Cache.Remove(EntityType.Group));
-            await Task.Run(() => Cache.Remove(EntityType.Brand));
-         }
+        }        
     }
 }
