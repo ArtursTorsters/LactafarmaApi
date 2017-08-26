@@ -39,9 +39,9 @@ namespace LactafarmaAPI.Controllers.Api
         #region Public Methods
 
         [Route("byname/{startsWith}")]
-        public JsonResult GetDrugsByName(string startsWith)
+        public IEnumerable<Domain.Models.Drug> GetDrugsByName(string startsWith)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Drug> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetDrugsByName");
@@ -52,12 +52,12 @@ namespace LactafarmaAPI.Controllers.Api
                     return null;
                 }
 
-                Cache.TryGetValue(EntityType.Drug, out IEnumerable<BaseModel> drugs);
+                Cache.TryGetValue(EntityType.Drug, out IEnumerable<Domain.Models.Drug> drugs);
 
-                result = Json(drugs
+                result = drugs
                     .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(),
                                     StringComparison.CurrentCultureIgnoreCase) !=
-                                -1).Take(7));
+                                -1).Take(7);
 
                 _logger.LogInformation("END GetDrugsByName");
             }
@@ -68,20 +68,20 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
         }
 
         [Route("bygroup/{groupId:int}")]
-        public JsonResult GetDrugsByGroup(int groupId)
+        public IEnumerable<Domain.Models.Drug> GetDrugsByGroup(int groupId)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Drug> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetDrugsByGroup");
-                result = Json(LactafarmaService.GetDrugsByGroup(groupId));
+                result = LactafarmaService.GetDrugsByGroup(groupId);
                 _logger.LogInformation("END GetDrugsByGroup");
             }
             catch (Exception ex)
@@ -91,20 +91,20 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
         }
 
         [Route("bybrand/{brandId:int}")]
-        public JsonResult GetDrugsByBrand(int brandId)
+        public IEnumerable<Domain.Models.Drug> GetDrugsByBrand(int brandId)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Drug> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetDrugsByBrand");
-                result = Json(LactafarmaService.GetDrugsByBrand(brandId));
+                result = LactafarmaService.GetDrugsByBrand(brandId);
                 _logger.LogInformation("END GetDrugsByBrand");
             }
             catch (Exception ex)
@@ -114,20 +114,20 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
         }
 
         [Route("byalias/{aliasId:int}")]
-        public JsonResult GetDrugByAlias(int aliasId)
+        public Domain.Models.Drug GetDrugByAlias(int aliasId)
         {
-            JsonResult result = null;
+            Domain.Models.Drug result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetDrugByAlias");
-                result = Json(LactafarmaService.GetDrugByAlias(aliasId));
+                result = LactafarmaService.GetDrugByAlias(aliasId);
                 _logger.LogInformation("END GetDrugByAlias");
             }
             catch (Exception ex)
@@ -137,20 +137,20 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
         }
 
         [Route("{drugId:int}")]
-        public JsonResult GetDrug(int drugId)
+        public Domain.Models.Drug GetDrug(int drugId)
         {
-            JsonResult result = null;
+            Domain.Models.Drug result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetDrug");
-                result = Json(LactafarmaService.GetDrug(drugId));
+                result = LactafarmaService.GetDrug(drugId);
                 _logger.LogInformation("END GetDrug");
             }
             catch (Exception ex)
@@ -159,7 +159,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;

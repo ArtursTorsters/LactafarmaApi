@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using LactafarmaAPI.Domain.Models;
 
 namespace LactafarmaAPI.Controllers.Api.Interfaces
 {
     interface IDrugsController
     {
-        JsonResult GetDrugsByName(string startsWith);
-        JsonResult GetDrugsByGroup(int groupId);
-        JsonResult GetDrugsByBrand(int brandId);
-        JsonResult GetDrugByAlias(int aliasId);
-        JsonResult GetDrug(int drugId);
-
+        IEnumerable<Drug> GetDrugsByName(string startsWith);
+        IEnumerable<Drug> GetDrugsByGroup(int groupId);
+        IEnumerable<Drug> GetDrugsByBrand(int brandId);
+        Drug GetDrugByAlias(int aliasId);
+        Drug GetDrug(int drugId);
     }
 }

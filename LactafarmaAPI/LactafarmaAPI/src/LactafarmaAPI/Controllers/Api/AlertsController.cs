@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace LactafarmaAPI.Controllers.Api
 {
@@ -35,13 +36,13 @@ namespace LactafarmaAPI.Controllers.Api
         #region Public Methods
 
         [Route("bydrug/{drugId:int}")]
-        public JsonResult GetAlertsByDrug(int drugId)
+        public IEnumerable<Domain.Models.Alert> GetAlertsByDrug(int drugId)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Alert> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetAlertsByDrug");
-                result = Json(LactafarmaService.GetAlertsByDrug(drugId));
+                result = LactafarmaService.GetAlertsByDrug(drugId);
                 _logger.LogInformation("END GetAlertsByDrug");
             }
             catch (Exception ex)
@@ -51,7 +52,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;

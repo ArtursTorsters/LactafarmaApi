@@ -39,9 +39,9 @@ namespace LactafarmaAPI.Controllers.Api
         #region Public Methods
 
         [Route("byname/{startsWith}")]
-        public JsonResult GetAliasesByName(string startsWith)
+        public IEnumerable<Domain.Models.Alias> GetAliasesByName(string startsWith)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Alias> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetAliasesByName");
@@ -52,11 +52,11 @@ namespace LactafarmaAPI.Controllers.Api
                     return null;
                 }
 
-                Cache.TryGetValue(EntityType.Alias, out IEnumerable<BaseModel> aliases);
+                Cache.TryGetValue(EntityType.Alias, out IEnumerable<Domain.Models.Alias> aliases);
 
-                result = Json(aliases
+                result = aliases
                     .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
-                                -1).Take(3));
+                                -1).Take(3);
 
                 _logger.LogInformation("END GetAliasesByName");
             }
@@ -67,7 +67,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
@@ -75,13 +75,13 @@ namespace LactafarmaAPI.Controllers.Api
 
 
         [Route("bydrug/{drugId:int}")]
-        public JsonResult GetAliasesByDrug(int drugId)
+        public IEnumerable<Domain.Models.Alias> GetAliasesByDrug(int drugId)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Alias> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetAliasesByDrug");
-                result = Json(LactafarmaService.GetAliasesByDrug(drugId));
+                result = LactafarmaService.GetAliasesByDrug(drugId);
                 _logger.LogInformation("END GetAliasesByDrug");
             }
             catch (Exception ex)
@@ -91,7 +91,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
 
@@ -99,13 +99,13 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         [Route("{aliasId:int}")]
-        public JsonResult GetAlias(int aliasId)
+        public Domain.Models.Alias GetAlias(int aliasId)
         {
-            JsonResult result = null;
+            Domain.Models.Alias result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetAlias");
-                result = Json(LactafarmaService.GetAlias(aliasId));
+                result = LactafarmaService.GetAlias(aliasId);
                 _logger.LogInformation("END GetAlias");
             }
             catch (Exception ex)
@@ -115,7 +115,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
 

@@ -39,9 +39,9 @@ namespace LactafarmaAPI.Controllers.Api
         #region Public Methods
 
         [Route("byname/{startsWith}")]
-        public JsonResult GetBrandsByName(string startsWith)
+        public IEnumerable<Domain.Models.Brand> GetBrandsByName(string startsWith)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Brand> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetBrandsByName");
@@ -52,11 +52,11 @@ namespace LactafarmaAPI.Controllers.Api
                     return null;
                 }
 
-                Cache.TryGetValue(EntityType.Brand, out IEnumerable<BaseModel> brands);
+                Cache.TryGetValue(EntityType.Brand, out IEnumerable<Domain.Models.Brand> brands);
 
-                result = Json(brands
+                result = brands
                     .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(), StringComparison.CurrentCultureIgnoreCase) !=
-                                -1).Take(3));
+                                -1).Take(3);
 
                 _logger.LogInformation("END GetBrandsByName");
             }
@@ -67,20 +67,20 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
         }
 
         [Route("bydrug/{drugId:int}")]
-        public JsonResult GetBrandsByDrug(int drugId)
+        public IEnumerable<Domain.Models.Brand> GetBrandsByDrug(int drugId)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Brand> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetBrandsByDrug");
-                result = Json(LactafarmaService.GetBrandsByDrug(drugId));
+                result = LactafarmaService.GetBrandsByDrug(drugId);
                 _logger.LogInformation("END GetBrandsByDrug");
             }
             catch (Exception ex)
@@ -90,7 +90,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
 
@@ -98,13 +98,13 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         [Route("{brandId:int}")]
-        public JsonResult GetBrand(int brandId)
+        public Domain.Models.Brand GetBrand(int brandId)
         {
-            JsonResult result = null;
+            Domain.Models.Brand result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetBrand");
-                result = Json(LactafarmaService.GetBrand(brandId));
+                result = LactafarmaService.GetBrand(brandId);
                 _logger.LogInformation("END GetBrand");
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;

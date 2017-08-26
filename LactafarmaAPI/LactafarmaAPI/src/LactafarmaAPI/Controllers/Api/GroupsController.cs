@@ -39,9 +39,9 @@ namespace LactafarmaAPI.Controllers.Api
         #region Public Methods
 
         [Route("byname/{startsWith}")]
-        public JsonResult GetGroupsByName(string startsWith)
+        public IEnumerable<Domain.Models.Group> GetGroupsByName(string startsWith)
         {
-            JsonResult result = null;
+            IEnumerable<Domain.Models.Group> result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetGroupsByName");
@@ -52,12 +52,12 @@ namespace LactafarmaAPI.Controllers.Api
                     return null;
                 }
 
-                Cache.TryGetValue(EntityType.Group, out IEnumerable<BaseModel> groups);
+                Cache.TryGetValue(EntityType.Group, out IEnumerable<Domain.Models.Group> groups);
 
-                result = Json(groups
+                result = groups
                     .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(),
                                     StringComparison.CurrentCultureIgnoreCase) !=
-                                -1).Take(3));
+                                -1).Take(3);
 
                 _logger.LogInformation("END GetGroupsByName");
             }
@@ -68,20 +68,20 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
         }
 
         [Route("{groupId:int}")]
-        public JsonResult GetGroup(int groupId)
+        public Domain.Models.Group GetGroup(int groupId)
         {
-            JsonResult result = null;
+            Domain.Models.Group result = null;
             try
             {
                 _logger.LogInformation("BEGIN GetGroup");
-                result = Json(LactafarmaService.GetGroup(groupId));
+                result = LactafarmaService.GetGroup(groupId);
                 _logger.LogInformation("END GetGroup");
             }
             catch (Exception ex)
@@ -91,7 +91,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             finally
             {
-                if (result?.Value == null)
+                if (result == null)
                     _logger.LogWarning("No results for current request!!!");
             }
             return result;
