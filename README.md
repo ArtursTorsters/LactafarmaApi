@@ -62,13 +62,13 @@ This project was a workaround for dealing with IdentityUser object on environmen
 ### Tryout Swagger API documentation
 A customized API documentation with Swagger is available for you, everything needed for creating qualified, accurated & elegant website under ASP.NET Core 2 paradigm is also available on the repository.
 
-**NEW HEADER**
+> **NEW HEADER**
 <img src="http://lactafarma.bebemundi.com/images/lactafarma-swagger-header.png" align="center" />
 
-**XML DOCUMENTATION ENABLED BY ENTITY**
+> **XML DOCUMENTATION ENABLED BY ENTITY**
 <img src="http://lactafarma.bebemundi.com/images/lactafarma-swagger-entities.png" align="center" />
 
-**SwashBuckle Nuget package on ASP.NET Core 2.0**
+> **SWASHBUCKLE NUGET PACKAGE ON ASP.NET CORE 2.0**
 <img src="http://lactafarma.bebemundi.com/images/lactafarma-swagger-description.png" align="center" />
 
 If you want to see more, please visit us on following link: **<a href="http://lactafarma.bebemundi.com/help"  target="_blank">LactafarmaApi Help Documentation</a>**
