@@ -22,6 +22,7 @@ namespace LactafarmaAPI.Controllers.Api.Base
     /// </summary>
     [Authorize]
     [Route("api/v1/[controller]")]
+    [Produces("application/json")]
     public class BaseController: Controller
     {
         /// <summary>
