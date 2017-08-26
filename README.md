@@ -59,8 +59,23 @@ Generic implementations or helpers ready to be used by rest of projects, kinda f
 #### LactafarmaAPI.EntityFrameworkMigrations
 This project was a workaround for dealing with IdentityUser object on environments with dependency injection on class library project (which resides EF Core)
 
+### Tryout Swagger API documentation
+A customized API documentation with Swagger is available for you, everything needed for creating qualified, accurated & elegant website under ASP.NET Core 2 paradigm is also available on the repository.
+
+**NEW HEADER**
+<img src="http://lactafarma.bebemundi.com/images/lactafarma-swagger-header.png" align="center" />
+
+**XML DOCUMENTATION ENABLED BY ENTITY**
+<img src="http://lactafarma.bebemundi.com/images/lactafarma-swagger-entities.png" align="center" />
+
+**SwashBuckle Nuget package on ASP.NET Core 2.0**
+<img src="http://lactafarma.bebemundi.com/images/lactafarma-swagger-description.png" align="center" />
+
+If you want to see more, please visit us on following link: **<a href="http://lactafarma.bebemundi.com/help" target="_blank">LactafarmaApi Help Documentation</a>**
+
 ### Problems? Please let us know
 
 If you run into any problems or issues, **please** let us know so we can address and fix them right away. You can report issues on GitHub:
 
 * [LactafarmaAPI Bug Reports and Feature Requests](https://github.com/gomnet/lactafarma/issues)
+
