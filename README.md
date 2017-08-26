@@ -71,7 +71,7 @@ A customized API documentation with Swagger is available for you, everything nee
 **SwashBuckle Nuget package on ASP.NET Core 2.0**
 <img src="http://lactafarma.bebemundi.com/images/lactafarma-swagger-description.png" align="center" />
 
-If you want to see more, please visit us on following link: **<a href="http://lactafarma.bebemundi.com/help" target="_blank">LactafarmaApi Help Documentation</a>**
+If you want to see more, please visit us on following link: **<a href="http://lactafarma.bebemundi.com/help"  target="_blank">LactafarmaApi Help Documentation</a>**
 
 ### Problems? Please let us know
 
