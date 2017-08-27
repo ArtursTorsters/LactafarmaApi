@@ -90,7 +90,7 @@ namespace LactafarmaAPI
 
             //TODO: Create Real Mail Service for sending to emails for administrator role
             //if (_env.IsEnvironment("Development") || _env.IsEnvironment("Testing"))
-            services.AddScoped<IMailService, DebugMailService>();
+            services.AddSingleton<IMailService, MailSenderService>();
 
             // EF Core Identity
             services.AddIdentity<User, IdentityRole>(config =>
@@ -108,7 +108,7 @@ namespace LactafarmaAPI
 
                 // User settings
                 config.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores<LactafarmaContext>();
+            }).AddEntityFrameworkStores<LactafarmaContext>().AddDefaultTokenProviders();
 
             // Cookie settings
             services.ConfigureApplicationCookie(config =>
@@ -166,7 +166,7 @@ namespace LactafarmaAPI
 
             //General service for retrieving items from EF Core
             services.AddScoped<ILactafarmaService, LactafarmaService>();
-
+                     
             //Allow logging system (ILogger)
             services.AddLogging();
 

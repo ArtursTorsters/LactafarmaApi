@@ -81,6 +81,19 @@ namespace LactafarmaAPI.Controllers.Web
                 _logger.LogInformation("BEGIN POST Login");
                 if (ModelState.IsValid)
                 {
+                    // Require the user to have a confirmed email before they can log on.
+                    var user = await _userManager.FindByEmailAsync(model.UserName);
+                    if (user != null)
+                    {
+                        if (!await _userManager.IsEmailConfirmedAsync(user))
+                        {
+                            ModelState.AddModelError(string.Empty,
+                                          "You must have a confirmed email to log in.");
+                            return View(model);
+                        }
+                    }
+
+
                     var signinResult = await _signInManager.PasswordSignInAsync(model.UserName,
                         model.Password,
                         false, false);

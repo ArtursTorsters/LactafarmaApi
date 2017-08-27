@@ -20,6 +20,7 @@ namespace LactafarmaAPI.Controllers.Api
         #region Private Properties
 
         private readonly ILogger<LogController> _logger;
+        private readonly IMailService _mailService;
 
         #endregion
 
@@ -38,6 +39,7 @@ namespace LactafarmaAPI.Controllers.Api
             IConfigurationRoot config, ILogger<LogController> logger, IMemoryCache cache, UserManager<User> userManager) : base(lactafarmaService, mailService, config, cache, userManager)
         {
             _logger = logger;
+            _mailService = mailService;
         }
 
         #endregion
@@ -95,6 +97,8 @@ namespace LactafarmaAPI.Controllers.Api
                 });
                 result = Json(logs);
 
+                await _mailService.SendEmailAsync("xpertpoint.solutions@gmail.com", "Logs information was requested - ERROR", $"User {User.Identity.Name} has requested log data");
+
                 _logger.LogInformation("END GetErrorLogs");
             }
             catch (Exception ex)
@@ -131,6 +135,7 @@ namespace LactafarmaAPI.Controllers.Api
                 });
                 result = Json(logs);
 
+                await _mailService.SendEmailAsync("xpertpoint.solutions@gmail.com", "Logs information was requested - WARN", $"User {User.Identity.Name} has requested log data");
                 _logger.LogInformation("END GetErrorLogs");
             }
             catch (Exception ex)
@@ -167,6 +172,8 @@ namespace LactafarmaAPI.Controllers.Api
                 });
                 result = Json(logs);
 
+                await _mailService.SendEmailAsync("xpertpoint.solutions@gmail.com", "Logs information was requested - FATAL", $"User {User.Identity.Name} has requested log data");
+
                 _logger.LogInformation("END GetFatalLogs");
             }
             catch (Exception ex)
@@ -202,6 +209,9 @@ namespace LactafarmaAPI.Controllers.Api
                     PageSize = 500
                 });
                 result = Json(logs);
+
+                await _mailService.SendEmailAsync("xpertpoint.solutions@gmail.com", "Logs information was requested - ALL", $"User {User.Identity.Name} has requested log data");
+
                 _logger.LogInformation("END GetLogs");
             }
             catch (Exception ex)

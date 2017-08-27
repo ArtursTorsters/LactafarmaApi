@@ -1,10 +1,13 @@
-﻿namespace LactafarmaAPI.Services.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace LactafarmaAPI.Services.Interfaces
 {
     public interface IMailService
     {
         #region Public Methods
 
-        void SendMail(string to, string from, string subject, string body);
+        Task SendEmailAsync(string email, string subject, string message);
+
 
         #endregion
     }
