@@ -5,15 +5,15 @@ using System.Text;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class DrugBrand
+    public class ProductBrand
     {
-        public int DrugId { get; set; }
+        public int ProductId { get; set; }
         public int BrandId { get; set; }
 
 
         //Navigation Properties
         public Brand Brand { get; set; }
-        public Drug Drug { get; set; }
+        public Product Product { get; set; }
 
     }
 }

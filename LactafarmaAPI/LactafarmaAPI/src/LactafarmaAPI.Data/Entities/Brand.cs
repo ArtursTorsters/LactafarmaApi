@@ -9,9 +9,10 @@ namespace LactafarmaAPI.Data.Entities
     public class Brand : IIdentifiableEntity
     {
         public int Id { get; set; }
+        public DateTime Modified { get; set; }
 
         //Navigation Properties
-        public virtual ICollection<DrugBrand> DrugBrands { get; set; }
+        public virtual ICollection<ProductBrand> ProductBrands { get; set; }
         public virtual ICollection<BrandMultilingual> BrandsMultilingual { get; set; }
         public int EntityId
         {

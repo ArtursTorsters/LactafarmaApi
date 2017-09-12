@@ -17,22 +17,23 @@ namespace LactafarmaAPI.Data
                 MapLanguage(modelBuilder, logger);
                 MapBrand(modelBuilder, logger);
                 MapBrandMultilingual(modelBuilder, logger);
+                MapRisk(modelBuilder, logger);
+                MapRiskMultilingual(modelBuilder, logger);
                 MapGroup(modelBuilder, logger);
                 MapGroupMultilingual(modelBuilder, logger);
 
-                MapToken(modelBuilder, logger);
                 //MapUser(modelBuilder, logger);
                 MapFavorite(modelBuilder, logger);
-                MapDrug(modelBuilder, logger);
-                MapDrugBrand(modelBuilder, logger);
-                MapDrugMultilingual(modelBuilder, logger);
+                MapProduct(modelBuilder, logger);
+                MapProductBrand(modelBuilder, logger);
+                MapProductGroup(modelBuilder, logger);
+                MapProductMultilingual(modelBuilder, logger);
 
                 MapAlert(modelBuilder, logger);
-                MapAlertMultilingual(modelBuilder, logger);
                 MapAlias(modelBuilder, logger);
                 MapAliasMultilingual(modelBuilder, logger);
 
-                MapDrugAlternative(modelBuilder, logger);
+                MapProductAlternative(modelBuilder, logger);
             }
             catch (Exception ex)
             {
@@ -81,6 +82,31 @@ namespace LactafarmaAPI.Data
         #endregion
 
         #region Private Methods
+
+        private static void MapRisk(ModelBuilder modelBuilder, ILogger logger)
+        {
+            logger.LogInformation("BEGIN: Configuring entity Risk");
+            modelBuilder.Entity<Risk>().ToTable("Risks");
+            modelBuilder.Entity<Risk>().Ignore(e => e.EntityId).HasKey(e => e.Id);
+            //modelBuilder.Entity<Brand>().HasMany(d => d.BrandsMultilingual);
+            logger.LogInformation("END: Configuring entity Risk");
+        }
+
+        private static void MapRiskMultilingual(ModelBuilder modelBuilder, ILogger logger)
+        {
+            logger.LogInformation("BEGIN: Configuring entity RiskMultilingual");
+            modelBuilder.Entity<RiskMultilingual>().ToTable("Risks_Multilingual");
+
+            modelBuilder.Entity<RiskMultilingual>()
+                .HasKey(bc => new { bc.RiskId, bc.LanguageId });
+
+            //modelBuilder.Entity<BrandMultilingual>()
+            //    .HasOne(bc => bc.Brand).WithMany(bc => bc.BrandsMultilingual).HasForeignKey(f => f.BrandId);                
+
+            //modelBuilder.Entity<BrandMultilingual>()
+            //    .HasOne(bc => bc.Language).WithMany(bc => bc.BrandsMultilingual).HasForeignKey(f => f.LanguageId);               
+            logger.LogInformation("END: Configuring entity RiskMultilingual");
+        }
 
         private static void MapBrand(ModelBuilder modelBuilder, ILogger logger)
         {
@@ -139,28 +165,8 @@ namespace LactafarmaAPI.Data
             modelBuilder.Entity<Language>().ToTable("Languages");
             modelBuilder.Entity<Language>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             logger.LogInformation("END: Configuring entity Language");
-        }
-
-        private static void MapToken(ModelBuilder modelBuilder, ILogger logger)
-        {
-            logger.LogInformation("BEGIN: Configuring entity Token");
-            modelBuilder.Entity<Token>().ToTable("Tokens");
-            modelBuilder.Entity<Token>().Ignore(e => e.EntityId).HasKey(e => e.Id);
-            //modelBuilder.Entity<Token>().HasOne(d => d.User);
-            logger.LogInformation("END: Configuring entity Token");
-        }
-
-        //private static void MapUser(ModelBuilder modelBuilder, ILogger logger)
-        //{
-        //    logger.LogInformation("BEGIN: Configuring entity User");
-        //    modelBuilder.Entity<User>().ToTable("Users");
-        //    modelBuilder.Entity<User>().Ignore(e => e.EntityId).HasKey(e => e.Id);
-        //    //modelBuilder.Entity<User>().HasMany(d => d.Favorites);
-        //    //modelBuilder.Entity<User>().HasMany(d => d.Tokens);
-        //    //modelBuilder.Entity<User>().HasOne(d => d.Language);
-        //    logger.LogInformation("END: Configuring entity User");
-        //}
-
+        }    
+        
         private static void MapFavorite(ModelBuilder modelBuilder, ILogger logger)
         {
             logger.LogInformation("BEGIN: Configuring entity Favorite");
@@ -171,12 +177,12 @@ namespace LactafarmaAPI.Data
             logger.LogInformation("END: Configuring entity Favorite");
         }
 
-        private static void MapDrug(ModelBuilder modelBuilder, ILogger logger)
+        private static void MapProduct(ModelBuilder modelBuilder, ILogger logger)
         {
-            logger.LogInformation("BEGIN: Configuring entity Drug");
+            logger.LogInformation("BEGIN: Configuring entity Product");
 
-            modelBuilder.Entity<Drug>().ToTable("Drugs");
-            modelBuilder.Entity<Drug>().Ignore(e => e.EntityId).HasKey(e => e.Id);
+            modelBuilder.Entity<Product>().ToTable("Products");
+            modelBuilder.Entity<Product>().Ignore(e => e.EntityId).HasKey(e => e.Id);
             //modelBuilder.Entity<Drug>().HasOne(d => d.Group);
             //modelBuilder.Entity<Drug>().HasMany(d => d.DrugBrands);
 
@@ -184,17 +190,17 @@ namespace LactafarmaAPI.Data
             //modelBuilder.Entity<Drug>().HasMany(d => d.Aliases);
             //modelBuilder.Entity<Drug>().HasMany(d => d.DrugAlternatives);
 
-            logger.LogInformation("END: Configuring entity Drug");
+            logger.LogInformation("END: Configuring entity Product");
         }
 
-        private static void MapDrugBrand(ModelBuilder modelBuilder, ILogger logger)
+        private static void MapProductBrand(ModelBuilder modelBuilder, ILogger logger)
         {
-            logger.LogInformation("BEGIN: Configuring entity DrugBrand");
+            logger.LogInformation("BEGIN: Configuring entity ProductBrand");
 
-            modelBuilder.Entity<DrugBrand>().ToTable("DrugBrands");
+            modelBuilder.Entity<ProductBrand>().ToTable("ProductBrands");
 
-            modelBuilder.Entity<DrugBrand>()
-                .HasKey(bc => new {bc.BrandId, bc.DrugId});
+            modelBuilder.Entity<ProductBrand>()
+                .HasKey(bc => new {bc.BrandId, bc.ProductId});
 
             //modelBuilder.Entity<DrugBrand>()
             //    .HasOne(bc => bc.Drug)
@@ -206,17 +212,39 @@ namespace LactafarmaAPI.Data
             //    .WithMany(c => c.DrugBrands)
             //    .HasForeignKey(bc => bc.BrandId);
 
-            logger.LogInformation("END: Configuring entity DrugBrand");
+            logger.LogInformation("END: Configuring entity ProductBrand");
         }
 
-        private static void MapDrugMultilingual(ModelBuilder modelBuilder, ILogger logger)
+        private static void MapProductGroup(ModelBuilder modelBuilder, ILogger logger)
         {
-            logger.LogInformation("BEGIN: Configuring entity DrugMultilingual");
+            logger.LogInformation("BEGIN: Configuring entity ProductGroup");
 
-            modelBuilder.Entity<DrugMultilingual>().ToTable("Drugs_Multilingual");
+            modelBuilder.Entity<ProductGroup>().ToTable("ProductGroups");
 
-            modelBuilder.Entity<DrugMultilingual>()
-                .HasKey(bc => new {bc.DrugId, bc.LanguageId});
+            modelBuilder.Entity<ProductGroup>()
+                .HasKey(bc => new { bc.GroupId, bc.ProductId });
+
+            //modelBuilder.Entity<DrugBrand>()
+            //    .HasOne(bc => bc.Drug)
+            //    .WithMany(b => b.DrugBrands)
+            //    .HasForeignKey(bc => bc.DrugId);
+
+            //modelBuilder.Entity<DrugBrand>()
+            //    .HasOne(bc => bc.Brand)
+            //    .WithMany(c => c.DrugBrands)
+            //    .HasForeignKey(bc => bc.BrandId);
+
+            logger.LogInformation("END: Configuring entity ProductGroup");
+        }
+
+        private static void MapProductMultilingual(ModelBuilder modelBuilder, ILogger logger)
+        {
+            logger.LogInformation("BEGIN: Configuring entity ProductMultilingual");
+
+            modelBuilder.Entity<ProductMultilingual>().ToTable("Products_Multilingual");
+
+            modelBuilder.Entity<ProductMultilingual>()
+                .HasKey(bc => new {bc.ProductId, bc.LanguageId});
 
             //modelBuilder.Entity<DrugMultilingual>()
             //    .HasOne(bc => bc.Drug)
@@ -238,27 +266,7 @@ namespace LactafarmaAPI.Data
             //modelBuilder.Entity<Alert>().HasOne(d => d.Drug).WithMany(d => d.Alerts);
 
             logger.LogInformation("END: Configuring entity Alert");
-        }
-
-        private static void MapAlertMultilingual(ModelBuilder modelBuilder, ILogger logger)
-        {
-            logger.LogInformation("BEGIN: Configuring entity AlertMultilingual");
-
-            modelBuilder.Entity<AlertMultilingual>().ToTable("Alerts_Multilingual");
-
-            modelBuilder.Entity<AlertMultilingual>()
-                .HasKey(bc => new {bc.AlertId, bc.LanguageId});
-
-            //modelBuilder.Entity<AlertMultilingual>()
-            //    .HasOne(bc => bc.Alert)
-            //    .WithMany(b => b.AlertsMultilingual)
-            //    .HasForeignKey(bc => bc.AlertId);
-
-            //modelBuilder.Entity<AlertMultilingual>()
-            //    .HasOne(bc => bc.Language);                
-
-            logger.LogInformation("END: Configuring entity AlertMultilingual");
-        }
+        }        
 
         private static void MapAlias(ModelBuilder modelBuilder, ILogger logger)
         {
@@ -266,7 +274,7 @@ namespace LactafarmaAPI.Data
 
             modelBuilder.Entity<Alias>().ToTable("Aliases");
             modelBuilder.Entity<Alias>().Ignore(e => e.EntityId).HasKey(e => e.Id);
-            modelBuilder.Entity<Alias>().HasOne(d => d.Drug);
+            modelBuilder.Entity<Alias>().HasOne(d => d.Product);
             modelBuilder.Entity<Alias>().HasMany(d => d.AliasMultilingual);
 
             logger.LogInformation("END: Configuring entity Alias");
@@ -291,14 +299,14 @@ namespace LactafarmaAPI.Data
             logger.LogInformation("END: Configuring entity AliasMultilingual");
         }
 
-        private static void MapDrugAlternative(ModelBuilder modelBuilder, ILogger logger)
+        private static void MapProductAlternative(ModelBuilder modelBuilder, ILogger logger)
         {
-            logger.LogInformation("BEGIN: Configuring entity DrugAlternative");
+            logger.LogInformation("BEGIN: Configuring entity ProductAlternative");
 
-            modelBuilder.Entity<DrugAlternative>().ToTable("DrugAlternatives");
+            modelBuilder.Entity<ProductAlternative>().ToTable("ProductAlternatives");
 
-            modelBuilder.Entity<DrugAlternative>()
-                .HasKey(bc => new {bc.DrugId, bc.DrugAlternativeId});
+            modelBuilder.Entity<ProductAlternative>()
+                .HasKey(bc => new {bc.ProductId, bc.ProductAlternativeId});
 
             //modelBuilder.Entity<DrugAlternative>()
             //    .HasOne(bc => bc.Drug)
@@ -310,7 +318,7 @@ namespace LactafarmaAPI.Data
             //    .WithMany(c => c.DrugAlternatives)
             //    .HasForeignKey(bc => bc.DrugAlternativeId);
 
-            logger.LogInformation("END: Configuring entity DrugAlternative");
+            logger.LogInformation("END: Configuring entity ProductAlternative");
         }
 
         #endregion

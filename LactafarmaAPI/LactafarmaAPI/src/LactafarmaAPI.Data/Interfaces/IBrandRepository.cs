@@ -9,7 +9,7 @@ namespace LactafarmaAPI.Data.Interfaces
     public interface IBrandRepository : IDataRepository<Brand>
     {
         IEnumerable<BrandMultilingual> GetAllBrands();
-        IEnumerable<BrandMultilingual> GetBrandsByDrug(int drugId);
+        IEnumerable<BrandMultilingual> GetBrandsByProduct(int productId);
         BrandMultilingual GetBrand(int brandId);
 
     }

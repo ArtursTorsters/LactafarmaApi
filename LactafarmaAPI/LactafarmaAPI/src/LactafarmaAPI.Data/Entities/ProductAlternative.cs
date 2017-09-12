@@ -5,9 +5,9 @@ using System.Text;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class DrugAlternative
+    public class ProductAlternative
     {
-        public int DrugId { get; set; }
-        public int DrugAlternativeId { get; set; }
+        public int ProductId { get; set; }
+        public int ProductAlternativeId { get; set; }
     }
 }

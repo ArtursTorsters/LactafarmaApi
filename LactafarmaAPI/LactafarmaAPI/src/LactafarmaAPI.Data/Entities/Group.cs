@@ -12,7 +12,7 @@ namespace LactafarmaAPI.Data.Entities
         public DateTime Modified { get; set; }
 
         //Navigation Properties
-        public virtual ICollection<Drug> Drugs { get; set; }
+        public virtual ICollection<ProductGroup> ProductGroups { get; set; }
         public virtual ICollection<GroupMultilingual> GroupsMultilingual { get; set; }
 
         public int EntityId

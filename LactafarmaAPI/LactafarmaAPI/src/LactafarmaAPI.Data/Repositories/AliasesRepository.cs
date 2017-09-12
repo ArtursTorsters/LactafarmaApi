@@ -41,33 +41,33 @@ namespace LactafarmaAPI.Data.Repositories
             }
         }
 
-        public IEnumerable<AliasMultilingual> GetAliasesByDrug(int drugId)
+        public IEnumerable<AliasMultilingual> GetAliasesByProduct(int productId)
         {
             try
             {
                 return EntityContext.AliasMultilingual.Where(e => e.LanguageId == LanguageId).Include(a => a.Alias)
-                    .ThenInclude(d => d.Drug)
-                    .Where(a => a.Alias.DrugId == drugId).AsEnumerable();
+                    .ThenInclude(d => d.Product)
+                    .Where(a => a.Alias.ProductId == productId).AsEnumerable();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetAliasesByDrug with message: {ex.Message}");
+                _logger.LogError($"Exception on GetAliasesByProduct with message: {ex.Message}");
                 return null;
             }
         }
 
-        public DrugMultilingual GetDrugByAlias(int aliasId)
+        public ProductMultilingual GetProductByAlias(int aliasId)
         {
             try
             {
-                var alias = EntityContext.Aliases.Where(d => d.Id == aliasId).Include(d => d.Drug)
-                    .Include(dm => dm.Drug.DrugsMultilingual).FirstOrDefault();
+                var alias = EntityContext.Aliases.Where(d => d.Id == aliasId).Include(d => d.Product)
+                    .Include(dm => dm.Product.ProductsMultilingual).FirstOrDefault();
 
-                return alias.Drug.DrugsMultilingual.Single(d => d.LanguageId == LanguageId);
+                return alias.Product.ProductsMultilingual.Single(d => d.LanguageId == LanguageId);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetDrugByAlias with message: {ex.Message}");
+                _logger.LogError($"Exception on GetsProductByAlias with message: {ex.Message}");
                 return null;
             }
         }

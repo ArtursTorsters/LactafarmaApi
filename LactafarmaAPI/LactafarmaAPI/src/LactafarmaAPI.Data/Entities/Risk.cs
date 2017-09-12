@@ -1,24 +1,22 @@
 ﻿using LactafarmaAPI.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class Alias : IIdentifiableEntity
+    public class Risk : IIdentifiableEntity
     {
         public int Id { get; set; }
-        public int ProductId { get; set; }
+        public DateTime Modified { get; set; }
 
         //Navigation Properties
-        public Product Product { get; set; }
-        public virtual ICollection<AliasMultilingual> AliasMultilingual { get; set; }
-
+        public virtual ICollection<RiskMultilingual> RisksMultilingual { get; set; }
         public int EntityId
         {
             get { return Id; }
             set { Id = value; }
         }
-
     }
 }

@@ -14,20 +14,19 @@ namespace LactafarmaAPI.Data
 
         public DbSet<Log> Logs { get; set; }
         public DbSet<Alert> Alerts { get; set; }
-        public DbSet<AlertMultilingual> AlertsMultilingual { get; set; }
         public DbSet<Alias> Aliases { get; set; }
         public DbSet<AliasMultilingual> AliasMultilingual { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<BrandMultilingual> BrandsMultilingual { get; set; }
-        public DbSet<DrugAlternative> DrugAlternatives { get; set; }
-        public DbSet<DrugBrand> DrugBrands { get; set; }
-        public DbSet<Drug> Drugs { get; set; }
-        public DbSet<DrugMultilingual> DrugsMultilingual { get; set; }
+        public DbSet<ProductAlternative> ProductAlternatives { get; set; }
+        public DbSet<ProductBrand> ProductBrands { get; set; }
+        public DbSet<ProductGroup> ProductGroups { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductMultilingual> ProductsMultilingual { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupMultilingual> GroupsMultilingual { get; set; }
         public DbSet<Language> Languages { get; set; }
-        public DbSet<Token> Tokens { get; set; }
 
         #endregion
 

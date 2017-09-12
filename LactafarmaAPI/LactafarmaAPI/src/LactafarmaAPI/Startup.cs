@@ -159,7 +159,7 @@ namespace LactafarmaAPI
             services.AddScoped<IAliasRepository, AliasesRepository>();
             services.AddScoped<IAlertRepository, AlertsRepository>();
             services.AddScoped<IBrandRepository, BrandsRepository>();
-            services.AddScoped<IDrugRepository, DrugsRepository>();
+            services.AddScoped<IProductRepository, DrugsRepository>();
             services.AddScoped<IGroupRepository, GroupsRepository>();
             //services.AddScoped<IUserRepository, UsersRepository>();
             services.AddScoped<ILogRepository, LogRepository>();

@@ -7,19 +7,20 @@ using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class Drug : IIdentifiableEntity
+    public class Product : IIdentifiableEntity
     {
         public int Id { get; set; }
         public DateTime Modified { get; set; }
-        public int GroupId { get; set; }
+        public int RiskId { get; set; }
 
         //Navigation Properties
-        public Group Group { get; set; }
+        public Risk Risk { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<Alias> Aliases { get; set; }
         //public virtual ICollection<DrugAlternative> DrugAlternatives { get; set; }
-        public virtual ICollection<DrugBrand> DrugBrands { get; set; }
-        public virtual ICollection<DrugMultilingual> DrugsMultilingual { get; set; }
+        public virtual ICollection<ProductBrand> ProductBrands { get; set; }
+        public virtual ICollection<ProductGroup> ProductGroups { get; set; }
+        public virtual ICollection<ProductMultilingual> ProductsMultilingual { get; set; }
         public int EntityId
         {
             get { return Id; }

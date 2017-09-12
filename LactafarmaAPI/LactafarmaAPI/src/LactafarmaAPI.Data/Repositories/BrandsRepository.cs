@@ -42,17 +42,17 @@ namespace LactafarmaAPI.Data.Repositories
             }
         }
 
-        public IEnumerable<BrandMultilingual> GetBrandsByDrug(int drugId)
+        public IEnumerable<BrandMultilingual> GetBrandsByProduct(int productId)
         {
             try
             {
                 return EntityContext.BrandsMultilingual.Where(l => l.LanguageId == LanguageId).Include(a => a.Brand)
-                    .ThenInclude(d => d.DrugBrands)
-                    .Where(a => a.Brand.DrugBrands.FirstOrDefault().DrugId == drugId).AsEnumerable();
+                    .ThenInclude(d => d.ProductBrands)
+                    .Where(a => a.Brand.ProductBrands.FirstOrDefault().ProductId == productId).AsEnumerable();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetBrandsByDrug with message: {ex.Message}");
+                _logger.LogError($"Exception on GetBrandsByProduct with message: {ex.Message}");
                 return null;
             }
         }

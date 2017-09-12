@@ -5,13 +5,10 @@ using LactafarmaAPI.Domain.Models.Base;
 
 namespace LactafarmaAPI.Domain.Models
 {
-    public class Favorite
+    public class Favorite: BaseModel
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-
         //Navigation Properties
-        public Drug Drug { get; set; }
+        public Product Product { get; set; }
         public User User { get; set; }
     }
 }

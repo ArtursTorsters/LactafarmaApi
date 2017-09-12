@@ -22,40 +22,46 @@ namespace LactafarmaAPI.Data.Repositories
             _logger = logger;
         }
 
-        public IEnumerable<AlertMultilingual> GetAllAlerts()
+        public IEnumerable<Alert> GetLastAlerts()
         {
             try
             {
-                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == LanguageId)
-                    .Include(e => e.Alert)
-                    .ThenInclude(e => e.Drug)
+                return EntityContext.Alerts
+                    .Include(e => e.Product)
+                    .Include(e => e.OldRisk)
+                    .ThenInclude(e => e.RisksMultilingual)
+                    .Include(e => e.NewRisk)
+                    .ThenInclude(e => e.RisksMultilingual).OrderByDescending(e => e.Created).Take(50)
                     .AsEnumerable();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetAllAlerts with message: {ex.Message}");
+                _logger.LogError($"Exception on GetLastAlerts with message: {ex.Message}");
                 return null;
             }
         }
 
-        public IEnumerable<AlertMultilingual> GetAlertsByDrug(int drugId)
+        public IEnumerable<Alert> GetAlertsByProduct(int productId)
         {
             try
             {
-                return EntityContext.AlertsMultilingual.Where(l => l.LanguageId == LanguageId)
-                    .Include(d => d.Alert).ThenInclude(d => d.Drug).Where(d => d.Alert.Drug.Id == drugId)
+                return EntityContext.Alerts
+                    .Include(d => d.Product).Where(d => d.Product.Id == productId).Include(e => e.OldRisk)
+                    .ThenInclude(e => e.RisksMultilingual)
+                    .Include(e => e.NewRisk)
+                    .ThenInclude(e => e.RisksMultilingual).OrderByDescending(e => e.Created).Take(2)
                     .AsEnumerable();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetAlertsByDrug with message: {ex.Message}");
+                _logger.LogError($"Exception on GetAlertsByProduct with message: {ex.Message}");
                 return null;
             }
-        }
+        }        
 
         protected override Expression<Func<Alert, bool>> IdentifierPredicate(int id)
         {
             return (e => e.Id == id);
-        }
+        }       
     }
 }

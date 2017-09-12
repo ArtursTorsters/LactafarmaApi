@@ -14,22 +14,26 @@ namespace LactafarmaAPI.Services.Interfaces
     {
         #region Public Methods
 
-        IEnumerable<Alert> GetAlertsByDrug(int drugId);
-        IEnumerable<BaseModel> GetAllAlerts();
+        IEnumerable<Alert> GetAlertsByProduct(int productId);
+        IEnumerable<Alert> GetLastAlerts();
+        //IEnumerable<BaseModel> GetAllAlerts();
         IEnumerable<BaseModel> GetAllAliases();
-        IEnumerable<Alias> GetAliasesByDrug(int drugId);
-        IEnumerable<Brand> GetBrandsByDrug(int drugId);
+        IEnumerable<Alias> GetAliasesByProduct(int productId);
+        IEnumerable<Brand> GetBrandsByProduct(int productId);
+        IEnumerable<Group> GetGroupsByProduct(int productId);
         IEnumerable<BaseModel> GetAllBrands();
-        IEnumerable<BaseModel> GetAllDrugs();
-        IEnumerable<Drug> GetDrugsByGroup(int groupId);
-        IEnumerable<Drug> GetDrugsByBrand(int brandId);
+        IEnumerable<BaseModel> GetAllProducts();
+        IEnumerable<Product> GetProductsByGroup(int groupId);
+        IEnumerable<Product> GetProductsByBrand(int brandId);
+        IEnumerable<Favorite> GetFavoritesByUser(Guid userId);
         IEnumerable<BaseModel> GetAllGroups();
         Group GetGroup(int groupId);
         //User GetUser(string userId);
         Alias GetAlias(int aliasId);
         Brand GetBrand(int brandId);
-        Drug GetDrug(int drugId);
-        Drug GetDrugByAlias(int aliasId);
+        Product GetProduct(int drugId);
+        Favorite GetFavorite(int favoriteId);
+        Product GetProductByAlias(int aliasId);
 
         #endregion
 

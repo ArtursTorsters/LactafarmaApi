@@ -6,9 +6,9 @@ using System.Text;
 
 namespace LactafarmaAPI.Data.Interfaces
 {
-    public interface IAlertRepository : IDataRepository<Alert>
+    public interface IFavoriteRepository : IDataRepository<Group>
     {
-        IEnumerable<Alert> GetLastAlerts();
-        IEnumerable<Alert> GetAlertsByProduct(int productId);
+        IEnumerable<Favorite> GetFavoritesByUser(Guid userId);
+        Favorite GetFavorite(int favoriteId);
     }
 }

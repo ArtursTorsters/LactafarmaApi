@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class DrugMultilingual
+    public class RiskMultilingual
     {
-        public int DrugId { get; set; }
+        public int RiskId { get; set; }
         public string Name { get; set; }
-        public string Risk { get; set; }
         public string Description { get; set; }
-        public string Comment { get; set; }
         public Guid LanguageId { get; set; }
 
         //Navigation Properties
-        public Drug Drug { get; set; }
+        public Risk Risk { get; set; }
         public Language Language { get; set; }
 
     }

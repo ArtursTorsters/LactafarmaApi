@@ -12,11 +12,14 @@ namespace LactafarmaAPI.Data.Entities
     {
         public int Id { get; set; }
         public DateTime Created { get; set; }
-        public int DrugId { get; set; }
+        public int ProductId { get; set; }
+        public int OldRiskId { get; set; }
+        public int NewRiskId { get; set; }
 
         //Navigation Properties
-        public Drug Drug { get; set; }
-        public virtual ICollection<AlertMultilingual> AlertsMultilingual { get; set; }
+        public Product Product { get; set; }
+        public Risk OldRisk{ get; set; }
+        public Risk NewRisk { get; set; }
         public int EntityId
         {
             get { return Id; }

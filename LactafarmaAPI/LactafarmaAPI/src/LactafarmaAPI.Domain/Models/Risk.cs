@@ -5,10 +5,10 @@ using LactafarmaAPI.Domain.Models.Base;
 
 namespace LactafarmaAPI.Domain.Models
 {
-    public class Group : BaseModel
+    public class Risk : BaseModel
     {
+        public string Description { get; set; }
         public DateTime Modified { get; set; }
         public Language Language { get; set; }
-        public IEnumerable<Product> Products { get; set; }
     }
 }

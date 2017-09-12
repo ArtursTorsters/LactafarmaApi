@@ -46,24 +46,24 @@ namespace LactafarmaAPI.Controllers.Api
 
         #region Public Methods
         /// <summary>
-        /// Get alerts by specified Drug in User context
+        /// Get alerts by specified Product in User context
         /// </summary>
-        /// <param name="drugId"></param>
+        /// <param name="productId"></param>
         /// <returns></returns>
-        [HttpGet("bydrug/{drugId:int}")]
-        public IEnumerable<Domain.Models.Alert> GetAlertsByDrug(int drugId)
+        [HttpGet("byproduct/{productId:int}")]
+        public IEnumerable<Domain.Models.Alert> GetAlertsByProduct(int productId)
         {
             IEnumerable<Domain.Models.Alert> result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetAlertsByDrug");
-                result = LactafarmaService.GetAlertsByDrug(drugId);
-                _logger.LogInformation("END GetAlertsByDrug");
+                _logger.LogInformation("BEGIN GetAlertsByProduct");
+                result = LactafarmaService.GetAlertsByProduct(productId);
+                _logger.LogInformation("END GetAlertsByProduct");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called GetAlertsByDrug(drugId={drugId}) with message {ex.Message}");
+                    $"Exception on JsonResult called GetAlertsByProduct(productId={productId}) with message {ex.Message}");
             }
             finally
             {

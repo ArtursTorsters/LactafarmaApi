@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace LactafarmaAPI.Data.Entities
 {
-    public class Favorite : IIdentifiableGuidEntity
+    public class Favorite : IIdentifiableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public int DrugId { get; set; }
+        public int ProductId { get; set; }
         public Guid UserId { get; set; }
 
         //Navigation Properties
-        public Drug Drug { get; set; }
+        public Product Product { get; set; }
         public User User { get; set; }
 
-        public Guid EntityId
+        public int EntityId
         {
             get => Id;
             set => Id = value;
