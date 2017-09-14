@@ -5,6 +5,7 @@ using LactafarmaAPI.Controllers.Api.Base;
 using LactafarmaAPI.Controllers.Api.Interfaces;
 using LactafarmaAPI.Core;
 using LactafarmaAPI.Data.Entities;
+using LactafarmaAPI.Domain.Models;
 using LactafarmaAPI.Domain.Models.Base;
 using LactafarmaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -16,20 +17,20 @@ using Microsoft.Extensions.Logging;
 namespace LactafarmaAPI.Controllers.Api
 {
     /// <summary>
-    /// Drugs handler class
+    /// Products handler class
     /// </summary>
-    public class DrugsController : BaseController, IDrugsController
+    public class ProductsController : BaseController, IProductsController
     {
         #region Private Properties
 
-        private readonly ILogger<DrugsController> _logger;
+        private readonly ILogger<ProductsController> _logger;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Drugs handler constructor
+        /// Products handler constructor
         /// </summary>
         /// <param name="lactafarmaService"></param>
         /// <param name="mailService"></param>
@@ -37,13 +38,13 @@ namespace LactafarmaAPI.Controllers.Api
         /// <param name="logger"></param>
         /// <param name="cache"></param>
         /// <param name="userManager"></param>
-        public DrugsController(ILactafarmaService lactafarmaService, IMailService mailService,
+        public ProductsController(ILactafarmaService lactafarmaService, IMailService mailService,
             IConfigurationRoot config,
-            ILogger<DrugsController> logger, IMemoryCache cache, UserManager<User> userManager) : base(
+            ILogger<ProductsController> logger, IMemoryCache cache, UserManager<Data.Entities.User> userManager) : base(
             lactafarmaService, mailService, config, cache, userManager)
         {
             _logger = logger;
-            CacheInitialize(lactafarmaService.GetAllDrugs(), EntityType.Drug);
+            CacheInitialize(lactafarmaService.GetAllProducts(), EntityType.Product);
         }
 
         #endregion
@@ -51,17 +52,17 @@ namespace LactafarmaAPI.Controllers.Api
         #region Public Methods
 
         /// <summary>
-        /// Get first 7 coincidences on drugs collection
+        /// Get first 7 coincidences on Products collection
         /// </summary>
         /// <param name="startsWith"></param>
         /// <returns></returns>
         [HttpGet("byname/{startsWith}")]
-        public IEnumerable<Domain.Models.Drug> GetDrugsByName(string startsWith)
+        public IEnumerable<Domain.Models.Product> GetProductsByName(string startsWith)
         {
-            IEnumerable<Domain.Models.Drug> result = null;
+            IEnumerable<Domain.Models.Product> result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetDrugsByName");
+                _logger.LogInformation("BEGIN GetProductsByName");
 
                 if (startsWith.Length < 1)
                 {
@@ -69,19 +70,19 @@ namespace LactafarmaAPI.Controllers.Api
                     return null;
                 }
 
-                Cache.TryGetValue(EntityType.Drug, out IEnumerable<Domain.Models.Drug> drugs);
+                Cache.TryGetValue(EntityType.Product, out IEnumerable<Domain.Models.Product> products);
 
-                result = drugs
+                result = products
                     .Where(a => a.VirtualName.IndexOf(startsWith.RemoveDiacritics(),
                                     StringComparison.CurrentCultureIgnoreCase) !=
                                 -1).Take(7);
 
-                _logger.LogInformation("END GetDrugsByName");
+                _logger.LogInformation("END GetProductsByName");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called GetDrugsByName(name={startsWith}) with message {ex.Message}");
+                    $"Exception on JsonResult called GetProductsByName(name={startsWith}) with message {ex.Message}");
             }
             finally
             {
@@ -92,24 +93,24 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        /// Get list of drugs by provided group
+        /// Get list of products by provided group
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
         [HttpGet("bygroup/{groupId:int}")]
-        public IEnumerable<Domain.Models.Drug> GetDrugsByGroup(int groupId)
+        public IEnumerable<Domain.Models.Product> GetProductsByGroup(int groupId)
         {
-            IEnumerable<Domain.Models.Drug> result = null;
+            IEnumerable<Domain.Models.Product> result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetDrugsByGroup");
-                result = LactafarmaService.GetDrugsByGroup(groupId);
-                _logger.LogInformation("END GetDrugsByGroup");
+                _logger.LogInformation("BEGIN GetProductsByGroup");
+                result = LactafarmaService.GetProductsByGroup(groupId);
+                _logger.LogInformation("END GetProductsByGroup");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called GetDrugsByGroup(groupId={groupId}) with message {ex.Message}");
+                    $"Exception on JsonResult called GetProductsByGroup(groupId={groupId}) with message {ex.Message}");
             }
             finally
             {
@@ -120,24 +121,24 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        /// Get list of drugs by provided brand
+        /// Get list of products by provided brand
         /// </summary>
         /// <param name="brandId"></param>
         /// <returns></returns>
         [HttpGet("bybrand/{brandId:int}")]
-        public IEnumerable<Domain.Models.Drug> GetDrugsByBrand(int brandId)
+        public IEnumerable<Domain.Models.Product> GetProductsByBrand(int brandId)
         {
-            IEnumerable<Domain.Models.Drug> result = null;
+            IEnumerable<Domain.Models.Product> result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetDrugsByBrand");
-                result = LactafarmaService.GetDrugsByBrand(brandId);
-                _logger.LogInformation("END GetDrugsByBrand");
+                _logger.LogInformation("BEGIN GetProductsByBrand");
+                result = LactafarmaService.GetProductsByBrand(brandId);
+                _logger.LogInformation("END GetProductsByBrand");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called GetDrugsByBrand(brandId={brandId}) with message {ex.Message}");
+                    $"Exception on JsonResult called GetProductsByBrand(brandId={brandId}) with message {ex.Message}");
             }
             finally
             {
@@ -148,24 +149,24 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        /// Get list of drugs by provided alias
+        /// Get list of products by provided alias
         /// </summary>
         /// <param name="aliasId"></param>
         /// <returns></returns>
         [HttpGet("byalias/{aliasId:int}")]
-        public Domain.Models.Drug GetDrugByAlias(int aliasId)
+        public Domain.Models.Product GetProductByAlias(int aliasId)
         {
-            Domain.Models.Drug result = null;
+            Domain.Models.Product result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetDrugByAlias");
-                result = LactafarmaService.GetDrugByAlias(aliasId);
-                _logger.LogInformation("END GetDrugByAlias");
+                _logger.LogInformation("BEGIN GetProductByAlias");
+                result = LactafarmaService.GetProductByAlias(aliasId);
+                _logger.LogInformation("END GetProductByAlias");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called GetDrugByAlias(aliasId={aliasId}) with message {ex.Message}");
+                    $"Exception on JsonResult called GetProductByAlias(aliasId={aliasId}) with message {ex.Message}");
             }
             finally
             {
@@ -176,23 +177,23 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        /// Get detailed information about drug requested
+        /// Get detailed information about Product requested
         /// </summary>
-        /// <param name="drugId"></param>
+        /// <param name="productId"></param>
         /// <returns></returns>
-        [HttpGet("{drugId:int}")]
-        public Domain.Models.Drug GetDrug(int drugId)
+        [HttpGet("{productId:int}")]
+        public Domain.Models.Product GetProduct(int productId)
         {
-            Domain.Models.Drug result = null;
+            Domain.Models.Product result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetDrug");
-                result = LactafarmaService.GetDrug(drugId);
-                _logger.LogInformation("END GetDrug");
+                _logger.LogInformation("BEGIN GetProduct");
+                result = LactafarmaService.GetProduct(productId);
+                _logger.LogInformation("END GetProduct");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on JsonResult called GetDrug(drugId={drugId}) with message {ex.Message}");
+                _logger.LogError($"Exception on JsonResult called GetProduct(productId={productId}) with message {ex.Message}");
             }
             finally
             {
@@ -201,7 +202,7 @@ namespace LactafarmaAPI.Controllers.Api
             }
             return result;
         }
-
+        
         #endregion
     }
 }

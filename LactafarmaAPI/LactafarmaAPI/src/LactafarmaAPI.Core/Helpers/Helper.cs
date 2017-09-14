@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace LactafarmaAPI.Core
 {
-    internal static class Helper
+    public static class Helper
     {
         #region Public Methods
 

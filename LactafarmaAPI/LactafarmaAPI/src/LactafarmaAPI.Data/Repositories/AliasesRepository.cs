@@ -54,23 +54,7 @@ namespace LactafarmaAPI.Data.Repositories
                 _logger.LogError($"Exception on GetAliasesByProduct with message: {ex.Message}");
                 return null;
             }
-        }
-
-        public ProductMultilingual GetProductByAlias(int aliasId)
-        {
-            try
-            {
-                var alias = EntityContext.Aliases.Where(d => d.Id == aliasId).Include(d => d.Product)
-                    .Include(dm => dm.Product.ProductsMultilingual).FirstOrDefault();
-
-                return alias.Product.ProductsMultilingual.Single(d => d.LanguageId == LanguageId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception on GetsProductByAlias with message: {ex.Message}");
-                return null;
-            }
-        }
+        }        
 
         public AliasMultilingual GetAlias(int aliasId)
         {

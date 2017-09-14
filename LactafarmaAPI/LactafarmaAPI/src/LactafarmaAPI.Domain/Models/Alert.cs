@@ -5,8 +5,11 @@ using LactafarmaAPI.Domain.Models.Base;
 
 namespace LactafarmaAPI.Domain.Models
 {
-    public class Alert: BaseModel
+    public class Alert
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int ProductId { get; set; }
         public DateTime Created { get; set; }
         public string OldRisk { get; set; }
         public string NewRisk { get; set; }

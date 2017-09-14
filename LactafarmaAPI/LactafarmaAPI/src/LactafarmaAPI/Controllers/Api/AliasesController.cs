@@ -91,24 +91,24 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        /// Get aliases by specified Drug in User context
+        /// Get aliases by specified Product in User context
         /// </summary>
-        /// <param name="drugId"></param>
+        /// <param name="productId"></param>
         /// <returns></returns>
-        [HttpGet("bydrug/{drugId:int}")]
-        public IEnumerable<Domain.Models.Alias> GetAliasesByDrug(int drugId)
+        [HttpGet("byproduct/{productId:int}")]
+        public IEnumerable<Domain.Models.Alias> GetAliasesByProduct(int productId)
         {
             IEnumerable<Domain.Models.Alias> result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetAliasesByDrug");
-                result = LactafarmaService.GetAliasesByDrug(drugId);
-                _logger.LogInformation("END GetAliasesByDrug");
+                _logger.LogInformation("BEGIN GetAliasesByProduct");
+                result = LactafarmaService.GetAliasesByProduct(productId);
+                _logger.LogInformation("END GetAliasesByProduct");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called GetAliasesByDrug(drugId={drugId}) with message {ex.Message}");
+                    $"Exception on JsonResult called GetAliasesByProduct(productId={productId}) with message {ex.Message}");
             }
             finally
             {

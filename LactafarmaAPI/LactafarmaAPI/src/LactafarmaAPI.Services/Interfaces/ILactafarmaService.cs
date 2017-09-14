@@ -16,6 +16,7 @@ namespace LactafarmaAPI.Services.Interfaces
 
         IEnumerable<Alert> GetAlertsByProduct(int productId);
         IEnumerable<Alert> GetLastAlerts();
+        Alert GetAlert(int alertId);
         //IEnumerable<BaseModel> GetAllAlerts();
         IEnumerable<BaseModel> GetAllAliases();
         IEnumerable<Alias> GetAliasesByProduct(int productId);
@@ -31,7 +32,7 @@ namespace LactafarmaAPI.Services.Interfaces
         //User GetUser(string userId);
         Alias GetAlias(int aliasId);
         Brand GetBrand(int brandId);
-        Product GetProduct(int drugId);
+        Product GetProduct(int productId);
         Favorite GetFavorite(int favoriteId);
         Product GetProductByAlias(int aliasId);
 
@@ -40,6 +41,6 @@ namespace LactafarmaAPI.Services.Interfaces
         Task<IList<string>> GetLevelsAsync();
 
         Task<IPagedList<Log>> GetLogsAsync(LogPagedDataRequest request);
-        void SetUser(User currentUser);
+        //void SetUser(User currentUser);
     }
 }

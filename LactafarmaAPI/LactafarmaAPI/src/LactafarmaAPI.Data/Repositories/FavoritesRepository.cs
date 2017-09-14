@@ -31,7 +31,8 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.Favorites.Where(f => f.UserId == userId).Include(a => a.Product)
+                return EntityContext.Favorites.Where(f => Guid.Parse(f.UserId) == userId)
+                    .Include(a => a.Product)
                     .AsEnumerable();
             }
             catch (Exception ex)
@@ -45,7 +46,9 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.Favorites.FirstOrDefault(f => f.Id == favoriteId);
+                return EntityContext.Favorites
+                    .Include(a => a.Product)                    
+                    .FirstOrDefault(f => f.Id == favoriteId);
             }
             catch (Exception ex)
             {
@@ -58,7 +61,7 @@ namespace LactafarmaAPI.Data.Repositories
 
         #region Overridden Members
 
-        protected override Expression<Func<Group, bool>> IdentifierPredicate(int id)
+        protected override Expression<Func<Favorite, bool>> IdentifierPredicate(int id)
         {
             return e => e.Id == id;
         }

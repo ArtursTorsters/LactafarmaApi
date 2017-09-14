@@ -159,8 +159,9 @@ namespace LactafarmaAPI
             services.AddScoped<IAliasRepository, AliasesRepository>();
             services.AddScoped<IAlertRepository, AlertsRepository>();
             services.AddScoped<IBrandRepository, BrandsRepository>();
-            services.AddScoped<IProductRepository, DrugsRepository>();
+            services.AddScoped<IProductRepository, ProductsRepository>();
             services.AddScoped<IGroupRepository, GroupsRepository>();
+            services.AddScoped<IFavoriteRepository, FavoritesRepository>();
             //services.AddScoped<IUserRepository, UsersRepository>();
             services.AddScoped<ILogRepository, LogRepository>();
 
@@ -175,7 +176,7 @@ namespace LactafarmaAPI
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
                 {
                     Title = "LactafarmaApi",
-                    Description = "API for getting interesting information about drugs for breastfeeding, also it will be used as template for ASP.NET Core projects with Entity Framework Core (2.0)",
+                    Description = "API for getting interesting information about products for breastfeeding, also it will be used as template for ASP.NET Core projects with Entity Framework Core (2.0)",
                     Version = "v1",
                     Contact = new Contact { Email = "xpertpoint.solutions@gmail.com", Url = "https://github.com/gomnet/lactafarma/issues" }
                 });

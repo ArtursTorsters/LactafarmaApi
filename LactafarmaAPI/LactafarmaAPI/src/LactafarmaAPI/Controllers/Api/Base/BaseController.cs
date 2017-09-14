@@ -37,7 +37,10 @@ namespace LactafarmaAPI.Controllers.Api.Base
         /// MailService
         /// </summary>
         public readonly IMailService MailService;
-        private readonly UserManager<User> _userManager;
+        /// <summary>
+        /// UserManager for ClaimsPrincipal
+        /// </summary>
+        public readonly UserManager<User> _userManager;
         /// <summary>
         /// Cache container
         /// </summary>
@@ -57,9 +60,9 @@ namespace LactafarmaAPI.Controllers.Api.Base
             /// </summary>
             Alias,
             /// <summary>
-            /// Drug entity type
+            /// Product entity type
             /// </summary>
-            Drug,
+            Product,
             /// <summary>
             /// Brand entity type
             /// </summary>

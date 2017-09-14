@@ -45,6 +45,11 @@ namespace LactafarmaAPI.ViewModels
         /// List of available languages
         /// </summary>
         public List<Language> Languages { get; set; }
+
+        /// <summary>
+        /// List of Errors concatenated
+        /// </summary>
+        public string Error { get; set; }
     }
 
     /// <summary>

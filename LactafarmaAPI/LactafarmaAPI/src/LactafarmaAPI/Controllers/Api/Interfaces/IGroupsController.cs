@@ -10,6 +10,7 @@ namespace LactafarmaAPI.Controllers.Api.Interfaces
     interface IGroupsController
     {
         IEnumerable<Group> GetGroupsByName(string startsWith);
+        IEnumerable<Domain.Models.Group> GetGroupsByProduct(int productId);
         Group GetGroup(int groupId);
 
     }

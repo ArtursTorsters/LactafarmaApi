@@ -5,7 +5,10 @@
 }
 
 <h2>@ViewData["Title"].</h2>
-
+@if (!String.IsNullOrEmpty(Model.Error))
+{
+    <h1>Registration process FAILED due to these errors: @Model.Error</h1>
+}
 <form asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form">
     <h4>Create a new account.</h4>
     <hr />

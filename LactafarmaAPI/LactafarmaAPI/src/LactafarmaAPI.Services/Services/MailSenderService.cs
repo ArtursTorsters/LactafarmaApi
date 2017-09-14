@@ -19,7 +19,10 @@ namespace LactafarmaAPI.Services.Services
             emailMessage.From.Add(new MailboxAddress("info", "info@bebemundi.com"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
-            emailMessage.Body = new TextPart("plain") { Text = message };
+
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = message;
+            emailMessage.Body = bodyBuilder.ToMessageBody();
 
             using (var client = new SmtpClient())
             {

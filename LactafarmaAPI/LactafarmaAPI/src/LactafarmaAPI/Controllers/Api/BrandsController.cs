@@ -91,24 +91,24 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
-        /// Get brands by specified Drug in User context
+        /// Get brands by specified Product in User context
         /// </summary>
-        /// <param name="drugId"></param>
+        /// <param name="productId"></param>
         /// <returns></returns>
-        [HttpGet("bydrug/{drugId:int}")]
-        public IEnumerable<Domain.Models.Brand> GetBrandsByDrug(int drugId)
+        [HttpGet("byproduct/{productId:int}")]
+        public IEnumerable<Domain.Models.Brand> GetBrandsByProduct(int productId)
         {
             IEnumerable<Domain.Models.Brand> result = null;
             try
             {
-                _logger.LogInformation("BEGIN GetBrandsByDrug");
-                result = LactafarmaService.GetBrandsByDrug(drugId);
-                _logger.LogInformation("END GetBrandsByDrug");
+                _logger.LogInformation("BEGIN GetBrandsByProduct");
+                result = LactafarmaService.GetBrandsByProduct(productId);
+                _logger.LogInformation("END GetBrandsByProduct");
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Exception on JsonResult called GetBrandsByDrug(drugId={drugId}) with message {ex.Message}");
+                    $"Exception on JsonResult called GetBrandsByProduct(productId={productId}) with message {ex.Message}");
             }
             finally
             {

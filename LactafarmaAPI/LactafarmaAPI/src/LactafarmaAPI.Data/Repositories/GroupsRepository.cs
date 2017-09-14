@@ -42,13 +42,14 @@ namespace LactafarmaAPI.Data.Repositories
             }
         }
 
-        public IEnumerable<GroupMultilingual> GetGroupsByProduct(int productId)
+        public IEnumerable<ProductGroup> GetGroupsByProduct(int productId)
         {
             try
             {
-                return EntityContext.GroupsMultilingual.Where(l => l.LanguageId == LanguageId).Include(a => a.Group)
-                    .ThenInclude(d => d.ProductGroups)
-                    .Where(a => a.Group.ProductGroups.FirstOrDefault().ProductId == productId).AsEnumerable();
+                return EntityContext.ProductGroups.Where(pg => pg.ProductId == productId);
+                //return EntityContext.GroupsMultilingual.Where(l => l.LanguageId == LanguageId).Include(a => a.Group)
+                //    .ThenInclude(d => d.ProductGroups)
+                //    .Where(a => a.Group.ProductGroups.FirstOrDefault().ProductId == productId).AsEnumerable();
             }
             catch (Exception ex)
             {

@@ -9,7 +9,7 @@ namespace LactafarmaAPI.Data.Interfaces
     public interface IGroupRepository : IDataRepository<Group>
     {
         IEnumerable<GroupMultilingual> GetAllGroups();
-        IEnumerable<GroupMultilingual> GetGroupsByProduct(int productId);
+        IEnumerable<ProductGroup> GetGroupsByProduct(int productId);
         GroupMultilingual GetGroup(int groupId);
     }
 }

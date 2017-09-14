@@ -27,7 +27,7 @@ namespace LactafarmaAPI.Data.Repositories
             try
             {
                 return EntityContext.Alerts
-                    .Include(e => e.Product)
+                    .Include(e => e.Product).ThenInclude(d => d.ProductsMultilingual)
                     .Include(e => e.OldRisk)
                     .ThenInclude(e => e.RisksMultilingual)
                     .Include(e => e.NewRisk)
@@ -46,7 +46,7 @@ namespace LactafarmaAPI.Data.Repositories
             try
             {
                 return EntityContext.Alerts
-                    .Include(d => d.Product).Where(d => d.Product.Id == productId).Include(e => e.OldRisk)
+                    .Include(d => d.Product).ThenInclude(d => d.ProductsMultilingual).Where(d => d.Product.Id == productId).Include(e => e.OldRisk)
                     .ThenInclude(e => e.RisksMultilingual)
                     .Include(e => e.NewRisk)
                     .ThenInclude(e => e.RisksMultilingual).OrderByDescending(e => e.Created).Take(2)
@@ -57,7 +57,20 @@ namespace LactafarmaAPI.Data.Repositories
                 _logger.LogError($"Exception on GetAlertsByProduct with message: {ex.Message}");
                 return null;
             }
-        }        
+        }
+
+        /// <summary>
+        /// Get alert by id
+        /// </summary>
+        /// <param name="alertId"></param>
+        /// <returns></returns>
+        public Alert GetAlert(int alertId)
+        {
+            return EntityContext.Alerts.Where(a => a.Id == alertId).Include(d => d.Product).ThenInclude(d => d.ProductsMultilingual).Include(e => e.OldRisk)
+                    .ThenInclude(e => e.RisksMultilingual)
+                    .Include(e => e.NewRisk)
+                    .ThenInclude(e => e.RisksMultilingual).FirstOrDefault();
+        }
 
         protected override Expression<Func<Alert, bool>> IdentifierPredicate(int id)
         {

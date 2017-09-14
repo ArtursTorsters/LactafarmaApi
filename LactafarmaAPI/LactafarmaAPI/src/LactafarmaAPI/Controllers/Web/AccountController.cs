@@ -117,12 +117,16 @@ namespace LactafarmaAPI.Controllers.Web
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                         await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                            "<html><head></head><body>Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a></body></html>");
+                            "<html><head></head><body><strong>Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">Confirm Lactafarma Api authentication</a></strong></body></html>");
                         await _emailSender.SendEmailAsync("xpertpoint.solutions@gmail.com", "New user registered", $"New user {model.Email} was registered using LactafarmaApi");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(3, "User created a new account with password.");
                         return Json("User created succesfully");
+                    }
+                    else
+                    {
+                        model.Error = String.Join(" -", result.Errors.Select(e => e.Description).ToArray()); 
                     }
                 }
             }
@@ -133,6 +137,20 @@ namespace LactafarmaAPI.Controllers.Web
             }
 
             _logger.LogInformation($"END POST Register with email {model.Email}");
+
+            model.Languages = new List<Language>
+                {
+                    new Language
+                    {
+                        Id = Guid.Parse("7C0AFE0E-0B25-4AEA-8AAE-51CBDDE1B134"),
+                        Name = "Spanish"
+                    },
+                    new Language
+                    {
+                        Id = Guid.Parse("458AD052-C8AC-486B-A945-FB3A85219448"),
+                        Name = "English"
+                    }
+                };
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -210,7 +228,7 @@ namespace LactafarmaAPI.Controllers.Web
                     var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                     var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                       "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                       "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">Confirm LactafarmaApp authorization</a>");
 
                     await _emailSender.SendEmailAsync("xpertpoint.solutions@gmail.com", "New user forgot password", $"New user {model.Email} forgot password using LactafarmaApi");
 

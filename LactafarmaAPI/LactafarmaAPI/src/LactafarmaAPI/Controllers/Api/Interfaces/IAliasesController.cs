@@ -9,7 +9,7 @@ namespace LactafarmaAPI.Controllers.Api.Interfaces
     interface IAliasesController
     {
         IEnumerable<Domain.Models.Alias> GetAliasesByName(string startsWith);
-        IEnumerable<Domain.Models.Alias> GetAliasesByDrug(int drugId);
+        IEnumerable<Domain.Models.Alias> GetAliasesByProduct(int productId);
         Domain.Models.Alias GetAlias(int aliasId);
 
     }

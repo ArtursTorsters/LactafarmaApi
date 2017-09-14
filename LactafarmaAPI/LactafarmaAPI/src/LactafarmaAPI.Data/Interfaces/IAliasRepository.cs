@@ -11,9 +11,7 @@ namespace LactafarmaAPI.Data.Interfaces
         IEnumerable<AliasMultilingual> GetAllAliases();
 
         IEnumerable<AliasMultilingual> GetAliasesByProduct(int productId);
-
-        ProductMultilingual GetProductByAlias(int aliasId);
-
+              
         AliasMultilingual GetAlias(int aliasId);
 
     }

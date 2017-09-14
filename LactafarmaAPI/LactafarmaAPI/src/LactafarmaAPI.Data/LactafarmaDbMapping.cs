@@ -254,7 +254,7 @@ namespace LactafarmaAPI.Data
             //modelBuilder.Entity<DrugMultilingual>()
             //    .HasOne(bc => bc.Language);                
 
-            logger.LogInformation("END: Configuring entity DrugMultilingual");
+            logger.LogInformation("END: Configuring entity ProductMultilingual");
         }
 
         private static void MapAlert(ModelBuilder modelBuilder, ILogger logger)

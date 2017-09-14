@@ -92,6 +92,35 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
+        /// Get groups by specified Product in User context
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        [HttpGet("byproduct/{productId:int}")]
+        public IEnumerable<Domain.Models.Group> GetGroupsByProduct(int productId)
+        {
+            IEnumerable<Domain.Models.Group> result = null;
+            try
+            {
+                _logger.LogInformation("BEGIN GetGroupsByProduct");
+                result = LactafarmaService.GetGroupsByProduct(productId);
+                _logger.LogInformation("END GetGroupsByProduct");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetGroupsByProduct(productId={productId}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Get detailed information about group requested
         /// </summary>
         /// <param name="groupId"></param>

@@ -10,7 +10,7 @@ namespace LactafarmaAPI.Controllers.Api.Interfaces
     interface IBrandsController
     {
         IEnumerable<Brand> GetBrandsByName(string startsWith);
-        IEnumerable<Brand> GetBrandsByDrug(int drugId);
+        IEnumerable<Brand> GetBrandsByProduct(int productId);
         Brand GetBrand(int brandId);
 
     }

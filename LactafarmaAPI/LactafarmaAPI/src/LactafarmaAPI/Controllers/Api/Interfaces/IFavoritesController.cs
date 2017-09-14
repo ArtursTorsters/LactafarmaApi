@@ -7,10 +7,10 @@ using LactafarmaAPI.Domain.Models;
 
 namespace LactafarmaAPI.Controllers.Api.Interfaces
 {
-    interface IAlertsController
+    interface IFavoritesController
     {
-        IEnumerable<Alert> GetAlertsByProduct(int productId);
-        IEnumerable<Domain.Models.Alert> GetLastAlerts();
-        Domain.Models.Alert GetAlert(int alertId);
+        IEnumerable<Favorite> GetFavoritesByUser();
+        Favorite GetFavorite(int favoriteId);
+
     }
 }

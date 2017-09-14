@@ -6,7 +6,7 @@ using System.Text;
 
 namespace LactafarmaAPI.Data.Interfaces
 {
-    public interface IFavoriteRepository : IDataRepository<Group>
+    public interface IFavoriteRepository : IDataRepository<Favorite>
     {
         IEnumerable<Favorite> GetFavoritesByUser(Guid userId);
         Favorite GetFavorite(int favoriteId);

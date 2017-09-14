@@ -109,7 +109,7 @@ namespace LactafarmaAPI.Controllers.Api
         private async Task ClearCachesAsync()
         {
             await Task.Run(() => Cache.Remove(EntityType.Alias));
-            await Task.Run(() => Cache.Remove(EntityType.Drug));
+            await Task.Run(() => Cache.Remove(EntityType.Product));
             await Task.Run(() => Cache.Remove(EntityType.Group));
             await Task.Run(() => Cache.Remove(EntityType.Brand));
         }
@@ -119,7 +119,7 @@ namespace LactafarmaAPI.Controllers.Api
             try
             {
                 _logger.LogInformation("BEGIN LoadCachesAsync");
-                await Task.Run(() => CacheInitialize(LactafarmaService.GetAllDrugs(), EntityType.Drug));
+                await Task.Run(() => CacheInitialize(LactafarmaService.GetAllProducts(), EntityType.Product));
                 await Task.Run(() => CacheInitialize(LactafarmaService.GetAllAliases(), EntityType.Alias));
                 await Task.Run(() => CacheInitialize(LactafarmaService.GetAllBrands(), EntityType.Brand));
                 await Task.Run(() => CacheInitialize(LactafarmaService.GetAllGroups(), EntityType.Group));

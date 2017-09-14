@@ -34,6 +34,8 @@ namespace LactafarmaAPI.Data.Repositories
             try
             {
                 return EntityContext.ProductsMultilingual.Where(l => l.LanguageId == LanguageId).Include(d => d.Product)
+                    .ThenInclude(e => e.Risk)
+                    .ThenInclude(e => e.RisksMultilingual)
                     .AsEnumerable();
             }
             catch (Exception ex)
@@ -48,7 +50,9 @@ namespace LactafarmaAPI.Data.Repositories
             try
             {
                 return EntityContext.ProductGroups.Where(db => db.GroupId == groupId).Include(d => d.Product)
-                    .ThenInclude(dm => dm.ProductsMultilingual)
+                    .ThenInclude(e => e.Risk)
+                    .ThenInclude(e => e.RisksMultilingual)
+                    .Include(dm => dm.Product.ProductsMultilingual)
                     .Where(dm => dm.Product.ProductsMultilingual.FirstOrDefault().LanguageId == LanguageId).AsEnumerable();                
             }
             catch (Exception ex)
@@ -62,8 +66,9 @@ namespace LactafarmaAPI.Data.Repositories
         {
             try
             {
-                return EntityContext.ProductBrands.Where(db => db.BrandId == brandId).Include(d => d.Product)
-                    .ThenInclude(dm => dm.ProductsMultilingual)
+                return EntityContext.ProductBrands.Where(db => db.BrandId == brandId).Include(d => d.Product).ThenInclude(e => e.Risk)
+                    .ThenInclude(e => e.RisksMultilingual)
+                    .Include(dm => dm.Product.ProductsMultilingual)
                     .Where(dm => dm.Product.ProductsMultilingual.FirstOrDefault().LanguageId == LanguageId).AsEnumerable();
             }
             catch (Exception ex)
@@ -73,12 +78,30 @@ namespace LactafarmaAPI.Data.Repositories
             }
         }
 
+        public ProductMultilingual GetProductByAlias(int aliasId)
+        {
+            try
+            {
+                var alias = EntityContext.Aliases.Where(d => d.Id == aliasId).Include(d => d.Product).ThenInclude(e => e.Risk)
+                    .ThenInclude(e => e.RisksMultilingual)
+                    .Include(dm => dm.Product.ProductsMultilingual).FirstOrDefault();
+
+                return alias.Product.ProductsMultilingual.Single(d => d.LanguageId == LanguageId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetProductByAlias with message: {ex.Message}");
+                return null;
+            }
+        }
+
         public ProductMultilingual GetProduct(int productId)
         {
             try
             {
                 return EntityContext.ProductsMultilingual.Where(e => e.ProductId == productId && e.LanguageId == LanguageId)
-                    .Include(e => e.Product).FirstOrDefault();
+                    .Include(e => e.Product).ThenInclude(e => e.Risk)
+                    .ThenInclude(e => e.RisksMultilingual).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -91,7 +114,7 @@ namespace LactafarmaAPI.Data.Repositories
 
         #region Overridden Members
 
-        protected override Expression<Func<Drug, bool>> IdentifierPredicate(int id)
+        protected override Expression<Func<Product, bool>> IdentifierPredicate(int id)
         {
             return e => e.Id == id;
         }

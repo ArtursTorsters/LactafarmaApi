@@ -20,6 +20,7 @@ using Group = LactafarmaAPI.Domain.Models.Group;
 using Log = LactafarmaAPI.Domain.Models.Log;
 using User = LactafarmaAPI.Domain.Models.User;
 using LactafarmaAPI.Domain.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace LactafarmaAPI.Services.Services
 {
@@ -33,12 +34,14 @@ namespace LactafarmaAPI.Services.Services
         private readonly IBrandRepository _brandRepository;
         private readonly IProductRepository _productRepository;
         private readonly IGroupRepository _groupRepository;
-
+        private readonly IHttpContextAccessor _httpContext;
         private readonly ILogger<LactafarmaService> _logger;
         private readonly ILogRepository _logRepository;
         private readonly IFavoriteRepository _favoriteRepository;
-        public LactafarmaAPI.Data.Entities.User _user;
+        //public LactafarmaAPI.Data.Entities.User _user;
 
+        public Guid LanguageId => User.LanguageId();
+        public ClaimsPrincipal User => _httpContext.HttpContext.User;
         #endregion
 
         #region Constructors
@@ -46,7 +49,7 @@ namespace LactafarmaAPI.Services.Services
         public LactafarmaService(ILogRepository logRepository, ILogger<LactafarmaService> logger,
             IAlertRepository alertRepository, IFavoriteRepository favoriteRepository,
             IAliasRepository aliasRepository, IProductRepository productRepository, IBrandRepository brandRepository,
-            IGroupRepository groupRepository)
+            IGroupRepository groupRepository, IHttpContextAccessor httpContext)
         {
             _logger = logger;
             _logRepository = logRepository;
@@ -56,6 +59,7 @@ namespace LactafarmaAPI.Services.Services
             _productRepository = productRepository;
             _brandRepository = brandRepository;
             _groupRepository = groupRepository;
+            _httpContext = httpContext;
         }
 
         #endregion
@@ -76,18 +80,18 @@ namespace LactafarmaAPI.Services.Services
             }
         }
 
-        public void SetUser(Data.Entities.User currentUser)
-        {
-            _logger.LogInformation($"BEGIN SetUser");
-            try
-            {
-                _user = currentUser;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception on SetUser with message: {ex.Message}");
-            }
-        }
+        //public void SetUser(Data.Entities.User currentUser)
+        //{
+        //    _logger.LogInformation($"BEGIN SetUser");
+        //    try
+        //    {
+        //        _user = currentUser;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Exception on SetUser with message: {ex.Message}");
+        //    }
+        //}
 
         public Task<IList<string>> GetLevelsAsync()
         {
@@ -132,24 +136,28 @@ namespace LactafarmaAPI.Services.Services
 
                 if (favorite == null) return null;
 
+                var productMultilingual = _productRepository.GetProduct(favorite.Product.Id);
+
                 var result = new Domain.Models.Favorite
                 {
-                    Id = favorite.Id,                    
+                    Id = favorite.Id,
+                    UserId = Guid.Parse(favorite.UserId),
+                    Name = favorite.Name,
                     Product = new Product
                     {
                         Id = favorite.ProductId,
-                        Name = favorite.Name,
-                        VirtualName = favorite.Name.RemoveDiacritics(),
+                        Name = productMultilingual.Name,
+                        VirtualName = productMultilingual.Name.RemoveDiacritics(),
                         Modified = favorite.Product.Modified,
                         Risk = new Risk
                         {
-                            Description = favorite.Product.Risk.RisksMultilingual.FirstOrDefault().Description,
-                            Id = favorite.Product.Risk.Id,
-                            Modified = favorite.Product.Risk.Modified,
-                            Name = favorite.Product.Risk.RisksMultilingual.FirstOrDefault().Name
+                            Description = productMultilingual.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
+                            Id = productMultilingual.Product.Risk.Id,
+                            Modified = productMultilingual.Product.Risk.Modified,
+                            Name = productMultilingual.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
                         },
-                        Description = favorite.Product.ProductsMultilingual.FirstOrDefault().Description
-                    }                    
+                        Description = productMultilingual.Description
+                    }
                 };
                 return result;
             }
@@ -175,7 +183,26 @@ namespace LactafarmaAPI.Services.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetAlertsByDrug with message: {ex.Message}");
+                _logger.LogError($"Exception on GetAlertsByProduct with message: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Get Alert by id
+        /// </summary>
+        /// <param name="alertId"></param>
+        /// <returns></returns>
+        public Alert GetAlert(int alertId)
+        {
+            _logger.LogInformation($"BEGIN GetAlert");
+            try
+            {
+                return MapAlert(_alertRepository.GetAlert(alertId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAlert with message: {ex.Message}");
                 return null;
             }
         }
@@ -219,18 +246,18 @@ namespace LactafarmaAPI.Services.Services
         /// <summary>
         ///     Get aliases by productId
         /// </summary>
-        /// <param name="drugId"></param>
+        /// <param name="productId"></param>
         /// <returns></returns>
         public IEnumerable<Alias> GetAliasesByProduct(int productId)
         {
-            _logger.LogInformation($"BEGIN GetAliasesByDrug");
+            _logger.LogInformation($"BEGIN GetAliasesByProduct");
             try
             {
                 return MapAliases(_aliasRepository.GetAliasesByProduct(productId));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetAliasesByDrug with message: {ex.Message}");
+                _logger.LogError($"Exception on GetAliasesByProduct with message: {ex.Message}");
                 return null;
             }
         }
@@ -259,7 +286,7 @@ namespace LactafarmaAPI.Services.Services
             _logger.LogInformation($"BEGIN GetGroupsByProduct");
             try
             {
-                return MapGroups(_groupRepository.GetGroupsByProduct(productId));
+                return MapProductGroups(_groupRepository.GetGroupsByProduct(productId));
             }
             catch (Exception ex)
             {
@@ -287,7 +314,7 @@ namespace LactafarmaAPI.Services.Services
         }
 
         /// <summary>
-        ///     Get all drugs
+        ///     Get all Products
         /// </summary>
         /// <returns></returns>
         public IEnumerable<BaseModel> GetAllProducts()
@@ -379,7 +406,8 @@ namespace LactafarmaAPI.Services.Services
                 {
                     Id = group.GroupId,
                     Modified = group.Group.Modified,
-                    Name = group.Name
+                    Name = group.Name,
+                    VirtualName = group.Name.RemoveDiacritics()
                 };
                 return result;
             }
@@ -422,7 +450,7 @@ namespace LactafarmaAPI.Services.Services
         //}
 
         /// <summary>
-        ///     Get Alias information by id (including associated Drug)
+        ///     Get Alias information by id (including associated Product)
         /// </summary>
         /// <param name="aliasId"></param>
         /// <returns></returns>
@@ -438,8 +466,9 @@ namespace LactafarmaAPI.Services.Services
                 var result = new Alias
                 {
                     Id = alias.AliasId,
+                    Modified = alias.Alias.Modified,
                     Name = alias.Name,
-                    Product = GetProductByAlias(aliasId)
+                    VirtualName = alias.Name.RemoveDiacritics(),
                 };
                 return result;
             }
@@ -451,7 +480,7 @@ namespace LactafarmaAPI.Services.Services
         }
 
         /// <summary>
-        ///     Get Drug information by AliasId
+        ///     Get Product information by AliasId
         /// </summary>
         /// <param name="aliasId"></param>
         /// <returns></returns>
@@ -460,7 +489,7 @@ namespace LactafarmaAPI.Services.Services
             _logger.LogInformation($"BEGIN GetProductByAlias");
             try
             {
-                var product = _aliasRepository.GetProductByAlias(aliasId);
+                var product = _productRepository.GetProductByAlias(aliasId);
 
                 if (product == null) return null;
 
@@ -472,10 +501,10 @@ namespace LactafarmaAPI.Services.Services
                     Modified = product.Product.Modified,
                     Risk = new Risk
                     {
-                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault().Description,
+                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
                         Id = product.Product.Risk.Id,
                         Modified = product.Product.Risk.Modified,
-                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault().Name
+                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
                     },
                     Description = product.Description
                 };
@@ -483,7 +512,7 @@ namespace LactafarmaAPI.Services.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception on GetDrugByAlias with message: {ex.Message}");
+                _logger.LogError($"Exception on GetProductByAlias with message: {ex.Message}");
                 return null;
             }
         }
@@ -505,7 +534,9 @@ namespace LactafarmaAPI.Services.Services
                 var result = new Brand
                 {
                     Id = brand.BrandId,
-                    Name = brand.Name
+                    Name = brand.Name,
+                    Modified = brand.Brand.Modified,
+                    VirtualName = brand.Name.RemoveDiacritics()
                 };
                 return result;
             }
@@ -519,7 +550,7 @@ namespace LactafarmaAPI.Services.Services
         /// <summary>
         ///     Get Product information
         /// </summary>
-        /// <param name="drugId"></param>
+        /// <param name="productId"></param>
         /// <returns></returns>
         public Product GetProduct(int productId)
         {
@@ -538,10 +569,10 @@ namespace LactafarmaAPI.Services.Services
                     Modified = product.Product.Modified,
                     Risk = new Risk
                     {
-                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault().Description,
+                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
                         Id = product.Product.Risk.Id,
                         Modified = product.Product.Risk.Modified,
-                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault().Name
+                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
                     },
                     Description = product.Product.ProductsMultilingual.FirstOrDefault().Description
                 };
@@ -587,29 +618,32 @@ namespace LactafarmaAPI.Services.Services
             return collection.Count == 0 ? null : collection;
         }
 
-        private static IEnumerable<Domain.Models.Favorite> MapFavorites(IEnumerable<Data.Entities.Favorite> favorites)
+        private IEnumerable<Domain.Models.Favorite> MapFavorites(IEnumerable<Data.Entities.Favorite> favorites)
         {
             var collection = new List<Domain.Models.Favorite>();
             foreach (var favorite in favorites.ToList())
             {
+                var productMultilingual = _productRepository.GetProduct(favorite.Product.Id);
+
                 var result = new Domain.Models.Favorite
                 {
                     Id = favorite.Id,
-                    Name = favorite.Product.ProductsMultilingual.FirstOrDefault().Name,
+                    UserId = Guid.Parse(favorite.UserId),
+                    Name = favorite.Name,
                     Product = new Product
                     {
                         Id = favorite.ProductId,
-                        Name = favorite.Product.ProductsMultilingual.FirstOrDefault().Name,
-                        VirtualName = favorite.Product.ProductsMultilingual.FirstOrDefault().Name.RemoveDiacritics(),
+                        Name = productMultilingual.Name,
+                        VirtualName = productMultilingual.Name.RemoveDiacritics(),
                         Modified = favorite.Product.Modified,
                         Risk = new Risk
-                        {
-                            Description = favorite.Product.Risk.RisksMultilingual.FirstOrDefault().Description,
-                            Id = favorite.Product.Risk.Id,
-                            Modified = favorite.Product.Risk.Modified,
-                            Name = favorite.Product.Risk.RisksMultilingual.FirstOrDefault().Name
+                        {                            
+                            Description = productMultilingual.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
+                            Id = productMultilingual.Product.Risk.Id,
+                            Modified = productMultilingual.Product.Risk.Modified,
+                            Name = productMultilingual.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
                         },
-                        Description = favorite.Product.ProductsMultilingual.FirstOrDefault().Description
+                        Description = productMultilingual.Description
                     }
                 };
                 collection.Add(result);
@@ -618,26 +652,32 @@ namespace LactafarmaAPI.Services.Services
             return collection.Count == 0 ? null : collection;
         }
 
-        private static IEnumerable<Alert> MapAlerts(IEnumerable<Data.Entities.Alert> alerts)
+        private IEnumerable<Alert> MapAlerts(IEnumerable<Data.Entities.Alert> alerts)
         {
             var collection = new List<Alert>();
             foreach (var alert in alerts.ToList())
             {
-                var result = new Alert
-                {
-                    Id = alert.Id,
-                    Name = alert.Product.ProductsMultilingual.FirstOrDefault().Name,                    
-                    Created = alert.Created,
-                    OldRisk = alert.OldRisk.RisksMultilingual.FirstOrDefault().Name,
-                    NewRisk = alert.NewRisk.RisksMultilingual.FirstOrDefault().Name
-                };
+                Alert result = MapAlert(alert);
                 collection.Add(result);
             }
 
             return collection.Count == 0 ? null : collection;
         }
 
-        private static IEnumerable<Alias> MapAliases(IEnumerable<AliasMultilingual> aliases)
+        private Alert MapAlert(Data.Entities.Alert alert)
+        {
+            return new Alert
+            {
+                Id = alert.Id,
+                ProductId = alert.Product.Id,
+                Name = alert.Product.ProductsMultilingual.FirstOrDefault().Name,
+                Created = alert.Created,
+                OldRisk = alert.OldRisk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name,
+                NewRisk = alert.NewRisk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
+            };
+        }
+
+        private IEnumerable<Alias> MapAliases(IEnumerable<AliasMultilingual> aliases)
         {
             var collection = new List<Alias>();
             foreach (var alias in aliases.ToList())
@@ -645,8 +685,9 @@ namespace LactafarmaAPI.Services.Services
                 var result = new Alias
                 {
                     Id = alias.AliasId,
+                    Modified = alias.Alias.Modified,
                     Name = alias.Name,
-                    VirtualName = alias.Name.RemoveDiacritics()
+                    VirtualName = alias.Name.RemoveDiacritics(),
                 };
                 collection.Add(result);
             }
@@ -654,7 +695,29 @@ namespace LactafarmaAPI.Services.Services
             return collection.Count == 0 ? null : collection;
         }
 
-        private static IEnumerable<Group> MapGroups(IEnumerable<GroupMultilingual> groups)
+        private IEnumerable<Group> MapProductGroups(IEnumerable<ProductGroup> groups)
+        {
+            var collection = new List<Group>();
+
+            foreach (var group in groups)
+            {
+                var groupDetail = _groupRepository.GetGroup(group.GroupId);
+
+                var result = new Group
+                {
+                    Id = group.GroupId,
+                    Name = groupDetail.Name,
+                    Modified = groupDetail.Group.Modified,
+                    VirtualName = groupDetail.Name.RemoveDiacritics()
+                };
+
+                collection.Add(result);
+            }
+
+            return collection.Count == 0 ? null : collection;
+        }
+
+        private IEnumerable<Group> MapGroups(IEnumerable<GroupMultilingual> groups)
         {
             var collection = new List<Group>();
 
@@ -674,7 +737,7 @@ namespace LactafarmaAPI.Services.Services
             return collection.Count == 0 ? null : collection;
         }
 
-        private static IEnumerable<Brand> MapBrands(IEnumerable<BrandMultilingual> brands)
+        private IEnumerable<Brand> MapBrands(IEnumerable<BrandMultilingual> brands)
         {
             var collection = new List<Brand>();
 
@@ -684,6 +747,7 @@ namespace LactafarmaAPI.Services.Services
                 {
                     Id = brand.BrandId,
                     Name = brand.Name,
+                    Modified = brand.Brand.Modified,
                     VirtualName = brand.Name.RemoveDiacritics()
                 };
 
@@ -707,10 +771,10 @@ namespace LactafarmaAPI.Services.Services
                     Modified = product.Product.Modified,
                     Risk = new Risk
                     {
-                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault().Description,
+                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
                         Id = product.Product.Risk.Id,
                         Modified = product.Product.Risk.Modified,
-                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault().Name
+                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
                     },
                     Description = product.Product.ProductsMultilingual.FirstOrDefault().Description
                 };
@@ -735,10 +799,10 @@ namespace LactafarmaAPI.Services.Services
                     Modified = product.Product.Modified,
                     Risk = new Risk
                     {
-                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault().Description,
+                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
                         Id = product.Product.Risk.Id,
                         Modified = product.Product.Risk.Modified,
-                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault().Name
+                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
                     },
                     Description = product.Product.ProductsMultilingual.FirstOrDefault().Description
                 };
@@ -755,20 +819,7 @@ namespace LactafarmaAPI.Services.Services
 
             foreach (var product in products)
             {
-                var result = new Product
-                {
-                    Id = product.ProductId,
-                    Name = product.Name,
-                    VirtualName = product.Name.RemoveDiacritics(),
-                    Modified = product.Product.Modified,
-                    Risk = new Risk {
-                        Description = product.Product.Risk.RisksMultilingual.FirstOrDefault().Description,
-                        Id = product.Product.Risk.Id,
-                        Modified = product.Product.Risk.Modified,
-                        Name = product.Product.Risk.RisksMultilingual.FirstOrDefault().Name
-                    },
-                    Description = product.Description
-                };
+                Product result = MapProduct(product);
 
                 collection.Add(result);
             }
@@ -776,7 +827,26 @@ namespace LactafarmaAPI.Services.Services
             return collection.Count == 0 ? null : collection;
         }
 
- 
+        private Product MapProduct(ProductMultilingual product)
+        {
+            return new Product
+            {
+                Id = product.ProductId,
+                Name = product.Name,
+                VirtualName = product.Name.RemoveDiacritics(),
+                Modified = product.Product.Modified,
+                Risk = new Risk
+                {
+                    Description = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
+                    Id = product.Product.Risk.Id,
+                    Modified = product.Product.Risk.Modified,
+                    Name = product.Product.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
+                },
+                Description = product.Description
+            };
+        }
+
+
         #endregion
     }
 }

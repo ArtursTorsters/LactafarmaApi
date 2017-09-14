@@ -7,7 +7,6 @@ namespace LactafarmaAPI.Domain.Models
 {
     public class Alias : BaseModel
     {
-        public Product Product { get; set; }
-        public Language Language { get; set; }
+        public DateTime Modified { get; set; }
     }
 }

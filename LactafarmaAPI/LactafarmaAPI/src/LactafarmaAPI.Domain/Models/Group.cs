@@ -8,7 +8,5 @@ namespace LactafarmaAPI.Domain.Models
     public class Group : BaseModel
     {
         public DateTime Modified { get; set; }
-        public Language Language { get; set; }
-        public IEnumerable<Product> Products { get; set; }
     }
 }

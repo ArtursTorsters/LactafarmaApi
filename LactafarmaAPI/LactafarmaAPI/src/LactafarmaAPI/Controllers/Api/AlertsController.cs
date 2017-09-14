@@ -73,6 +73,61 @@ namespace LactafarmaAPI.Controllers.Api
             return result;
         }
 
+        /// <summary>
+        /// Get alerts by specified Product in User context
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("last")]
+        public IEnumerable<Domain.Models.Alert> GetLastAlerts()
+        {
+            IEnumerable<Domain.Models.Alert> result = null;
+            try
+            {
+                _logger.LogInformation("BEGIN GetLastAlerts");
+                result = LactafarmaService.GetLastAlerts();
+                _logger.LogInformation("END GetLastAlerts");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetLastAlerts with message {ex.Message}");
+            }
+            finally
+            {
+                if (result == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get alert by specified Id
+        /// </summary>
+        /// <param name="alertId"></param>
+        /// <returns></returns>
+        [HttpGet("{alertId:int}")]
+        public Domain.Models.Alert GetAlert(int alertId)
+        {
+            Domain.Models.Alert result = null;
+            try
+            {
+                _logger.LogInformation("BEGIN GetAlert");
+                result = LactafarmaService.GetAlert(alertId);
+                _logger.LogInformation("END GetAlert");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetAlert with message {ex.Message}");
+            }
+            finally
+            {
+                if (result == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
+            return result;
+        }
+
         #endregion
     }
 }

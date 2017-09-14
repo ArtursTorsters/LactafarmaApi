@@ -10,5 +10,7 @@ namespace LactafarmaAPI.Data.Interfaces
     {
         IEnumerable<Alert> GetLastAlerts();
         IEnumerable<Alert> GetAlertsByProduct(int productId);
+
+        Alert GetAlert(int alertId);
     }
 }

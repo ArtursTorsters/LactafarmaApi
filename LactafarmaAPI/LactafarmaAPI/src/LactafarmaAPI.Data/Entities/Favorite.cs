@@ -12,11 +12,10 @@ namespace LactafarmaAPI.Data.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public int ProductId { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         //Navigation Properties
         public Product Product { get; set; }
-        public User User { get; set; }
 
         public int EntityId
         {
