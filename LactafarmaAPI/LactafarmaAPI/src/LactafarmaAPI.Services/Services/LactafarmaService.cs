@@ -332,6 +332,26 @@ namespace LactafarmaAPI.Services.Services
         }
 
         /// <summary>
+        ///     Get Alternatives by productId
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        public IEnumerable<Product> GetAlternativesByProduct(int productId)
+        {
+            _logger.LogInformation($"BEGIN GetAlternativesByProduct");
+            try
+            {
+                return MapProductsForAlternative(_productRepository.GetAlternativesByProduct(productId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAlternativesByProduct with message: {ex.Message}");
+                return null;
+            }
+        }
+
+
+        /// <summary>
         ///     Get Products by groupId
         /// </summary>
         /// <param name="groupId"></param>
@@ -784,6 +804,35 @@ namespace LactafarmaAPI.Services.Services
 
             return collection.Count == 0 ? null : collection;
         }
+
+        private IEnumerable<Product> MapProductsForAlternative(IEnumerable<ProductAlternative> products)
+        {
+            var collection = new List<Product>();
+
+            foreach (var product in products)
+            {
+                var result = new Product
+                {
+                    Id = product.ProductAlternativeId,
+                    Name = product.ProductAlt.ProductsMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name,
+                    VirtualName = product.ProductAlt.ProductsMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name.RemoveDiacritics(),
+                    Modified = product.ProductAlt.Modified,
+                    Risk = new Risk
+                    {
+                        Description = product.ProductAlt.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description,
+                        Id = product.ProductAlt.Risk.Id,
+                        Modified = product.ProductAlt.Risk.Modified,
+                        Name = product.ProductAlt.Risk.RisksMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Name
+                    },
+                    Description = product.ProductAlt.ProductsMultilingual.FirstOrDefault(rm => rm.LanguageId == LanguageId).Description
+                };
+
+                collection.Add(result);
+            }
+
+            return collection.Count == 0 ? null : collection;
+        }
+
 
         private IEnumerable<Product> MapProductsForBrand(IEnumerable<ProductBrand> products)
         {

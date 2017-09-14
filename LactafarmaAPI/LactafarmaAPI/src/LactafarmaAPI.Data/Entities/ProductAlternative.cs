@@ -9,5 +9,8 @@ namespace LactafarmaAPI.Data.Entities
     {
         public int ProductId { get; set; }
         public int ProductAlternativeId { get; set; }
+
+        //Navigation properties
+        public Product ProductAlt { get; set; }
     }
 }

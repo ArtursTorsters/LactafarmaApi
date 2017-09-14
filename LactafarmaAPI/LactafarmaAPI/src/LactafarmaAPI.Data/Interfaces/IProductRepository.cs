@@ -10,6 +10,7 @@ namespace LactafarmaAPI.Data.Interfaces
     {
         IEnumerable<ProductMultilingual> GetAllProducts();
         IEnumerable<ProductGroup> GetProductsByGroup(int groupId);
+        IEnumerable<ProductAlternative> GetAlternativesByProduct(int productId);
         IEnumerable<ProductBrand> GetProductsByBrand(int brandId);
         ProductMultilingual GetProductByAlias(int aliasId);
         ProductMultilingual GetProduct(int productId);

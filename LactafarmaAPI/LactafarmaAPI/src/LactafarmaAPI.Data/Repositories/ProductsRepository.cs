@@ -45,6 +45,23 @@ namespace LactafarmaAPI.Data.Repositories
             }
         }
 
+        public IEnumerable<ProductAlternative> GetAlternativesByProduct(int productId)
+        {
+            try
+            {
+                return EntityContext.ProductAlternatives.Where(db => db.ProductId == productId).Include(d => d.ProductAlt)                    
+                    .ThenInclude(e => e.Risk)
+                    .ThenInclude(e => e.RisksMultilingual)
+                    .Include(dm => dm.ProductAlt.ProductsMultilingual)
+                    .Where(dm => dm.ProductAlt.ProductsMultilingual.FirstOrDefault().LanguageId == LanguageId).AsEnumerable();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception on GetAlternativesByProduct with message: {ex.Message}");
+                return null;
+            }
+        }
+
         public IEnumerable<ProductGroup> GetProductsByGroup(int groupId)
         {
             try

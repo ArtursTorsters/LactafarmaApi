@@ -149,6 +149,34 @@ namespace LactafarmaAPI.Controllers.Api
         }
 
         /// <summary>
+        /// Get list of alternatives by provided Product
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        [HttpGet("alternatives/{productId:int}")]
+        public IEnumerable<Domain.Models.Product> GetAlternativesByProduct(int productId)
+        {
+            IEnumerable<Domain.Models.Product> result = null;
+            try
+            {
+                _logger.LogInformation("BEGIN GetAlternativesByProduct");
+                result = LactafarmaService.GetAlternativesByProduct(productId);
+                _logger.LogInformation("END GetAlternativesByProduct");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Exception on JsonResult called GetAlternativesByProduct(productId={productId}) with message {ex.Message}");
+            }
+            finally
+            {
+                if (result == null)
+                    _logger.LogWarning("No results for current request!!!");
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Get list of products by provided alias
         /// </summary>
         /// <param name="aliasId"></param>

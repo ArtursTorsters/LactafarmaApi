@@ -308,6 +308,8 @@ namespace LactafarmaAPI.Data
             modelBuilder.Entity<ProductAlternative>()
                 .HasKey(bc => new {bc.ProductId, bc.ProductAlternativeId});
 
+            modelBuilder.Entity<ProductAlternative>().HasOne(t => t.ProductAlt).WithOne().HasForeignKey<ProductAlternative>("ProductAlternativeId");
+
             //modelBuilder.Entity<DrugAlternative>()
             //    .HasOne(bc => bc.Drug)
             //    .WithMany(b => b.DrugAlternatives)

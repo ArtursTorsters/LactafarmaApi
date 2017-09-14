@@ -24,6 +24,7 @@ namespace LactafarmaAPI.Services.Interfaces
         IEnumerable<Group> GetGroupsByProduct(int productId);
         IEnumerable<BaseModel> GetAllBrands();
         IEnumerable<BaseModel> GetAllProducts();
+        IEnumerable<Product> GetAlternativesByProduct(int productId);
         IEnumerable<Product> GetProductsByGroup(int groupId);
         IEnumerable<Product> GetProductsByBrand(int brandId);
         IEnumerable<Favorite> GetFavoritesByUser(Guid userId);
