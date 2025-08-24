@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using LactafarmaAPI.Data;
 using LactafarmaAPI.Data.Entities;
 using LactafarmaAPI.Data.Interfaces;
@@ -23,13 +24,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
+// UPDATED: Changed to IWebHostEnvironment
+using Microsoft.Extensions.Hosting;
+
 using Newtonsoft.Json.Serialization;
 using NLog;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.Extensions.PlatformAbstractions;
+// UPDATED: Changed Swagger imports for newer versions
+using Microsoft.OpenApi.Models;
+// REMOVED: Microsoft.Extensions.PlatformAbstractions - use alternative approach
 
 namespace LactafarmaAPI
 {
@@ -40,16 +45,17 @@ namespace LactafarmaAPI
     {
         #region Private Properties
 
-        private readonly IHostingEnvironment _env;
+        // UPDATED: Changed to IWebHostEnvironment
+        private readonly IWebHostEnvironment _env;
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// IConfigurationRoot
+        /// IConfiguration (updated from IConfigurationRoot)
         /// </summary>
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         #endregion
 
@@ -59,7 +65,8 @@ namespace LactafarmaAPI
         /// Startup constructor
         /// </summary>
         /// <param name="env"></param>
-        public Startup(IHostingEnvironment env)
+        // UPDATED: Changed parameter type to IWebHostEnvironment
+        public Startup(IWebHostEnvironment env)
         {
             _env = env;
 
@@ -71,7 +78,7 @@ namespace LactafarmaAPI
 
             Configuration = builder.Build();
 
-            env.ConfigureNLog("nlog.config");
+            // UPDATED: ConfigureNLog is handled in Configure method now
         }
 
         #endregion
@@ -167,33 +174,37 @@ namespace LactafarmaAPI
 
             //General service for retrieving items from EF Core
             services.AddScoped<ILactafarmaService, LactafarmaService>();
-                     
+
             //Allow logging system (ILogger)
             services.AddLogging();
 
+            // UPDATED: Modern Swagger configuration
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "LactafarmaApi",
                     Description = "API for getting interesting information about products for breastfeeding, also it will be used as template for ASP.NET Core projects with Entity Framework Core (2.0)",
                     Version = "v1",
-                    Contact = new Contact { Email = "xpertpoint.solutions@gmail.com", Url = "https://github.com/gomnet/lactafarma/issues" }
+                    Contact = new OpenApiContact { Email = "xpertpoint.solutions@gmail.com", Url = new Uri("https://github.com/gomnet/lactafarma/issues") }
                 });
 
-                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "LactafarmaAPI.xml");
-                c.IncludeXmlComments(filePath);
+                // UPDATED: Alternative approach without PlatformAbstractions
+                var xmlFile = "LactafarmaAPI.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                {
+                    c.IncludeXmlComments(xmlPath);
+                }
+
+                // UseFullTypeNameInSchemaIds replacement for .NET Core
+                c.CustomSchemaIds(x => x.FullName);
             });
 
-            services.ConfigureSwaggerGen(
-                options => {
-                    // UseFullTypeNameInSchemaIds replacement for .NET Core
-                    options.CustomSchemaIds(x => x.FullName);                    
-                    });
-
-            //Allow MVC services to be specified
+            //Allow Controllers services to be specified
             //Add AuthorizeFilter to demand the user to be authenticated in order to access resources.
-            services.AddMvc(options =>
+            // UPDATED: Add Controllers instead of MVC
+            services.AddControllers(options =>
             {
                 //TODO: SSL requirement on Hosting
                 //if (_env.IsProduction())
@@ -203,7 +214,12 @@ namespace LactafarmaAPI
                 //options.Filters
                 //    .Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
                 //        .Build()));
-            }).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            })
+            // UPDATED: Modern JSON configuration
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
 
             // Set up policies from claims
             services.AddAuthorization(options =>
@@ -227,27 +243,23 @@ namespace LactafarmaAPI
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="loggerFactory"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        // UPDATED: Removed ILoggerFactory parameter - NLog is configured differently in .NET 8
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //NLog configuration
-            loggerFactory.AddNLog();
-            app.AddNLogWeb();
-
-            if (env.IsEnvironment("Development"))
+            // Modern environment checking
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                loggerFactory.AddDebug(LogLevel.Information);
-            }
-            else
-            {
-                loggerFactory.AddDebug(LogLevel.Error);
             }
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();
 
+            // UPDATED: Add routing before authentication
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSession();
 
@@ -255,7 +267,7 @@ namespace LactafarmaAPI
             app.UseSwagger(c =>
             {
                 c.RouteTemplate = "help/{documentName}/lactafarma.json";
-                c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
+                c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" } });
             });
 
             //Indicate endpoints/documents for Swagger UI generator
@@ -264,10 +276,14 @@ namespace LactafarmaAPI
                 c.RoutePrefix = "help";
                 c.SwaggerEndpoint("/help/v1/lactafarma.json", "LactafarmaApi V1");
                 c.InjectStylesheet("/css/themes/theme-monokai.css");
-                c.InjectOnCompleteJavaScript("/js/custom-swagger-ui.js");
+                // UPDATED: Removed obsolete InjectOnCompleteJavaScript
             });
 
-            app.UseMvc();            
+            // UPDATED: Modern endpoint mapping instead of UseMvc
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
 
         #endregion

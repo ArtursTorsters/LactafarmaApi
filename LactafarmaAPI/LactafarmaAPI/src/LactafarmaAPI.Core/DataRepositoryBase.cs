@@ -222,8 +222,7 @@ namespace LactafarmaAPI.Core
 
         public virtual IEnumerable<TEntity> FindAll()
         {
-            return GetEntities().Where(e => e.EntityId != null);
-        }
+return GetEntities().Where(e => e.EntityId != Guid.Empty);        }
 
         public virtual TEntity FindById(Guid id)
         {

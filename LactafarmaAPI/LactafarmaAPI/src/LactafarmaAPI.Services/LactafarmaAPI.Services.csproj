@@ -5,12 +5,12 @@
     <PackageId>LactafarmaAPI.Services</PackageId>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="4.3.0" />
-    <PackageReference Include="MimeKit" Version="4.3.0" />
+    <PackageReference Include="MailKit" Version="4.13.0" />
+    <PackageReference Include="MimeKit" Version="4.13.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\LactafarmaAPI.Core\LactafarmaAPI.Core.csproj" />
     <ProjectReference Include="..\LactafarmaAPI.Data\LactafarmaAPI.Data.csproj" />
