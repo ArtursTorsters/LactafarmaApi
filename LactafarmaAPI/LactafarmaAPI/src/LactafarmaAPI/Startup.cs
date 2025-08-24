@@ -263,7 +263,6 @@ namespace LactafarmaAPI
 
             app.UseSession();
 
-            //Specify route template for API documentation
             app.UseSwagger(c =>
             {
                 c.RouteTemplate = "help/{documentName}/lactafarma.json";
